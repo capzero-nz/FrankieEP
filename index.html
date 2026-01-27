@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Frankie Venter - A Big Deal To Me</title>
-<link rel="icon" type="image/png" href="Five AM Icon - Color.png">
+<link rel="icon" type="image/png" href="https://www.dropbox.com/scl/fi/iz5j46vmrkod00j7ityln/Five-AM-Icon-Color.png?rlkey=2g6h3skqdpsll99dj6m69n3xy&st=h743pb3r&raw=1">
 <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
 
 <style>
@@ -18,6 +18,13 @@
   --yellow:#ffbd2e;
   --green:#27c93f;
   --accent:#ff69b4;
+
+  /* Home layout scaling: fit (not fill) */
+  --icon-size: clamp(72px, 10vh, 96px);
+  --icon-gap: clamp(34px, 4.2vh, 72px);
+  --title-size: clamp(40px, 6.8vh, 60px);
+  --top-pad: clamp(56px, 8.5vh, 110px);
+  --bottom-pad: clamp(64px, 8.5vh, 120px);
 }
 
 * { box-sizing: border-box; }
@@ -87,7 +94,9 @@ html, body {
 /* ===== DESKTOP ===== */
 .desktop {
   height:calc(100vh - 28px);
-  padding:40px;
+  padding:32px;
+  padding-top: var(--top-pad);
+  padding-bottom: var(--bottom-pad);
   display:flex;
   flex-direction:column;
   gap:50px;
@@ -98,38 +107,38 @@ html, body {
 .desktop-icons {
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:80px;
+  gap: var(--icon-gap);
   align-items:center;
   justify-items:center;
-  max-width:1100px;
+  max-width:1200px;
 }
 
 
 .welcome-text {
-  font-size:48px;
+  font-size: var(--title-size);
   font-weight:300;
   color:#fff;
   text-align:center;
   text-shadow:0 2px 8px rgba(0,0,0,.5);
   letter-spacing:-0.5px;
-  margin-bottom:40px;
+  margin-bottom: clamp(20px, 3.2vh, 40px);
 }
 
 .icon {
-  width:120px;
+  width: calc(var(--icon-size) + 28px);
   text-align:center;
   cursor:pointer;
 }
 
 .icon-img {
-  width:90px;
-  height:90px;
+  width: var(--icon-size);
+  height: var(--icon-size);
   margin:0 auto 8px;
   border-radius:20px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:45px;
+  font-size: clamp(18px, 3.6vh, 36px);
   background:rgba(255,255,255,.2);
   backdrop-filter: blur(12px);
   border:1px solid var(--blur-border);
@@ -140,14 +149,13 @@ html, body {
 .icon:active .icon-img { transform:scale(.92); }
 
 .icon-label {
-  font-size:11px;
+  font-size:10px;
   color:#fff;
   background:rgba(0,0,0,.35);
   padding:2px 6px;
   border-radius:5px;
   text-shadow:0 1px 3px rgba(0,0,0,.6);
 }
-
 /* ===== WINDOWS ===== */
 .window {
   position:fixed;
@@ -668,7 +676,7 @@ html, body {
 
 /* ===== MOBILE ===== */
 @media (max-width:640px) {
-  .desktop { padding:16px; height:auto; min-height:calc(100vh - 28px); justify-content:flex-start; }
+  .desktop { padding:16px; padding-top:32px; height:auto; min-height:calc(100vh - 28px); justify-content:flex-start; }
   .window { height:75vh; }
 }
 
@@ -791,7 +799,7 @@ html, body {
 </div>
 
 <div class="menu-bar">
-  <img src="747.png" alt="Apple" style="height: 16px; width: auto;">
+  <img src="https://www.dropbox.com/scl/fi/jaro7tf2paxju5t9lnflp/747.png?rlkey=akamxf9owvejo8yoj51302xi5&st=8v9mwutn&raw=1" alt="Apple" style="height: 16px; width: auto;">
   <div style="flex: 1; text-align: center;">Frankie Venter</div>
   <div id="clock"></div>
 </div>
@@ -858,7 +866,7 @@ html, body {
       <div class="icon-label">Draw</div>
     </div>
     <div class="icon" onclick="openLink('https://fiveam.lnk.to/abigdealtome')">
-      <div class="icon-img" style="background-image:url('fc55f708c8d651c923055ab1a1d749be.jpg');background-size:cover;background-position:center;"></div>
+      <div class="icon-img" style="background-image:url('https://www.dropbox.com/scl/fi/ydjexhmo7bzpefle21734/fc55f708c8d651c923055ab1a1d749be.jpg?rlkey=healak5anf4t66tn4msu6qjnz&st=i6oaa054&raw=1');background-size:cover;background-position:center;"></div>
       <div class="icon-label">Listen</div>
     </div>
   </div>
@@ -976,7 +984,7 @@ html, body {
     </div>
     <div id="drawContainer" class="draw-canvas-container">
       <canvas id="drawCanvas" style="position:absolute;top:0;left:0;z-index:1;"></canvas>
-      <img id="drawStencil" src="stencil.jpeg" alt="stencil" style="position:absolute;top:0;left:0;z-index:2;pointer-events:none;mix-blend-mode:multiply;" />
+      <img id="drawStencil" src="https://www.dropbox.com/scl/fi/qjj4hlu4on2twivhdxfyf/stencil.jpeg?rlkey=455cgmxf17463a7107eha4y4d&st=sf2ftfm8&raw=1" alt="stencil" style="position:absolute;top:0;left:0;z-index:2;pointer-events:none;mix-blend-mode:multiply;" />
     </div>
   </div>
 </div>
@@ -1154,12 +1162,12 @@ html, body {
 
 <script>
 const photos = [
-  "FV PRESS IMAGE 1.jpg",
-  "FV PRESS IMAGE 2.jpg",
-  "FV PRESS IMAGE 3.JPG",
-  "FV PRESS IMAGE 4.JPG",
-  "FV PRESS IMAGE 5.JPG",
-  "FV PRESS IMAGE 1 (EDIT).png"
+  "https://www.dropbox.com/scl/fi/gm1a6kbul7sculre1fxee/FV-PRESS-IMAGE-1.jpg?rlkey=3a38td6eq56jda3q73750oynv&st=uw9eil5f&raw=1",
+  "https://www.dropbox.com/scl/fi/kxr51rx8mowaxexl23eqc/FV-PRESS-IMAGE-2.jpg?rlkey=wc2sh3bbzpeychrfpglp12pv1&st=4m1yzyzm&raw=1",
+  "https://www.dropbox.com/scl/fi/hl6i1mjlvrzeyk7mql15v/FV-PRESS-IMAGE-3.JPG?rlkey=uhf4xtyw8abc3wimmcwzjv62x&st=rfe3otok&raw=1",
+  "https://www.dropbox.com/scl/fi/sjjarijq46b8ju1mksm2o/FV-PRESS-IMAGE-4.JPG?rlkey=bqs6ur6f9loulaj0tk6fni3bk&st=try8pq1v&raw=1",
+  "https://www.dropbox.com/scl/fi/or7ugi1hykukdwdorl933/FV-PRESS-IMAGE-5.JPG?rlkey=wme7basatxkjfkrlmcrsd4xsy&st=3iuzdkj7&raw=1",
+  "https://www.dropbox.com/scl/fi/zwv1cu8ofa6upmsh3km49/FV-PRESS-IMAGE-1-EDIT.png?rlkey=xxn6iwwkhumimsov06v4hs2c0&st=2mv5nizc&raw=1"
 ];
 
 let currentIndex = 0;
@@ -1228,6 +1236,7 @@ function closeWindow(id) {
 
 // ===== ENTRY PASSWORD GATE =====
 function initGate(){
+  if (window.ENABLE_GATE === false) return;
   try {
     // Already authorized for this session?
     if(sessionStorage.getItem('fv_auth') === 'true'){ return; }
@@ -1985,11 +1994,13 @@ function initLetters(){
         const msg = document.getElementById('fanMessage');
         if(msg) msg.value = '';
       } else {
+        const data = await res.json().catch(()=>({}));
         if(thanks){
-          thanks.textContent = 'Failed to send. Please try again later.';
+          const detail = data?.detail?.message || data?.error || 'Failed to send. Please try again later.';
+          thanks.textContent = detail;
           thanks.style.display = 'block';
           thanks.style.color = '#ff5f56';
-          setTimeout(() => { thanks.style.display = 'none'; thanks.style.color = '#27c93f'; }, 3000);
+          setTimeout(() => { thanks.style.display = 'none'; thanks.style.color = '#27c93f'; }, 4000);
         }
       }
     } catch(err){
@@ -2106,6 +2117,13 @@ function initPong(){
   function onKeyDown(e){
     if(e.key === 'ArrowLeft') paddleVX = -paddleSpeed;
     else if(e.key === 'ArrowRight') paddleVX = paddleSpeed;
+    else if(e.key === 'Enter') {
+      if(gameOver && !pongRunning){
+        reset();
+        pongRunning = true;
+        requestAnimationFrame(loop);
+      }
+    }
   }
 
   function onKeyUp(e){
@@ -2179,23 +2197,37 @@ function closeVideoModal(){
   if(modal) modal.style.display = 'none';
 }
 
-function joinWaitlist(){
-  const email = document.getElementById("tourEmail").value;
+async function joinWaitlist(){
+  const emailInput = document.getElementById("tourEmail");
+  const email = emailInput?.value || '';
   const messageEl = document.getElementById("formMessage");
-  
+  if(!messageEl) return;
   if(!email || !email.includes("@")){
     messageEl.textContent = "Please enter a valid email";
     messageEl.style.color = "#ff5f56";
     return;
   }
-  
-  messageEl.textContent = "✓ Thanks! Check your email for confirmation";
-  messageEl.classList.add("success");
-  document.getElementById("tourEmail").value = "";
-  
-  setTimeout(() => {
-    messageEl.textContent = "";
-  }, 3000);
+  messageEl.textContent = "Sending...";
+  messageEl.style.color = "#666";
+  try{
+    const res = await fetch('/api/join-waitlist', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    if(res.ok){
+      messageEl.textContent = "✓ Thanks! You're on the list.";
+      messageEl.style.color = "#27c93f";
+      if(emailInput) emailInput.value = '';
+    } else {
+      const data = await res.json().catch(()=>({}));
+      messageEl.textContent = data?.detail?.message || data?.error || "Failed to join. Please try again later.";
+      messageEl.style.color = "#ff5f56";
+    }
+  }catch(e){
+    messageEl.textContent = "Error connecting to server.";
+    messageEl.style.color = "#ff5f56";
+  }
+  setTimeout(()=>{ messageEl.textContent = ""; }, 4000);
 }
 
 setInterval(updateClock,1000);
@@ -2203,6 +2235,8 @@ updateClock();
 
 // Preload content so windows are populated when opened
 document.addEventListener('DOMContentLoaded', function(){
+  window.ENABLE_GATE = true; // enable password gate
+  try { sessionStorage.removeItem('fv_auth'); } catch(e) {}
   initGate();
   try { loadGallery(); } catch(e) { console.warn('Gallery init error', e); }
   try { loadVideos(); } catch(e) { console.warn('Videos init error', e); }
