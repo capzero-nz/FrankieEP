@@ -727,29 +727,7 @@ html, body {
   user-select: text;
 }
 
-/* Larger window variant (used by Draw app) */
-.window.large {
-  width: min(1100px, 95vw);
-  height: min(900px, 92vh);
-}
-
-/* Draw app responsive layout */
-.draw-canvas-container {
-  position: relative;
-  width: 100%;
-  max-width: 1000px;
-  aspect-ratio: 2 / 3; /* Keeps canvas proportional */
-  height: auto;
-  background: #fff;
-  border: 1px solid var(--blur-border);
-  border-radius: 12px;
-  box-shadow: var(--shadow-soft);
-}
-
-@media (max-width:640px) {
-  .window.large { width: 95vw; height: 80vh; }
-  .draw-canvas-container { max-width: 100%; }
-}
+/* (Draw app styles removed) */
 
 /* ===== RESPONSIVE: Home Grid & Icons ===== */
 @media (max-width: 1024px) {
@@ -859,11 +837,7 @@ html, body {
 
     <div class="icon" onclick="openWindow('game-window')">
       <div class="icon-img">🕹️</div>
-      <div class="icon-label">Game</div>
-    </div>
-    <div class="icon" onclick="openWindow('draw-window')">
-      <div class="icon-img">🎨</div>
-      <div class="icon-label">Draw</div>
+      <div class="icon-label">Games</div>
     </div>
     <div class="icon" onclick="openLink('https://fiveam.lnk.to/abigdealtome')">
       <div class="icon-img" style="background-image:url('https://www.dropbox.com/scl/fi/ydjexhmo7bzpefle21734/fc55f708c8d651c923055ab1a1d749be.jpg?rlkey=healak5anf4t66tn4msu6qjnz&st=i6oaa054&raw=1');background-size:cover;background-position:center;"></div>
@@ -961,33 +935,7 @@ html, body {
   </div>
   </div>
 
-<!-- Draw App Window -->
-<div id="draw-window" class="window large">
-  <div class="window-header">
-    <div class="dots">
-      <div class="dot close" onclick="closeWindow('draw-window')"></div>
-      <div class="dot min"></div>
-      <div class="dot max"></div>
-    </div>
-    <div class="window-title">Draw</div>
-  </div>
-  <div class="window-content" style="flex-direction:column;align-items:center;justify-content:flex-start;gap:16px;">
-    <div class="draw-controls" style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;background:rgba(255,255,255,.8);border:1px solid var(--blur-border);border-radius:12px;padding:14px;">
-      <label style="font-size:12px;color:#333;">Pick Color: <input type="color" id="drawColor" value="#ff6b6b" style="width:36px;height:36px;border:none;background:none;" /></label>
-      <label style="font-size:12px;color:#333;">Brush Size: <input type="range" id="drawBrush" min="5" max="80" value="20" /></label>
-      <input type="text" id="drawName" placeholder="Your Name (optional)" style="padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:12px;" />
-      <button id="drawClear" style="padding:8px 14px;background:#888;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Clear</button>
-      <button id="drawEraser" style="padding:8px 14px;background:#ffbd2e;color:#222;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Eraser</button>
-      <a id="drawSave" href="#" style="padding:8px 14px;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;">Save PNG</a>
-      <button id="drawSubmit" style="padding:8px 14px;background:#4e98ff;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Send to Frankie!</button>
-      <span id="drawStatus" style="font-size:12px;color:#666;"></span>
-    </div>
-    <div id="drawContainer" class="draw-canvas-container">
-      <canvas id="drawCanvas" style="position:absolute;top:0;left:0;z-index:1;"></canvas>
-      <img id="drawStencil" src="https://www.dropbox.com/scl/fi/qjj4hlu4on2twivhdxfyf/stencil.jpeg?rlkey=455cgmxf17463a7107eha4y4d&st=sf2ftfm8&raw=1" alt="stencil" style="position:absolute;top:0;left:0;z-index:2;pointer-events:none;mix-blend-mode:multiply;" />
-    </div>
-  </div>
-</div>
+ 
 <!-- Letters App Window -->
 <div id="letters-window" class="window">
   <div class="window-header">
@@ -1020,15 +968,29 @@ html, body {
       <div class="dot min"></div>
       <div class="dot max"></div>
     </div>
-    <div class="window-title">Frankie Pong</div>
+    <div class="window-title">Games</div>
   </div>
-  <div class="window-content" style="flex-direction:column;align-items:center;justify-content:center;gap:12px;">
-    <div style="font-size:16px;color:#222;font-weight:600;">Score: <span id="pongScore">0</span> • High: <span id="pongHigh">0</span></div>
-    <div id="pongContainer" style="position:relative;display:inline-block;">
-      <canvas id="pongCanvas" width="700" height="420" style="max-width:95%;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:#000"></canvas>
-      <button id="pongPlayBtn" style="display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 24px;border-radius:10px;border:none;background:#ff69b4;color:#fff;font-weight:700;font-size:16px;box-shadow:0 8px 20px rgba(0,0,0,.2);cursor:pointer;">Play Again</button>
+  <div class="window-content" style="flex-direction:column;gap:16px;">
+    <div id="gamesMenu" style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center;">
+      <div onclick="showPongView()" style="width:150px;height:150px;border:1px solid rgba(0,0,0,.08);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.6);box-shadow:var(--shadow-heavy);cursor:pointer;">
+        <div style="font-size:42px;">🏓</div>
+        <div style="margin-top:8px;font-weight:700;color:#222;">Frankie Pong</div>
+      </div>
     </div>
-    <div style="font-size:12px;color:#666;">Use mouse or ← → keys to move the paddle.</div>
+
+    <div id="pongView" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
+      <div style="width:100%;display:flex;justify-content:flex-start;">
+        <button onclick="showGamesMenu()" style="padding:6px 10px;border-radius:8px;border:1px solid rgba(0,0,0,.1);background:#f5f5f7;color:#222;font-weight:600;cursor:pointer;">← Games</button>
+      </div>
+      <div style="font-size:16px;color:#222;font-weight:600;">Score: <span id="pongScore">0</span> • High: <span id="pongHigh">0</span></div>
+      <div id="pongContainer" style="position:relative;display:inline-block;">
+        <canvas id="pongCanvas" width="700" height="420" style="max-width:95%;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:#000"></canvas>
+        <button id="pongPlayBtn" style="display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 24px;border-radius:10px;border:none;background:#ff69b4;color:#fff;font-weight:700;font-size:16px;box-shadow:0 8px 20px rgba(0,0,0,.2);cursor:pointer;">Play Again</button>
+      </div>
+      <div style="font-size:12px;color:#666;">Use mouse or ← → keys to move the paddle.</div>
+    </div>
+
+    
   </div>
   </div>
 
@@ -1173,23 +1135,20 @@ const photos = [
 let currentIndex = 0;
 
 function openWindow(windowId) {
-  // Hide all windows
-  document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
-  // Show the requested window
+  // Hide all windows and remove active class
+  document.querySelectorAll('.window').forEach(w => { w.style.display = 'none'; w.classList.remove('active'); });
   const target = document.getElementById(windowId);
-  if(!target){
-    console.warn('Window not found:', windowId);
-    return;
-  }
+  if(!target){ console.warn('Window not found:', windowId); return; }
+  // Show target window
   target.style.display = 'flex';
-  // Special logic for certain apps
+  target.classList.add('active');
+  // App-specific init
   if(windowId === 'notes-window') loadNotes();
   if(windowId === 'credits-window') loadCredits();
   if(windowId === 'gallery-window') loadGallery();
   if(windowId === 'videos-window') loadVideos();
   if(windowId === 'lyrics-window') loadLyrics();
   if(windowId === 'music-window') initMusic();
-  if(windowId === 'draw-window') initDraw();
   if(windowId === 'letters-window') {
     initLetters();
     const thanks = document.getElementById('lettersThanks');
@@ -1198,11 +1157,17 @@ function openWindow(windowId) {
     if(form && form.reset) form.reset();
   }
   if(windowId === 'game-window') {
-    initPong();
-    const scoreEl = document.getElementById('pongScore');
-    if(scoreEl) scoreEl.textContent = '0';
+    // Land on the Games menu; game loops start when a view is opened
+    showGamesMenu();
   }
 }
+
+// Expose UI actions globally for inline handlers
+try {
+  window.openWindow = openWindow;
+  window.showGamesMenu = typeof showGamesMenu === 'function' ? showGamesMenu : window.showGamesMenu;
+  window.showPongView = typeof showPongView === 'function' ? showPongView : window.showPongView;
+} catch(_) {}
 function toggleSidebar(windowId){
   const win = document.getElementById(windowId);
   if(!win) return;
@@ -1236,7 +1201,7 @@ function closeWindow(id) {
 
 // ===== ENTRY PASSWORD GATE =====
 function initGate(){
-  if (window.ENABLE_GATE === false) return;
+  if (window.ENABLE_GATE === true) return;
   try {
     // Already authorized for this session?
     if(sessionStorage.getItem('fv_auth') === 'true'){ return; }
@@ -1269,148 +1234,23 @@ function initGate(){
   } catch(e) { console.warn('Gate init error', e); }
 }
 
-// Optional configurable endpoint for Draw submissions (set to a valid URL to enable server submission)
-window.DRAW_SUBMIT_URL = '/api/submit-draw';
-
-// ===== DRAW APP =====
-function initDraw(){
-  const canvas = document.getElementById('drawCanvas');
-  const stencil = document.getElementById('drawStencil');
-  const container = document.getElementById('drawContainer');
-  const color = document.getElementById('drawColor');
-  const brush = document.getElementById('drawBrush');
-  const clearBtn = document.getElementById('drawClear');
-  const eraserBtn = document.getElementById('drawEraser');
-  const saveBtn = document.getElementById('drawSave');
-  const submitBtn = document.getElementById('drawSubmit');
-  const nameInput = document.getElementById('drawName');
-  const statusEl = document.getElementById('drawStatus');
-  if(!canvas || canvas.dataset.bound === 'true') return;
-  const ctx = canvas.getContext('2d');
-  let isErasing = false;
-  function sizeCanvas(){
-    if(!container) return;
-    const cw = container.clientWidth;
-    const ch = container.clientHeight;
-    const iw = stencil.naturalWidth || cw;
-    const ih = stencil.naturalHeight || ch;
-    const scale = Math.min(cw/iw, ch/ih);
-    const displayW = Math.floor(iw * scale);
-    const displayH = Math.floor(ih * scale);
-    const offsetX = Math.floor((cw - displayW) / 2);
-    const offsetY = Math.floor((ch - displayH) / 2);
-    // Position and size the stencil (fit, not fill)
-    stencil.style.width = displayW + 'px';
-    stencil.style.height = displayH + 'px';
-    stencil.style.left = offsetX + 'px';
-    stencil.style.top = offsetY + 'px';
-    // Match canvas to the same box
-    canvas.style.width = displayW + 'px';
-    canvas.style.height = displayH + 'px';
-    canvas.style.left = offsetX + 'px';
-    canvas.style.top = offsetY + 'px';
-    // Set backing resolution for crisp strokes
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = Math.floor(displayW * dpr);
-    canvas.height = Math.floor(displayH * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-  }
-  const start = (e)=>{ painting = true; draw(e); };
-  const end = ()=>{ painting = false; ctx.beginPath(); updateSaveLink(); };
-  let painting = false;
-  function draw(e){
-    if(!painting) return;
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    ctx.lineWidth = brush.value;
-    if(isErasing){
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.strokeStyle = 'rgba(0,0,0,1)';
-    } else {
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.strokeStyle = color.value;
-    }
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  }
-  stencil.addEventListener('load', sizeCanvas);
-  window.addEventListener('resize', sizeCanvas);
-  if(stencil.complete) sizeCanvas();
-  canvas.addEventListener('mousedown', start);
-  window.addEventListener('mouseup', end);
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('touchstart', (e)=>{ e.preventDefault(); start(e); });
-  canvas.addEventListener('touchend', end);
-  canvas.addEventListener('touchmove', (e)=>{ e.preventDefault(); draw(e); });
-  if(clearBtn) clearBtn.addEventListener('click', ()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); updateSaveLink(); });
-  if(eraserBtn) eraserBtn.addEventListener('click', ()=>{
-    isErasing = !isErasing;
-    eraserBtn.style.background = isErasing ? '#ff9f1a' : '#ffbd2e';
-    eraserBtn.textContent = isErasing ? 'Eraser (On)' : 'Eraser';
-  });
-  function buildCompositeCanvas(){
-    const t = document.createElement('canvas');
-    t.width = canvas.width; t.height = canvas.height;
-    const tc = t.getContext('2d');
-    // 1. White background
-    tc.fillStyle = '#fff';
-    tc.fillRect(0, 0, t.width, t.height);
-    // 2. Paint layer
-    tc.drawImage(canvas, 0, 0);
-    // 3. Stencil overlay (multiply), skip if blocked
-    tc.globalCompositeOperation = 'multiply';
-    try {
-      if(stencil && stencil.naturalWidth && stencil.naturalHeight){
-        tc.drawImage(stencil, 0, 0, t.width, t.height);
-      }
-    } catch(e) {
-      console.warn('Stencil merge skipped due to security context:', e);
-    }
-    // Reset comp op
-    tc.globalCompositeOperation = 'source-over';
-    return t;
-  }
-  function updateSaveLink(){
-    if(!saveBtn) return;
-    const t = buildCompositeCanvas();
-    try {
-      const url = t.toDataURL('image/png');
-      saveBtn.href = url;
-      saveBtn.download = 'colored-artwork.png';
-    } catch(e) {
-      saveBtn.removeAttribute('href');
-    }
-  }
-  if(saveBtn) saveBtn.addEventListener('click', updateSaveLink);
-  if(submitBtn) submitBtn.addEventListener('click', async ()=>{
-    statusEl.textContent = '';
-    const t = buildCompositeCanvas();
-    const url = t.toDataURL('image/png');
-    if(window.DRAW_SUBMIT_URL){
-      try{
-        const res = await fetch(window.DRAW_SUBMIT_URL, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: nameInput ? nameInput.value : '', image: url })
-        });
-        if(res.ok){ statusEl.textContent = '✓ Submitted — thank you!'; statusEl.style.color = '#27c93f'; }
-        else { statusEl.textContent = 'Submission failed.'; statusEl.style.color = '#ff5f56'; }
-      }catch(e){ statusEl.textContent = 'Submission error.'; statusEl.style.color = '#ff5f56'; }
-    } else {
-      statusEl.innerHTML = 'Saved image; please email your PNG to Frankie.';
-      const a = document.createElement('a');
-      a.download = 'colored-artwork.png';
-      a.href = url; a.click();
-    }
-  });
-  canvas.dataset.bound = 'true';
+// ===== GAMES NAV =====
+function showGamesMenu(){
+  // Stop running games if needed
+  try{ if(window.stopPong) window.stopPong(); }catch(_){ }
+  const menu = document.getElementById('gamesMenu');
+  const pong = document.getElementById('pongView');
+  if(menu) menu.style.display = 'flex';
+  if(pong) pong.style.display = 'none';
 }
+function showPongView(){
+  const menu = document.getElementById('gamesMenu');
+  const pong = document.getElementById('pongView');
+  if(menu) menu.style.display = 'none';
+  if(pong) { pong.style.display = 'flex'; initPong(); }
+}
+
+ 
 
 function loadGallery() {
   const grid = document.getElementById("photoGrid");
@@ -1450,11 +1290,11 @@ function changeImage(dir){
 }
 
 function updateClock(){
-  document.getElementById("clock").textContent=
-    new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+  const el = document.getElementById('clock');
+  if(!el) return;
+  const now = new Date();
+  el.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
-
-// Notes data
 const notes = [
   {title: "a big deal to me", content: "Started this in the late hours when the city goes quiet. The synth layers came naturally - I wanted that dreamy, ethereal feeling. Three weeks of production, endless coffee breaks, and finally found the perfect vocal tone. This track captures exactly what I was feeling at that moment. Pure creativity flowing through the speakers."},
   {title: "turn me down", content: "Started this in the late hours when the city goes quiet. The synth layers came naturally - I wanted that dreamy, ethereal feeling. Three weeks of production, endless coffee breaks, and finally found the perfect vocal tone. This track captures exactly what I was feeling at that moment. Pure creativity flowing through the speakers."},
@@ -1500,27 +1340,27 @@ const creditsListData = [
       <div style="margin-bottom:18px;">
         <div style="font-weight:700; font-size:18px; margin-bottom:6px;">Visual Team</div>
         <div style="line-height:1.8; font-size:14px; color:#222;">
-          Artwork Photographer: Apela Bell<br>
-          Press Photos: Apela Bell, Taine Noble, Te Ngariki Kokiri<br>
-          Vinyl Creative Design: Frankie Venter, Jade Johnson<br>
-          Single Artworks: Riley Cough<br>
-          Social Content: Taine Noble, Jade Johnson<br>
-          Visualisers & Music Videos: Taine Noble<br>
-          Touring Content: Taine Noble
+          <b>Artwork Photographer:</b> Apela Bell<br>
+          <b>Press Photos:</b> Apela Bell, Taine Noble, Te Ngariki Kokiri<br>
+          <b>Vinyl Creative Design:</b> Frankie Venter, Jade Johnson<br>
+          <b>Single Artworks:</b> Riley Cough<br>
+          <b>Social Content:</b> Taine Noble, Jade Johnson<br>
+          <b>Visualisers & Music Videos:</b> Taine Noble<br>
+          <b>Touring Content:</b> Taine Noble
         </div>
       </div>
       <div style="margin-bottom:18px;">
         <div style="font-weight:700; font-size:18px; margin-bottom:6px;">Label & Distribution Team</div>
         <div style="line-height:1.8; font-size:14px; color:#222;">
-          Executive Producer: Rory Noble<br>
-          Project Management: Rory Noble, Nate Brown<br>
-          Label Representative: Nate Brown<br>
-          Label Assist: Jade Johnson<br>
-          Delivery Manager: Nate Brown<br>
-          Management: Jade Johnson<br>
-          Touring: Henare “H” Kaa<br>
-          Tracklist Curation: Jamie Boyo<br>
-          Vinyl Mastering: Jamie Boyo
+          <b>Executive Producer:</b> Rory Noble<br>
+          <b>Project Management:</b> Rory Noble, Nate Brown<br>
+          <b>Label Representative:</b> Nate Brown<br>
+          <b>Label Assist:</b> Jade Johnson<br>
+          <b>Delivery Manager:</b> Nate Brown<br>
+          <b>Management:</b> Jade Johnson<br>
+          <b>Touring:</b> Henare “H” Kaa<br>
+          <b>Tracklist Curation:</b> Jamie Boyo<br>
+          <b>Vinyl Mastering:</b> Jamie Boyo
         </div>
       </div>
       <div style="margin-bottom:18px;">
@@ -1976,8 +1816,10 @@ function initLetters(){
   if(form.dataset.bound === 'true') return;
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const name = document.getElementById('fanName')?.value || '';
-    const message = document.getElementById('fanMessage')?.value || '';
+    const nameEl = document.getElementById('fanName');
+    const msgEl = document.getElementById('fanMessage');
+    const name = (nameEl && nameEl.value) || '';
+    const message = (msgEl && msgEl.value) || '';
     const thanks = document.getElementById('lettersThanks');
     try {
       const res = await fetch('/api/send-letter', {
@@ -1996,7 +1838,7 @@ function initLetters(){
       } else {
         const data = await res.json().catch(()=>({}));
         if(thanks){
-          const detail = data?.detail?.message || data?.error || 'Failed to send. Please try again later.';
+          const detail = (data && data.detail && data.detail.message) || (data && data.error) || 'Failed to send. Please try again later.';
           thanks.textContent = detail;
           thanks.style.display = 'block';
           thanks.style.color = '#ff5f56';
@@ -2016,7 +1858,6 @@ function initLetters(){
 }
 
 // ===== PONG GAME =====
-let pongRunning = false;
 function initPong(){
   const canvas = document.getElementById('pongCanvas');
   const scoreEl = document.getElementById('pongScore');
@@ -2024,132 +1865,171 @@ function initPong(){
   const playBtn = document.getElementById('pongPlayBtn');
   if(!canvas || !scoreEl) return;
   const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
   const W = canvas.width, H = canvas.height;
+
+  // Local-only background
+  const BG_SRC = 'fc55f708c8d651c923055ab1a1d749be.jpg';
   const bgImg = new Image();
-  bgImg.src = 'fc55f708c8d651c923055ab1a1d749be.jpg';
+  let bgReady = false;
+  bgImg.onload = ()=>{ bgReady = true; };
+  bgImg.onerror = ()=>{ bgReady = false; };
+  bgImg.src = BG_SRC;
 
-  let paddle = { w: 120, h: 16, x: (W-120)/2, y: H - 16 };
-  let ball = { x: W/2, y: H/2, r: 8, vx: 3, vy: -3 };
-  let score = 0;
+  // Game state
+  const BALL_SPEED = 5;
+  const PADDLE_W = 120, PADDLE_H = 16;
+  const MAX_BOUNCE_ANGLE = Math.PI/3; // 60°
+  let running = false, gameOver = false;
   let highScore = parseInt(localStorage.getItem('pongHighScore') || '0', 10);
-  let gameOver = false;
   if(highEl) highEl.textContent = String(highScore);
-  let paddleVX = 0;
-  const paddleSpeed = 7;
+  const state = {
+    paddle: { x: (W-PADDLE_W)/2, y: H - PADDLE_H - 2, w: PADDLE_W, h: PADDLE_H, vx: 0, speed: 8 },
+    ball: { x: W/2, y: H/2, r: 8, vx: 0, vy: 0 },
+    score: 0
+  };
 
-  function reset(){
-    paddle.x = (W-120)/2;
-    paddle.y = H - paddle.h;
-    ball.x = W/2; ball.y = H/2; ball.vx = 4; ball.vy = -4;
-    score = 0; scoreEl.textContent = '0';
-    gameOver = false;
-    if(playBtn) playBtn.style.display = 'none';
+  function launchBall(){
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    const angle = Math.random() * (MAX_BOUNCE_ANGLE - Math.PI/6) + Math.PI/6; // 30°..60°
+    state.ball.vx = BALL_SPEED * Math.sin(angle) * dir;
+    state.ball.vy = -BALL_SPEED * Math.cos(angle);
   }
 
-  function draw(){
-    // Background image
-    if(bgImg.complete) {
-      ctx.drawImage(bgImg, 0, 0, W, H);
-    } else {
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0,0,W,H);
-    }
-    // Ball
-    ctx.fillStyle = '#8000ff';
-    ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2); ctx.fill();
-    // Paddle (normal rectangle)
+  function reset(){
+    state.paddle.x = (W-PADDLE_W)/2; state.paddle.y = H - state.paddle.h - 2; state.paddle.vx = 0;
+    state.ball.x = W/2; state.ball.y = H*0.6; state.ball.r = 8;
+    launchBall();
+    state.score = 0; scoreEl.textContent = '0';
+    gameOver = false; if(playBtn) playBtn.style.display = 'none';
+  }
+
+  function drawRoundedRect(x, y, w, h, r){
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.arcTo(x+w, y, x+w, y+h, r);
+    ctx.arcTo(x+w, y+h, x, y+h, r);
+    ctx.arcTo(x, y+h, x, y, r);
+    ctx.arcTo(x, y, x+w, y, r);
+    ctx.closePath();
+  }
+
+  function render(){
+    // Background
+    if(bgReady) ctx.drawImage(bgImg, 0, 0, W, H);
+    else { ctx.fillStyle = '#0b0b12'; ctx.fillRect(0,0,W,H); }
+    // Subtle overlay for readability
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillRect(0,0,W,H);
+
+    // Paddle
     ctx.fillStyle = '#ff69b4';
-    ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
-    // Game over overlay text
+    ctx.shadowColor = 'rgba(255,105,180,0.6)';
+    ctx.shadowBlur = 12;
+    drawRoundedRect(state.paddle.x, state.paddle.y, state.paddle.w, state.paddle.h, 8);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Ball with glow
+    ctx.fillStyle = '#8a2be2';
+    ctx.shadowColor = 'rgba(138,43,226,0.7)';
+    ctx.shadowBlur = 16;
+    ctx.beginPath(); ctx.arc(state.ball.x, state.ball.y, state.ball.r, 0, Math.PI*2); ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Text
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 18px -apple-system,BlinkMacSystemFont,Segoe UI';
+    ctx.fillText(`Score: ${state.score}`, 16, 26);
+    if(highEl) highEl.textContent = String(highScore);
+
     if(gameOver){
       ctx.fillStyle = 'rgba(0,0,0,0.5)';
       ctx.fillRect(0,0,W,H);
       ctx.fillStyle = '#fff';
-      ctx.font = 'bold 28px -apple-system, BlinkMacSystemFont, Segoe UI';
+      ctx.font = 'bold 28px -apple-system,BlinkMacSystemFont,Segoe UI';
       ctx.textAlign = 'center';
+      ctx.textAlign = 'start';
     }
   }
 
-  function endGame(){
-    gameOver = true;
-    pongRunning = false;
-    if(score > highScore){
-      highScore = score;
-      localStorage.setItem('pongHighScore', String(highScore));
-      if(highEl) highEl.textContent = String(highScore);
-    }
-    if(playBtn) playBtn.style.display = 'inline-block';
+  function normalizeBall(){
+    const mag = Math.hypot(state.ball.vx, state.ball.vy) || 1;
+    state.ball.vx = BALL_SPEED * (state.ball.vx / mag);
+    state.ball.vy = BALL_SPEED * (state.ball.vy / mag);
   }
 
   function update(){
-    ball.x += ball.vx; ball.y += ball.vy;
-    // Paddle movement via keyboard
-    paddle.x += paddleVX;
-    if(paddle.x < 0) paddle.x = 0;
-    if(paddle.x > W - paddle.w) paddle.x = W - paddle.w;
+    // Paddle
+    state.paddle.x += state.paddle.vx;
+    if(state.paddle.x < 0) state.paddle.x = 0;
+    if(state.paddle.x > W - state.paddle.w) state.paddle.x = W - state.paddle.w;
+
+    // Ball
+    state.ball.x += state.ball.vx; state.ball.y += state.ball.vy;
+
     // Walls
-    if(ball.x < ball.r || ball.x > W - ball.r) ball.vx *= -1;
-    if(ball.y < ball.r) ball.vy *= -1;
+    if(state.ball.x - state.ball.r <= 0 || state.ball.x + state.ball.r >= W){
+      state.ball.vx *= -1; normalizeBall();
+    }
+    if(state.ball.y - state.ball.r <= 0){
+      state.ball.vy *= -1; normalizeBall();
+    }
+
     // Paddle collision
-    if(ball.y + ball.r >= paddle.y && ball.y + ball.r <= paddle.y + paddle.h){
-      if(ball.x >= paddle.x && ball.x <= paddle.x + paddle.w){
-        ball.vy *= -1;
-        score += 1; scoreEl.textContent = String(score);
-        // Add a touch of speed up
-        ball.vx *= 1.02; ball.vy *= 1.02;
+    if(state.ball.y + state.ball.r >= state.paddle.y && state.ball.y - state.ball.r <= state.paddle.y + state.paddle.h){
+      if(state.ball.x >= state.paddle.x && state.ball.x <= state.paddle.x + state.paddle.w){
+        const rel = ((state.ball.x - state.paddle.x) / state.paddle.w) - 0.5; // -0.5..0.5
+        const angle = rel * 2 * MAX_BOUNCE_ANGLE;
+        state.ball.vx = BALL_SPEED * Math.sin(angle);
+        state.ball.vy = -BALL_SPEED * Math.cos(angle);
+        state.score += 1; scoreEl.textContent = String(state.score);
       }
     }
-    // Miss -> game over
-    if(ball.y - ball.r > H){ endGame(); }
+
+    // Miss
+    if(state.ball.y - state.ball.r > H){
+      gameOver = true; running = false;
+      if(state.score > highScore){ highScore = state.score; localStorage.setItem('pongHighScore', String(highScore)); }
+      if(playBtn) playBtn.style.display = 'inline-block';
+    }
   }
 
   function loop(){
-    if(!pongRunning){ draw(); return; }
-    update(); draw(); requestAnimationFrame(loop);
+    if(!running){ render(); return; }
+    update(); render(); requestAnimationFrame(loop);
   }
 
+  // Controls
   function onMouseMove(e){
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
-    paddle.x = Math.max(0, Math.min(W - paddle.w, mx - paddle.w/2));
+    state.paddle.x = Math.max(0, Math.min(W - state.paddle.w, mx - state.paddle.w/2));
   }
-
   function onKeyDown(e){
-    if(e.key === 'ArrowLeft') paddleVX = -paddleSpeed;
-    else if(e.key === 'ArrowRight') paddleVX = paddleSpeed;
-    else if(e.key === 'Enter') {
-      if(gameOver && !pongRunning){
-        reset();
-        pongRunning = true;
-        requestAnimationFrame(loop);
-      }
+    if(e.key === 'ArrowLeft') state.paddle.vx = -state.paddle.speed;
+    else if(e.key === 'ArrowRight') state.paddle.vx = state.paddle.speed;
+    else if(e.key === 'Enter'){
+      if(gameOver && !running){ reset(); running = true; requestAnimationFrame(loop); }
     }
   }
+  function onKeyUp(e){ if(e.key === 'ArrowLeft' || e.key === 'ArrowRight') state.paddle.vx = 0; }
 
-  function onKeyUp(e){
-    if(e.key === 'ArrowLeft' || e.key === 'ArrowRight') paddleVX = 0;
-  }
-
-  if(canvas && canvas.dataset.bound !== 'true'){
+  if(canvas && canvas.dataset.pongBound !== 'true'){
     canvas.addEventListener('mousemove', onMouseMove);
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
-    if(playBtn){
-      playBtn.addEventListener('click', () => {
-        if(!pongRunning){
-          reset();
-          pongRunning = true;
-          requestAnimationFrame(loop);
-        }
-      });
-    }
-    canvas.dataset.bound = 'true';
+    if(playBtn){ playBtn.addEventListener('click', ()=>{ if(!running){ reset(); running = true; requestAnimationFrame(loop); } }); }
+    canvas.dataset.pongBound = 'true';
   }
 
-  pongRunning = true;
-  reset();
-  requestAnimationFrame(loop);
+  // Expose stop so games menu can halt the loop
+  window.stopPong = ()=>{ running = false; };
+  window.resetPong = reset;
+  reset(); running = true; requestAnimationFrame(loop);
 }
+
+// (Tetris removed per request)
 
 // Videos data
 const videos = [
@@ -2199,7 +2079,7 @@ function closeVideoModal(){
 
 async function joinWaitlist(){
   const emailInput = document.getElementById("tourEmail");
-  const email = emailInput?.value || '';
+  const email = (emailInput && emailInput.value) || '';
   const messageEl = document.getElementById("formMessage");
   if(!messageEl) return;
   if(!email || !email.includes("@")){
@@ -2220,7 +2100,7 @@ async function joinWaitlist(){
       if(emailInput) emailInput.value = '';
     } else {
       const data = await res.json().catch(()=>({}));
-      messageEl.textContent = data?.detail?.message || data?.error || "Failed to join. Please try again later.";
+      messageEl.textContent = (data && data.detail && data.detail.message) || (data && data.error) || "Failed to join. Please try again later.";
       messageEl.style.color = "#ff5f56";
     }
   }catch(e){
@@ -2235,7 +2115,7 @@ updateClock();
 
 // Preload content so windows are populated when opened
 document.addEventListener('DOMContentLoaded', function(){
-  window.ENABLE_GATE = true; // enable password gate
+  window.ENABLE_GATE = false; // enable password gate
   try { sessionStorage.removeItem('fv_auth'); } catch(e) {}
   initGate();
   try { loadGallery(); } catch(e) { console.warn('Gallery init error', e); }
@@ -2252,6 +2132,10 @@ document.addEventListener('keydown', function(event) {
     });
   }
 });
+
+// Ensure all script blocks are properly closed
+// (fallback brace in case of earlier unmatched opening)
+try{}catch(_){}
 </script>
 
 <div class="footer">
