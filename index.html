@@ -65,6 +65,10 @@ html, body {
   font-weight:600;
   box-shadow:0 1px 10px rgba(0,0,0,.1);
 }
+.menu-left { position: relative; display:flex; align-items:center; gap:8px; }
+.menu-dropdown { position:absolute; top:26px; left:0; background:rgba(255,255,255,0.95); border:1px solid rgba(0,0,0,0.08); border-radius:8px; box-shadow:0 10px 24px rgba(0,0,0,0.15); min-width:140px; overflow:hidden; z-index:10000; }
+.menu-item { padding:8px 12px; font-size:13px; color:#222; cursor:pointer; }
+.menu-item:hover { background:rgba(0,0,0,0.06); }
 
 /* ===== FOOTER ===== */
 .footer {
@@ -797,7 +801,12 @@ html, body {
 </div>
 
 <div class="menu-bar">
-  <img src="https://www.dropbox.com/scl/fi/jaro7tf2paxju5t9lnflp/747.png?rlkey=akamxf9owvejo8yoj51302xi5&st=8v9mwutn&raw=1" alt="Apple" style="height: 16px; width: auto;">
+  <div class="menu-left">
+    <img id="appleMenuButton" src="https://www.dropbox.com/scl/fi/jaro7tf2paxju5t9lnflp/747.png?rlkey=akamxf9owvejo8yoj51302xi5&st=8v9mwutn&raw=1" alt="Apple" style="height: 16px; width: auto; cursor: pointer;">
+    <div id="appleDropdown" class="menu-dropdown" style="display:none;">
+      <div class="menu-item" id="logoutMenuItem">Log Out</div>
+    </div>
+  </div>
   <div style="flex: 1; text-align: center;">Frankie Venter's Laptop</div>
   <div id="clock"></div>
 </div>
@@ -1509,6 +1518,27 @@ function updateClock(){
   if(!el) return;
   const now = new Date();
   el.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+// ===== MENU DROPDOWN & LOGOUT =====
+function initMenuDropdown(){
+  const btn = document.getElementById('appleMenuButton');
+  const dd = document.getElementById('appleDropdown');
+  const logoutItem = document.getElementById('logoutMenuItem');
+  if(!btn || !dd || !logoutItem) return;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+  });
+  document.addEventListener('click', () => { dd.style.display = 'none'; });
+  logoutItem.addEventListener('click', () => {
+    dd.style.display = 'none';
+    try { sessionStorage.removeItem('fv_auth'); } catch(_){}
+    window.ENABLE_GATE = true;
+    document.querySelectorAll('.window').forEach(w => { w.style.display = 'none'; w.classList.remove('active'); });
+    document.body.classList.remove('desktop-ready');
+    initGate();
+  });
 }
 const notes = [
   {title: "a big deal to me", content: "Started this in the late hours when the city goes quiet. The synth layers came naturally - I wanted that dreamy, ethereal feeling. Three weeks of production, endless coffee breaks, and finally found the perfect vocal tone. This track captures exactly what I was feeling at that moment. Pure creativity flowing through the speakers."},
@@ -2341,6 +2371,7 @@ document.addEventListener('DOMContentLoaded', function(){
       initGate();
     }
   })();
+  initMenuDropdown();
   try { loadGallery(); } catch(e) { console.warn('Gallery init error', e); }
   try { loadVideos(); } catch(e) { console.warn('Videos init error', e); }
   try { /* lazy init draw on open */ } catch(e) { console.warn('Draw init error', e); }
