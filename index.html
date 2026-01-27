@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Frankie Venter - A Big Deal To Me</title>
 <link rel="icon" type="image/png" href="Five AM Icon - Color.png">
+<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -16,6 +17,7 @@
   --red:#ff5f56;
   --yellow:#ffbd2e;
   --green:#27c93f;
+  --accent:#ff69b4;
 }
 
 * { box-sizing: border-box; }
@@ -27,7 +29,8 @@ html, body {
   background: linear-gradient(135deg, #be0568 0%, #ff69b4 25%, #ff1491bb 50%, #ff69b4 75%, #ff69b9d8 100%);
   background-size: 400% 400%;
   animation: gradientWave 8s ease infinite;
-  overflow:hidden;
+  overflow-x:hidden;
+  overflow-y:auto;
 }
 
 @keyframes gradientWave {
@@ -84,20 +87,23 @@ html, body {
 /* ===== DESKTOP ===== */
 .desktop {
   height:calc(100vh - 28px);
-  padding:24px;
+  padding:40px;
   display:flex;
   flex-direction:column;
-  gap:28px;
+  gap:50px;
   align-items:center;
   justify-content:center;
 }
 
 .desktop-icons {
-  display:flex;
-  flex-direction:row;
-  gap:40px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:80px;
   align-items:center;
+  justify-items:center;
+  max-width:1100px;
 }
+
 
 .welcome-text {
   font-size:48px;
@@ -110,20 +116,20 @@ html, body {
 }
 
 .icon {
-  width:88px;
+  width:120px;
   text-align:center;
   cursor:pointer;
 }
 
 .icon-img {
-  width:64px;
-  height:64px;
-  margin:0 auto 6px;
-  border-radius:16px;
+  width:90px;
+  height:90px;
+  margin:0 auto 8px;
+  border-radius:20px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:30px;
+  font-size:45px;
   background:rgba(255,255,255,.2);
   backdrop-filter: blur(12px);
   border:1px solid var(--blur-border);
@@ -159,6 +165,10 @@ html, body {
   overflow:hidden;
 }
 
+.window.active {
+  display:flex;
+}
+
 .window-header {
   height:40px;
   display:flex;
@@ -166,6 +176,15 @@ html, body {
   padding:0 14px;
   background:rgba(255,255,255,.35);
   border-bottom:1px solid rgba(0,0,0,.08);
+}
+.sidebar-toggle {
+  margin-left: auto;
+  padding: 6px 10px;
+  font-size: 12px;
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 6px;
+  background: rgba(255,255,255,.8);
+  cursor: pointer;
 }
 
 .dots {
@@ -196,6 +215,9 @@ html, body {
   flex:1;
   background:rgba(255,255,255,.45);
   overflow:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 /* ===== MUSIC ===== */
@@ -233,6 +255,283 @@ html, body {
 }
 
 .photo-item:hover img { transform:scale(1.06); }
+
+/* ===== NOTES ===== */
+.notes-sidebar {
+  width:200px;
+  border-right:1px solid rgba(0,0,0,.1);
+  overflow-y:auto;
+  height:100%;
+}
+
+.note-item {
+  padding:12px;
+  border-bottom:1px solid rgba(0,0,0,.05);
+  cursor:pointer;
+  transition:background .2s ease;
+  font-size:12px;
+}
+
+.note-item:hover {
+  background:rgba(0,0,0,.05);
+}
+
+.note-item.active {
+  background:rgba(255,105,180,.2);
+  border-left:3px solid #ff69b4;
+}
+
+.notes-content {
+  flex:1;
+  padding:20px;
+  overflow-y:auto;
+  line-height:1.8;
+  color:#333;
+  font-family: 'Indie Flower', cursive;
+  font-size:16px;
+  font-weight:400;
+}
+
+.notes-content h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size:20px;
+  font-weight:600;
+  margin-top:0;
+  margin-bottom:15px;
+  color:#222;
+}
+
+.notes-content p {
+  font-family: 'Indie Flower', cursive;
+  font-size:16px;
+}
+
+/* ===== VIDEOS ===== */
+.video-grid {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  padding:20px;
+  width:100%;
+  height:100%;
+}
+
+.video-item {
+  aspect-ratio:16/9;
+  border-radius:10px;
+  overflow:hidden;
+  background:#000;
+  cursor:pointer;
+  position:relative;
+  width:750px;
+  height:422px;
+  max-width:95%;
+}
+
+.video-item iframe {
+  width:100%;
+  height:100%;
+  border:none;
+}
+
+.video-item video {
+  width:100%;
+  height:100%;
+  border:none;
+}
+
+.video-item::after {
+  content:'▶';
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:40px;
+  background:rgba(0,0,0,.3);
+  opacity:0;
+  transition:opacity .3s ease;
+}
+
+.video-item:hover::after {
+  opacity:1;
+}
+
+/* ===== VIDEO FILES VIEW ===== */
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
+  padding: 24px;
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.file-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--blur-border);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+
+.file-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
+}
+
+.file-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  background: rgba(255,255,255,.9);
+  border: 1px solid #eee;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+
+.file-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+}
+
+/* ===== SHOP ===== */
+.shop-container {
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  gap:30px;
+  padding:20px;
+  flex-wrap:wrap;
+  width:100%;
+}
+
+.product-card {
+  border:1px solid rgba(0,0,0,.1);
+  border-radius:10px;
+  padding:20px;
+  text-align:center;
+  transition:transform .2s ease, box-shadow .2s ease;
+  width:280px;
+  box-shadow: var(--shadow-soft);
+}
+
+.product-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.product-img {
+  font-size:48px;
+  margin-bottom:12px;
+  height:80px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.product-card h3 {
+  margin:12px 0 8px;
+  font-size:16px;
+  color:#222;
+}
+
+.product-card p {
+  font-size:13px;
+  color:#666;
+  margin:8px 0;
+}
+
+.price {
+  font-size:18px;
+  font-weight:600;
+  color:#ff69b4;
+  margin:12px 0;
+}
+
+.shop-btn {
+  width:100%;
+  padding:10px;
+  background:#ff69b4;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+  transition:background .2s ease;
+}
+
+.shop-btn:hover {
+  background:#ff1493;
+}
+
+/* ===== SOCIAL ===== */
+.social-container {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  padding:20px;
+  width:100%;
+  height:100%;
+}
+
+.social-row {
+  display:flex;
+  gap:16px;
+  justify-content:center;
+}
+
+.social-link {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  border-radius:10px;
+  background:rgba(255,105,180,.1);
+  border:1px solid rgba(255,105,180,.3);
+  text-decoration:none;
+  color:#222;
+  transition:all .2s ease;
+  cursor:pointer;
+  width:140px;
+  height:140px;
+}
+
+.social-link:hover {
+  background:rgba(255,105,180,.2);
+  border-color:#ff69b4;
+  transform:translateY(-2px);
+}
+
+.social-icon {
+  font-size:32px;
+  margin-bottom:8px;
+}
+
+.social-name {
+  font-size:12px;
+  font-weight:600;
+}
 
 /* ===== MODAL ===== */
 .modal {
@@ -284,19 +583,216 @@ html, body {
 .prev { left:10px; }
 .next { right:10px; }
 
+/* ===== TOUR ===== */
+.tour-container {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  padding:40px;
+}
+
+.coming-soon {
+  text-align:center;
+  max-width:500px;
+}
+
+.coming-soon h1 {
+  font-size:48px;
+  color:#ff69b4;
+  margin:0 0 15px;
+  font-weight:700;
+}
+
+.error-code {
+  font-size:24px;
+  color:#666;
+  margin:10px 0 20px;
+  font-weight:500;
+}
+
+.description {
+  font-size:14px;
+  color:#999;
+  margin-bottom:30px;
+  line-height:1.6;
+}
+
+.waitlist-form {
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.email-input {
+  flex:1;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:6px;
+  font-size:14px;
+  font-family:inherit;
+}
+
+.email-input:focus {
+  outline:none;
+  border-color:#ff69b4;
+  box-shadow:0 0 0 3px rgba(255,105,180,.1);
+}
+
+.waitlist-btn {
+  padding:12px 24px;
+  background:#ff69b4;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+  transition:background .2s ease;
+  white-space:nowrap;
+}
+
+.waitlist-btn:hover {
+  background:#ff1493;
+}
+
+.form-note {
+  font-size:12px;
+  color:#999;
+  margin:10px 0 0;
+}
+
+.form-note.success {
+  color:#27c93f;
+}
+
 /* ===== MOBILE ===== */
 @media (max-width:640px) {
-  .desktop { padding:16px; }
+  .desktop { padding:16px; height:auto; min-height:calc(100vh - 28px); justify-content:flex-start; }
   .window { height:75vh; }
+}
+
+/* ===== APP: NOTES & LYRICS & CREDITS (Split View) ===== */
+.split-view {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: rgba(255,255,255,0.3);
+  border-right: 1px solid rgba(0,0,0,0.06);
+  overflow-y: auto;
+  padding: 10px 0;
+}
+.sidebar.collapsed {
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  border-right: none;
+}
+.sidebar.collapsed .sidebar-item { display: none; }
+
+.sidebar-item {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+
+.sidebar-item:hover { background: rgba(0,0,0,0.03); }
+.sidebar-item.active { background: var(--accent); color: white; font-weight: 600; border-radius: 6px; margin: 0 8px; width: auto;}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  user-select: text;
+}
+
+/* Larger window variant (used by Draw app) */
+.window.large {
+  width: min(1100px, 95vw);
+  height: min(900px, 92vh);
+}
+
+/* Draw app responsive layout */
+.draw-canvas-container {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  aspect-ratio: 2 / 3; /* Keeps canvas proportional */
+  height: auto;
+  background: #fff;
+  border: 1px solid var(--blur-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+}
+
+@media (max-width:640px) {
+  .window.large { width: 95vw; height: 80vh; }
+  .draw-canvas-container { max-width: 100%; }
+}
+
+/* ===== RESPONSIVE: Home Grid & Icons ===== */
+@media (max-width: 1024px) {
+  .desktop-icons { grid-template-columns: repeat(3, 1fr); gap: 60px; }
+  .welcome-text { font-size: 40px; }
+}
+@media (max-width: 640px) {
+  .desktop { padding: 16px; height:auto; min-height:calc(100vh - 28px); justify-content:flex-start; }
+  .desktop-icons { grid-template-columns: repeat(2, 1fr); gap: 36px; }
+  .icon { width: 96px; }
+  .icon-img { width: 72px; height: 72px; font-size: 36px; border-radius: 16px; }
+  .icon-label { font-size: 10px; }
+  .welcome-text { font-size: 28px; margin-bottom: 24px; }
+  .window { width: 95vw; height: 80vh; }
+}
+@media (max-width: 400px) {
+  .desktop { padding: 12px; }
+  .desktop-icons { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .icon { width: 88px; }
+  .icon-img { width: 64px; height: 64px; font-size: 30px; }
+  .welcome-text { font-size: 24px; }
+  .window { width: 95vw; height: 78vh; }
 }
 </style>
 </head>
 
 <body>
 
+<!-- Entry Password Gate -->
+<div id="gateOverlay" class="gate-overlay" style="display:none;">
+  <div class="gate-card">
+    <div class="gate-title">Welcome</div>
+    <div class="gate-sub">Enter password to continue</div>
+    <input id="gatePassword" type="password" placeholder="Password" class="gate-input" />
+    <button id="gateSubmit" class="gate-btn">Enter</button>
+    <div id="gateStatus" class="gate-status"></div>
+  </div>
+  <style>
+    .gate-overlay { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.6); backdrop-filter:blur(6px); z-index:99999; }
+    .gate-card { width:92%; max-width:360px; padding:20px; border-radius:12px; background:rgba(255,255,255,.9); border:1px solid var(--blur-border); box-shadow:var(--shadow-heavy); text-align:center; }
+    .gate-title { font-size:18px; font-weight:700; color:#222; margin-bottom:6px; }
+    .gate-sub { font-size:12px; color:#555; margin-bottom:14px; }
+    .gate-input { width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px; margin-bottom:12px; }
+    .gate-btn { width:100%; padding:10px; background:#ff69b4; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; }
+    .gate-status { margin-top:10px; font-size:12px; color:#b00; min-height:16px; }
+  </style>
+</div>
+
 <div class="menu-bar">
-  <img src="747.png" alt="Apple" style="height: 16px; width: auto; margin-right: 8px;">
-  <div>Frankie Venter</div>
+  <img src="747.png" alt="Apple" style="height: 16px; width: auto;">
+  <div style="flex: 1; text-align: center;">Frankie Venter</div>
   <div id="clock"></div>
 </div>
 
@@ -305,12 +801,65 @@ html, body {
   <div class="desktop-icons">
     <div class="icon" onclick="openWindow('music-window')">
       <div class="icon-img">🎵</div>
-      <div class="icon-label">Exclusive Music</div>
+      <div class="icon-label">Frankie's Demos</div>
     </div>
 
     <div class="icon" onclick="openWindow('gallery-window')">
       <div class="icon-img">📂</div>
-      <div class="icon-label">Unreleased</div>
+      <div class="icon-label">Unreleased Photos</div>
+    </div>
+
+    <div class="icon" onclick="openWindow('notes-window')">
+      <div class="icon-img">📝</div>
+      <div class="icon-label">Notes</div>
+    </div>
+
+    <div class="icon" onclick="openWindow('videos-window')">
+      <div class="icon-img">🎬</div>
+      <div class="icon-label">Videos</div>
+    </div>
+
+    <div class="icon" onclick="openWindow('shop-window')">
+      <div class="icon-img">🛍️</div>
+      <div class="icon-label">Shop</div>
+    </div>
+
+    <div class="icon" onclick="openWindow('social-window')">
+      <div class="icon-img">👥</div>
+      <div class="icon-label">Follow</div>
+    </div>
+
+    <div class="icon" onclick="openWindow('tour-window')">
+      <div class="icon-img">✈️</div>
+      <div class="icon-label">Tour</div>
+    </div>
+
+    <div class="icon" onclick="openWindow('credits-window')">
+      <div class="icon-img">©️</div>
+      <div class="icon-label">Credits</div>
+    </div>
+
+    <div class="icon" onclick="openWindow('lyrics-window')">
+      <div class="icon-img">🎤</div>
+      <div class="icon-label">Lyrics</div>
+    </div>
+
+    <div class="icon" onclick="openWindow('letters-window')">
+      <div class="icon-img">✉️</div>
+      <div class="icon-label">Letters</div>
+    </div>
+
+    <div class="icon" onclick="openWindow('game-window')">
+      <div class="icon-img">🕹️</div>
+      <div class="icon-label">Game</div>
+    </div>
+    <div class="icon" onclick="openWindow('draw-window')">
+      <div class="icon-img">🎨</div>
+      <div class="icon-label">Draw</div>
+    </div>
+    <div class="icon" onclick="openLink('https://fiveam.lnk.to/abigdealtome')">
+      <div class="icon-img" style="background-image:url('fc55f708c8d651c923055ab1a1d749be.jpg');background-size:cover;background-position:center;"></div>
+      <div class="icon-label">Listen</div>
     </div>
   </div>
 </div>
@@ -326,6 +875,10 @@ html, body {
   </div>
   <div class="window-content">
     <iframe id="disco-playlist-27299296" name="disco-playlist-27299296" allowfullscreen frameborder="0" class="disco-embed" src="https://fiveam.disco.ac/e/p/27299296?download=true&s=EVvmGgOtx5iRwT7wQD4k4ZtdbIs%3AiznxpykJ&artwork=true&color=%234E98FF&theme=white" width="480" height="395"></iframe>
+    <div id="musicFallback" style="display:none;text-align:center;color:#333;">
+      <div style="margin-top:12px;font-size:13px;">If the player doesn't load, open it directly:</div>
+      <a href="https://fiveam.disco.ac/e/p/27299296?download=true&s=EVvmGgOtx5iRwT7wQD4k4ZtdbIs%3AiznxpykJ&artwork=true&color=%234E98FF&theme=white" target="_blank" style="display:inline-block;margin-top:8px;padding:8px 12px;background:#4e98ff;color:#fff;border-radius:8px;text-decoration:none;">Open Demos</a>
+    </div>
   </div>
 </div>
 
@@ -345,6 +898,241 @@ html, body {
   </div>
 </div>
 
+<div id="notes-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('notes-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Notes from Frankie</div>
+    <button class="sidebar-toggle" onclick="toggleSidebar('notes-window')">☰ Sidebar</button>
+  </div>
+  <div class="window-content">
+    <div class="split-view">
+      <div class="sidebar" id="notesList"></div>
+      <div class="main-content" id="noteContent"></div>
+    </div>
+  </div>
+</div>
+
+<div id="credits-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('credits-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Credits</div>
+    <button class="sidebar-toggle" onclick="toggleSidebar('credits-window')">☰ Sidebar</button>
+  </div>
+  <div class="window-content">
+    <div class="split-view">
+      <div class="sidebar" id="creditsList"></div>
+      <div class="main-content" id="creditContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Lyrics App Window -->
+<div id="lyrics-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('lyrics-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Lyrics</div>
+    <button class="sidebar-toggle" onclick="toggleSidebar('lyrics-window')">☰ Sidebar</button>
+  </div>
+  <div class="window-content">
+    <div class="split-view">
+      <div class="sidebar" id="lyricsList"></div>
+      <div class="main-content clean-style" id="lyricContent"></div>
+    </div>
+  </div>
+  </div>
+
+<!-- Draw App Window -->
+<div id="draw-window" class="window large">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('draw-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Draw</div>
+  </div>
+  <div class="window-content" style="flex-direction:column;align-items:center;justify-content:flex-start;gap:16px;">
+    <div class="draw-controls" style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;background:rgba(255,255,255,.8);border:1px solid var(--blur-border);border-radius:12px;padding:14px;">
+      <label style="font-size:12px;color:#333;">Pick Color: <input type="color" id="drawColor" value="#ff6b6b" style="width:36px;height:36px;border:none;background:none;" /></label>
+      <label style="font-size:12px;color:#333;">Brush Size: <input type="range" id="drawBrush" min="5" max="80" value="20" /></label>
+      <input type="text" id="drawName" placeholder="Your Name (optional)" style="padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:12px;" />
+      <button id="drawClear" style="padding:8px 14px;background:#888;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Clear</button>
+      <button id="drawEraser" style="padding:8px 14px;background:#ffbd2e;color:#222;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Eraser</button>
+      <a id="drawSave" href="#" style="padding:8px 14px;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;">Save PNG</a>
+      <button id="drawSubmit" style="padding:8px 14px;background:#4e98ff;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Send to Frankie!</button>
+      <span id="drawStatus" style="font-size:12px;color:#666;"></span>
+    </div>
+    <div id="drawContainer" class="draw-canvas-container">
+      <canvas id="drawCanvas" style="position:absolute;top:0;left:0;z-index:1;"></canvas>
+      <img id="drawStencil" src="stencil.jpeg" alt="stencil" style="position:absolute;top:0;left:0;z-index:2;pointer-events:none;mix-blend-mode:multiply;" />
+    </div>
+  </div>
+</div>
+<!-- Letters App Window -->
+<div id="letters-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('letters-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Letters to Frankie</div>
+  </div>
+  <div class="window-content" style="align-items:center; flex-direction:column;">
+    <div style="margin:auto;max-width:520px;width:100%;padding:24px;">
+      <div style="font-size:18px;font-weight:600;color:#222;margin-bottom:8px;">Write a letter to Frankie</div>
+      <p style="margin:0 0 16px;color:#555;font-size:14px;line-height:1.7;">Share a message, a memory, or anything you'd like Frankie to read. Your words mean a lot — thank you for taking the time to write.</p>
+    </div>
+    <form id="lettersForm" style="margin:auto;max-width:520px;width:100%;display:flex;flex-direction:column;gap:16px;align-items:stretch;padding:0 24px 24px;">
+      <input type="text" id="fanName" placeholder="Your Name (optional)" style="width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:15px;">
+      <textarea id="fanMessage" placeholder="Write your message to Frankie..." rows="6" style="width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:15px;"></textarea>
+      <button type="submit" style="padding:10px 24px;background:#ff69b4;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Send</button>
+      <div id="lettersThanks" style="color:#27c93f;font-size:14px;display:none;">Thank you for your message!</div>
+    </form>
+  </div>
+  </div>
+
+<!-- Game App Window -->
+<div id="game-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('game-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Frankie Pong</div>
+  </div>
+  <div class="window-content" style="flex-direction:column;align-items:center;justify-content:center;gap:12px;">
+    <div style="font-size:16px;color:#222;font-weight:600;">Score: <span id="pongScore">0</span> • High: <span id="pongHigh">0</span></div>
+    <div id="pongContainer" style="position:relative;display:inline-block;">
+      <canvas id="pongCanvas" width="700" height="420" style="max-width:95%;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:#000"></canvas>
+      <button id="pongPlayBtn" style="display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 24px;border-radius:10px;border:none;background:#ff69b4;color:#fff;font-weight:700;font-size:16px;box-shadow:0 8px 20px rgba(0,0,0,.2);cursor:pointer;">Play Again</button>
+    </div>
+    <div style="font-size:12px;color:#666;">Use mouse or ← → keys to move the paddle.</div>
+  </div>
+  </div>
+
+<div id="videos-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('videos-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Videos</div>
+  </div>
+  <div class="window-content">
+    <div class="gallery-container">
+      <div class="video-grid" id="videoGrid"></div>
+    </div>
+  </div>
+</div>
+
+<div id="shop-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('shop-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Shop</div>
+  </div>
+  <div class="window-content">
+    <div class="shop-container">
+      <div class="product-card">
+        <div class="product-img">🎵</div>
+        <h3><i>a big deal to me</i> - Vinyl</h3>
+        <p>Limited edition vinyl record of Frankie Venter's new EP, <i>a big deal to me</i></p>
+        <p class="price">$59.99 NZD</p>
+        <button class="shop-btn">Buy Now</button>
+      </div>
+      <div class="product-card">
+        <div class="product-img">🎧</div>
+        <h3> <i>a big deal to me</i> Merchandise</h3>
+        <p>Official Frankie Venter merch</p>
+        <p class="price">$29.99</p>
+        <button class="shop-btn">Shop Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="social-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('social-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Follow Frankie</div>
+  </div>
+  <div class="window-content">
+    <div class="social-container">
+      <div class="social-row">
+        <a href="https://instagram.com/frankieventermusic" target="_blank" class="social-link">
+          <div class="social-icon">📸</div>
+          <div class="social-name">Instagram</div>
+        </a>
+        <a href="https://open.spotify.com/artist/4OpEtCxKCkuq7XqJ18zVYn?si=k9NxL5NGSNud1M53hMcxmg" target="_blank" class="social-link">
+          <div class="social-icon">🎵</div>
+          <div class="social-name">Spotify</div>
+        </a>
+        <a href="http://youtube.com/@frankieventermusic" target="_blank" class="social-link">
+          <div class="social-icon">📺</div>
+          <div class="social-name">YouTube</div>
+        </a>
+      </div>
+      <div class="social-row">
+        <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiQ147syLOOAxUx-DgGHb2hLdYQFnoECAoQAQ&url=https%3A%2F%2Fwww.facebook.com%2Ffrankiesingingxx%2F&usg=AOvVaw31uUTvQjPLPmA-ZUDC2W68&opi=89978449" target="_blank" class="social-link">
+          <div class="social-icon">👥</div>
+          <div class="social-name">Facebook</div>
+        </a>
+        <a href="http://tiktok.com/@frankieventermusic" target="_blank" class="social-link">
+          <div class="social-icon">✨</div>
+          <div class="social-name">TikTok</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tour-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('tour-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Tour</div>
+  </div>
+  <div class="window-content">
+    <div class="tour-container">
+      <div class="coming-soon">
+        <h1>404 Not Found!</h1>
+        <p class="error-code">Coming Soon...</p>
+        <p class="description">Join the waitlist to stay updated!</p>
+        <div class="waitlist-form">
+          <input type="email" id="tourEmail" placeholder="Enter your email" class="email-input">
+          <button onclick="joinWaitlist()" class="waitlist-btn">Join Waitlist</button>
+        </div>
+        <p class="form-note" id="formMessage"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="imageModal" class="modal">
   <span class="modal-close" onclick="closeModal()">×</span>
   <div class="modal-content">
@@ -352,6 +1140,16 @@ html, body {
     <img id="modalImg" class="modal-img">
     <span class="nav-btn next" onclick="changeImage(1)">›</span>
   </div>
+</div>
+
+<!-- Video Modal -->
+<div id="videoModal" class="modal">
+  <span class="modal-close" onclick="closeVideoModal()">×</span>
+  <div class="modal-content">
+    <iframe id="videoIframe" title="Video" style="width:80vw;height:45vw;max-width:900px;max-height:506px;border:none;border-radius:10px;"></iframe>
+  </div>
+  
+  
 </div>
 
 <script>
@@ -366,27 +1164,265 @@ const photos = [
 
 let currentIndex = 0;
 
-function openWindow(id) {
-  document.querySelectorAll(".window").forEach(w => w.style.display="none");
-  document.getElementById(id).style.display="flex";
-  if(id==="gallery-window") loadGallery();
+function openWindow(windowId) {
+  // Hide all windows
+  document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+  // Show the requested window
+  const target = document.getElementById(windowId);
+  if(!target){
+    console.warn('Window not found:', windowId);
+    return;
+  }
+  target.style.display = 'flex';
+  // Special logic for certain apps
+  if(windowId === 'notes-window') loadNotes();
+  if(windowId === 'credits-window') loadCredits();
+  if(windowId === 'gallery-window') loadGallery();
+  if(windowId === 'videos-window') loadVideos();
+  if(windowId === 'lyrics-window') loadLyrics();
+  if(windowId === 'music-window') initMusic();
+  if(windowId === 'draw-window') initDraw();
+  if(windowId === 'letters-window') {
+    initLetters();
+    const thanks = document.getElementById('lettersThanks');
+    const form = document.getElementById('lettersForm');
+    if(thanks) thanks.style.display = 'none';
+    if(form && form.reset) form.reset();
+  }
+  if(windowId === 'game-window') {
+    initPong();
+    const scoreEl = document.getElementById('pongScore');
+    if(scoreEl) scoreEl.textContent = '0';
+  }
+}
+function toggleSidebar(windowId){
+  const win = document.getElementById(windowId);
+  if(!win) return;
+  const sidebar = win.querySelector('.sidebar');
+  if(sidebar){ sidebar.classList.toggle('collapsed'); }
+}
+
+function initMusic(){
+  const iframe = document.getElementById('disco-playlist-27299296');
+  const fb = document.getElementById('musicFallback');
+  if(!iframe || !fb) return;
+  fb.style.display = 'none';
+  let loaded = false;
+  iframe.onload = ()=>{ loaded = true; fb.style.display = 'none'; };
+  setTimeout(()=>{ if(!loaded) fb.style.display = 'block'; }, 2500);
+}
+
+function openLink(url){
+  try {
+    window.open(url, '_blank', 'noopener');
+  } catch(e) {
+    location.href = url;
+  }
 }
 
 function closeWindow(id) {
-  document.getElementById(id).style.display="none";
+  const window = document.getElementById(id);
+  window.style.display="none";
+  window.classList.remove("active");
+}
+
+// ===== ENTRY PASSWORD GATE =====
+function initGate(){
+  try {
+    // Already authorized for this session?
+    if(sessionStorage.getItem('fv_auth') === 'true'){ return; }
+    const overlay = document.getElementById('gateOverlay');
+    const input = document.getElementById('gatePassword');
+    const btn = document.getElementById('gateSubmit');
+    const status = document.getElementById('gateStatus');
+    if(!overlay || !input || !btn) return;
+    overlay.style.display = 'flex';
+    async function attempt(){
+      const pw = input.value.trim();
+      status.textContent = '';
+      btn.disabled = true; btn.textContent = 'Checking…';
+      try {
+        const res = await fetch('/api/check-password', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pw })
+        });
+        if(res.ok){
+          sessionStorage.setItem('fv_auth', 'true');
+          overlay.style.display = 'none';
+        } else {
+          status.textContent = 'Incorrect password';
+        }
+      } catch(e){ status.textContent = 'Connection error'; }
+      btn.disabled = false; btn.textContent = 'Enter';
+    }
+    btn.addEventListener('click', attempt);
+    input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') attempt(); });
+  } catch(e) { console.warn('Gate init error', e); }
+}
+
+// Optional configurable endpoint for Draw submissions (set to a valid URL to enable server submission)
+window.DRAW_SUBMIT_URL = '/api/submit-draw';
+
+// ===== DRAW APP =====
+function initDraw(){
+  const canvas = document.getElementById('drawCanvas');
+  const stencil = document.getElementById('drawStencil');
+  const container = document.getElementById('drawContainer');
+  const color = document.getElementById('drawColor');
+  const brush = document.getElementById('drawBrush');
+  const clearBtn = document.getElementById('drawClear');
+  const eraserBtn = document.getElementById('drawEraser');
+  const saveBtn = document.getElementById('drawSave');
+  const submitBtn = document.getElementById('drawSubmit');
+  const nameInput = document.getElementById('drawName');
+  const statusEl = document.getElementById('drawStatus');
+  if(!canvas || canvas.dataset.bound === 'true') return;
+  const ctx = canvas.getContext('2d');
+  let isErasing = false;
+  function sizeCanvas(){
+    if(!container) return;
+    const cw = container.clientWidth;
+    const ch = container.clientHeight;
+    const iw = stencil.naturalWidth || cw;
+    const ih = stencil.naturalHeight || ch;
+    const scale = Math.min(cw/iw, ch/ih);
+    const displayW = Math.floor(iw * scale);
+    const displayH = Math.floor(ih * scale);
+    const offsetX = Math.floor((cw - displayW) / 2);
+    const offsetY = Math.floor((ch - displayH) / 2);
+    // Position and size the stencil (fit, not fill)
+    stencil.style.width = displayW + 'px';
+    stencil.style.height = displayH + 'px';
+    stencil.style.left = offsetX + 'px';
+    stencil.style.top = offsetY + 'px';
+    // Match canvas to the same box
+    canvas.style.width = displayW + 'px';
+    canvas.style.height = displayH + 'px';
+    canvas.style.left = offsetX + 'px';
+    canvas.style.top = offsetY + 'px';
+    // Set backing resolution for crisp strokes
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(displayW * dpr);
+    canvas.height = Math.floor(displayH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+  const start = (e)=>{ painting = true; draw(e); };
+  const end = ()=>{ painting = false; ctx.beginPath(); updateSaveLink(); };
+  let painting = false;
+  function draw(e){
+    if(!painting) return;
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    ctx.lineWidth = brush.value;
+    if(isErasing){
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = color.value;
+    }
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+  stencil.addEventListener('load', sizeCanvas);
+  window.addEventListener('resize', sizeCanvas);
+  if(stencil.complete) sizeCanvas();
+  canvas.addEventListener('mousedown', start);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('touchstart', (e)=>{ e.preventDefault(); start(e); });
+  canvas.addEventListener('touchend', end);
+  canvas.addEventListener('touchmove', (e)=>{ e.preventDefault(); draw(e); });
+  if(clearBtn) clearBtn.addEventListener('click', ()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); updateSaveLink(); });
+  if(eraserBtn) eraserBtn.addEventListener('click', ()=>{
+    isErasing = !isErasing;
+    eraserBtn.style.background = isErasing ? '#ff9f1a' : '#ffbd2e';
+    eraserBtn.textContent = isErasing ? 'Eraser (On)' : 'Eraser';
+  });
+  function buildCompositeCanvas(){
+    const t = document.createElement('canvas');
+    t.width = canvas.width; t.height = canvas.height;
+    const tc = t.getContext('2d');
+    // 1. White background
+    tc.fillStyle = '#fff';
+    tc.fillRect(0, 0, t.width, t.height);
+    // 2. Paint layer
+    tc.drawImage(canvas, 0, 0);
+    // 3. Stencil overlay (multiply), skip if blocked
+    tc.globalCompositeOperation = 'multiply';
+    try {
+      if(stencil && stencil.naturalWidth && stencil.naturalHeight){
+        tc.drawImage(stencil, 0, 0, t.width, t.height);
+      }
+    } catch(e) {
+      console.warn('Stencil merge skipped due to security context:', e);
+    }
+    // Reset comp op
+    tc.globalCompositeOperation = 'source-over';
+    return t;
+  }
+  function updateSaveLink(){
+    if(!saveBtn) return;
+    const t = buildCompositeCanvas();
+    try {
+      const url = t.toDataURL('image/png');
+      saveBtn.href = url;
+      saveBtn.download = 'colored-artwork.png';
+    } catch(e) {
+      saveBtn.removeAttribute('href');
+    }
+  }
+  if(saveBtn) saveBtn.addEventListener('click', updateSaveLink);
+  if(submitBtn) submitBtn.addEventListener('click', async ()=>{
+    statusEl.textContent = '';
+    const t = buildCompositeCanvas();
+    const url = t.toDataURL('image/png');
+    if(window.DRAW_SUBMIT_URL){
+      try{
+        const res = await fetch(window.DRAW_SUBMIT_URL, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: nameInput ? nameInput.value : '', image: url })
+        });
+        if(res.ok){ statusEl.textContent = '✓ Submitted — thank you!'; statusEl.style.color = '#27c93f'; }
+        else { statusEl.textContent = 'Submission failed.'; statusEl.style.color = '#ff5f56'; }
+      }catch(e){ statusEl.textContent = 'Submission error.'; statusEl.style.color = '#ff5f56'; }
+    } else {
+      statusEl.innerHTML = 'Saved image; please email your PNG to Frankie.';
+      const a = document.createElement('a');
+      a.download = 'colored-artwork.png';
+      a.href = url; a.click();
+    }
+  });
+  canvas.dataset.bound = 'true';
 }
 
 function loadGallery() {
   const grid = document.getElementById("photoGrid");
+  if(!grid) return;
   if(grid.children.length) return;
 
   photos.forEach((src,i)=>{
     const div=document.createElement("div");
     div.className="photo-item";
-    div.innerHTML=`<img src="${src}" loading="lazy">`;
+    div.innerHTML=`<img src="${src}" alt="Frankie photo ${i+1}" loading="lazy">`;
     div.onclick=()=>openModal(i);
     grid.appendChild(div);
   });
+  if(!grid.children.length){
+    const msg = document.createElement('div');
+    msg.style.color = '#666';
+    msg.style.textAlign = 'center';
+    msg.style.padding = '20px';
+    msg.textContent = 'No photos available.';
+    grid.appendChild(msg);
+  }
 }
 
 function openModal(i){
@@ -408,8 +1444,780 @@ function updateClock(){
   document.getElementById("clock").textContent=
     new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
 }
+
+// Notes data
+const notes = [
+  {title: "a big deal to me", content: "Started this in the late hours when the city goes quiet. The synth layers came naturally - I wanted that dreamy, ethereal feeling. Three weeks of production, endless coffee breaks, and finally found the perfect vocal tone. This track captures exactly what I was feeling at that moment. Pure creativity flowing through the speakers."},
+  {title: "turn me down", content: "Started this in the late hours when the city goes quiet. The synth layers came naturally - I wanted that dreamy, ethereal feeling. Three weeks of production, endless coffee breaks, and finally found the perfect vocal tone. This track captures exactly what I was feeling at that moment. Pure creativity flowing through the speakers."},
+  {title: "hint", content: "Had this vision of neon lights reflecting off wet streets at 3am. The energy is different, more upbeat and raw. Working with the Five AM team pushed me creatively - we tried things I'd never done before. The drums were the last piece we locked in, and when they clicked, everything else fell into place perfectly."},
+  {title: "she's leaving", content: "This one's close to my heart. It's about hope after darkness, new beginnings, personal growth. The melody builds like a sunrise - slow at first, then explosive. I wrote the lyrics in one sitting, everything just poured out. This represents where I'm heading with my music and my life."},
+  {title: "how you like me now", content: "Collaborated with some seriously talented artists on this track. The energy was insane in the studio. We brought together different styles and it somehow just worked. Multiple takes, lots of experimentation, and a final result that surprised even us. This is what happens when creative minds collide."},
+  {title: "just want you here", content: "This one's close to my heart. It's about hope after darkness, new beginnings, personal growth. The melody builds like a sunrise - slow at first, then explosive. I wrote the lyrics in one sitting, everything just poured out. This represents where I'm heading with my music and my life."},
+  {title: "selfish", content: "This one's close to my heart. It's about hope after darkness, new beginnings, personal growth. The melody builds like a sunrise - slow at first, then explosive. I wrote the lyrics in one sitting, everything just poured out. This represents where I'm heading with my music and my life."},
+  {title: "paris", content: "This one's close to my heart. It's about hope after darkness, new beginnings, personal growth. The melody builds like a sunrise - slow at first, then explosive. I wrote the lyrics in one sitting, everything just poured out. This represents where I'm heading with my music and my life."},
+  {title: "real to me", content: "This one's close to my heart. It's about hope after darkness, new beginnings, personal growth. The melody builds like a sunrise - slow at first, then explosive. I wrote the lyrics in one sitting, everything just poured out. This represents where I'm heading with my music and my life."},
+];
+
+let currentNote = 0;
+
+function loadNotes() {
+  const sidebar = document.getElementById("notesList");
+  if(sidebar.children.length) return;
+  
+  notes.forEach((note, i) => {
+    const div = document.createElement("div");
+    div.className = "sidebar-item" + (i === 0 ? " active" : "");
+    div.textContent = note.title;
+    div.onclick = () => selectNote(i);
+    sidebar.appendChild(div);
+  });
+  
+  selectNote(0);
+}
+
+function selectNote(i) {
+  currentNote = i;
+  document.querySelectorAll("#notesList .sidebar-item").forEach((el, idx) => {
+    el.classList.toggle("active", idx === i);
+  });
+  document.getElementById("noteContent").innerHTML = `<h2>${notes[i].title}</h2><p>${notes[i].content}</p>`;
+}
+
+// ===== CREDITS (list: project + tracks) =====
+const creditsListData = [
+  {
+    title: '<b>a big deal to me</b>',
+    content: `
+      <div style="margin-bottom:18px;">
+        <div style="font-weight:700; font-size:18px; margin-bottom:6px;">Visual Team</div>
+        <div style="line-height:1.8; font-size:14px; color:#222;">
+          Artwork Photographer: Apela Bell<br>
+          Press Photos: Apela Bell, Taine Noble, Te Ngariki Kokiri<br>
+          Vinyl Creative Design: Frankie Venter, Jade Johnson<br>
+          Single Artworks: Riley Cough<br>
+          Social Content: Taine Noble, Jade Johnson<br>
+          Visualisers & Music Videos: Taine Noble<br>
+          Touring Content: Taine Noble
+        </div>
+      </div>
+      <div style="margin-bottom:18px;">
+        <div style="font-weight:700; font-size:18px; margin-bottom:6px;">Label & Distribution Team</div>
+        <div style="line-height:1.8; font-size:14px; color:#222;">
+          Executive Producer: Rory Noble<br>
+          Project Management: Rory Noble, Nate Brown<br>
+          Label Representative: Nate Brown<br>
+          Label Assist: Jade Johnson<br>
+          Delivery Manager: Nate Brown<br>
+          Management: Jade Johnson<br>
+          Touring: Henare “H” Kaa<br>
+          Tracklist Curation: Jamie Boyo<br>
+          Vinyl Mastering: Jamie Boyo
+        </div>
+      </div>
+      <div style="margin-bottom:18px;">
+        <div style="font-weight:700; font-size:18px; margin-bottom:6px;">Special Thanks</div>
+        <div style="line-height:1.8; font-size:14px; color:#222;">
+          Mandie Skerrett, Mark Venter, Cooper Venter, Jet Venter, Liam “Beans” Beasley, Te Ngariki Kokiri, Andre Theis, Cam Noble, Mona (Chaii), Andy Irvine, Satty, Viv Mellish, Benji James, Jordan and the whole DD team, Jess and Callum from Cult Artists, Ben Wallace and Holiday Records, and the teams at New Zealand On Air and the New Zealand Music Commission.
+        </div>
+      </div>
+      <div style="font-size:12px; color:#777; margin-top:12px;">© 2026 Frankie Venter, under exclusive licence to Five AM. All rights reserved.</div>
+    `
+  },
+  { title: 'turn me down ', content: `
+    <div style="font-size:14px;color:#222;line-height:1.8;">
+      <b>Artist:</b> Frankie Venter<br>
+      <b>Writers:</b> Frankie Venter, Rory Noble<br>
+      <b>Producers:</b> Rory Noble<br>
+      <b>Instruments:</b> Rory Noble (Guitar, Bass, Keys, Synths, Backing Vocals)<br>
+      <b>Mix:</b> Rory Noble<br>
+      <b>Master:</b> Rory Noble
+    </div>
+  ` },
+  { title: 'hint', content: `
+    <div style="font-size:14px;color:#222;line-height:1.8;">
+      <b>Artist:</b> Frankie Venter<br>
+      <b>Writers:</b> Frankie Venter, Rory Noble, Josh Naley, Mark Landon<br>
+      <b>Producers:</b> Rory Noble, Josh Naley, M-Phazes<br>
+      <b>Instruments:</b> Rory Noble (Guitar, Bass, Keys, Synths, Backing Vocals), M-Phazes (Drums)<br>
+      <b>Mix:</b> Rory Noble<br>
+      <b>Master:</b> Rory Noble
+    </div>
+  ` },
+  { title: "she’s leaving", content: `
+    <div style="font-size:14px;color:#222;line-height:1.8;">
+      <b>Artist:</b> Frankie Venter<br>
+      <b>Writers:</b> Frankie Venter, Rory Noble, Aubrie Mitchell, Mark Landon<br>
+      <b>Producers:</b> Rory Noble, Aubrie Mitchell, M-Phazes<br>
+      <b>Instruments:</b> Rory Noble (Guitar, Bass, Keys, Synths, Backing Vocals), M-Phazes (Drums)<br>
+      <b>Mix:</b> Rory Noble<br>
+      <b>Master:</b> Rory Noble
+    </div>
+  ` },
+  { title: 'how you like me now', content: `
+    <div style="font-size:14px;color:#222;line-height:1.8;">
+      <b>Artist:</b> Frankie Venter<br>
+      <b>Writers:</b> Frankie Venter, Rory Noble, Dallas Austin<br>
+      <b>Producers:</b> Rory Noble<br>
+      <b>Instruments:</b> Rory Noble (Guitar, Bass, Keys, Synths, Backing Vocals), M-Phazes (Drums)<br>
+      <b>Mix:</b> Rory Noble<br>
+      <b>Master:</b> Jamie Boyo
+    </div>
+  ` },
+  { title: 'just want you here', content: `
+    <div style="font-size:14px;color:#222;line-height:1.8;">
+      <b>Artist:</b> Frankie Venter<br>
+      <b>Writers:</b> Frankie Venter, Rory Noble, Emma Wagner, Mark Landon<br>
+      <b>Producers:</b> Rory Noble, M-Phazes<br>
+      <b>Instruments:</b> Rory Noble (Guitar, Bass, Keys, Synths, Backing Vocals), M-Phazes (Drums)<br>
+      <b>Mix:</b> Rory Noble<br>
+      <b>Master:</b> Rory Noble
+    </div>
+  ` },
+  { title: 'selfish', content: `
+    <div style="font-size:14px;color:#222;line-height:1.8;">
+      <b>Artist:</b> Frankie Venter<br>
+      <b>Writers:</b> Frankie Venter, Rory Noble, Josh Naley, Mark Landon<br>
+      <b>Producers:</b> Rory Noble, Josh Naley, M-Phazes<br>
+      <b>Instruments:</b> Rory Noble (Guitar, Bass, Keys, Synths, Backing Vocals), M-Phazes (Drums), Josh Naley (Guitar)<br>
+      <b>Mix:</b> Rory Noble<br>
+      <b>Master:</b> Rory Noble
+    </div>
+  ` },
+  { title: 'paris', content: `
+    <div style="font-size:14px;color:#222;line-height:1.8;">
+      <b>Artist:</b> Frankie Venter<br>
+      <b>Writers:</b> Frankie Venter, Rory Noble, Mark Landon<br>
+      <b>Producers:</b> Rory Noble, M-Phazes<br>
+      <b>Instruments:</b> Rory Noble (Guitar, Bass, Keys, Synths, Backing Vocals), M-Phazes (Drums)<br>
+      <b>Mix:</b> Rory Noble<br>
+      <b>Master:</b> Rory Noble
+    </div>
+  ` },
+  { title: 'real to me', content: `
+    <div style="font-size:14px;color:#222;line-height:1.8;">
+      <b>Artist:</b> Frankie Venter<br>
+      <b>Writers:</b> Frankie Venter, Rory Noble, Josh Naley<br>
+      <b>Producers:</b> Rory Noble, Josh Naley<br>
+      <b>Instruments:</b> Rory Noble (Guitar, Bass, Keys, Synths, Backing Vocals), Josh Naley (Guitar)<br>
+      <b>Mix:</b> Rory Noble<br>
+      <b>Master:</b> Rory Noble
+    </div>
+  ` },
+];
+
+function loadCredits(){
+  const listEl = document.getElementById('creditsList');
+  const contentEl = document.getElementById('creditContent');
+  if(!listEl || !contentEl) return;
+  listEl.innerHTML = '';
+  creditsListData.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'sidebar-item' + (i === 0 ? ' active' : '');
+    div.innerHTML = item.title;
+    div.onclick = () => selectCreditItem(i);
+    listEl.appendChild(div);
+  });
+  selectCreditItem(0);
+}
+
+function selectCreditItem(i){
+  const contentEl = document.getElementById('creditContent');
+  if(!contentEl) return;
+  document.querySelectorAll('#creditsList .sidebar-item').forEach((el, idx) => {
+    el.classList.toggle('active', idx === i);
+  });
+  const item = creditsListData[i];
+  contentEl.innerHTML = `<h2 style='font-weight:700;'>${item.title}</h2><div style='font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;'>${item.content}</div>`;
+}
+
+// ===== LYRICS (Split View, dynamic from .txt files) =====
+const lyricsFiles = [
+  { file: 'turn me down.txt' },
+  { file: 'hint.txt' },
+  { file: "she's leaving.txt" },
+  { file: 'how you like me now.txt' },
+  { file: 'just want you here.txt' },
+  { file: 'selfish.txt' },
+  { file: 'paris.txt' },
+  { file: 'real to me.txt' },
+];
+
+// Inline fallback lyrics content to avoid fetch issues when opening via file://
+const embeddedLyrics = {
+  'turn me down.txt': `I'll leave the light on when you get in bed 'cause I know that you'll be out again
+as fast as you walked in
+You're always looking around behind you even when I'm right beside you
+What are you scared to do?
+
+And I could just lay here, put all my pride aside and wait here, given you my best parts for two years, just for you to be undecided
+And you could have seen it coming, the car was crashing, you steered it off a cliff
+How did we get where we did?
+
+You'll scream and I'll shout, turn me on and turn me down
+Say you can't live without me and you want to work things out
+Don't know if you're selfish or irresponsible 
+I wouldn't know, I shut you out while I was drowning in my room and you were over at her house
+You wanna be alone but too selfish to let me go
+
+Force myself not to read into your texts
+Can't control what you're gonna do next
+And if you need me, you really should have wanted to see me
+I shouldn't feel more when I'm even speaking
+You got me needy
+
+And I could just lay here, put all my pride aside and wait here, giving you my best parts for two years, just for you to be undecided
+And you could have seen it coming, the car was crashing, you steered it off a cliff
+How did we get where we did?
+
+You'll scream and I'll shout, turn me on and turn me down
+Say you can't live without me and you want to work things out
+Don't know if you're selfish or irresponsible
+But I wouldn't know, I shut you out while I was drowning in my room and you were over at her house
+`,
+  'hint.txt': `Generational heartthrob, he's so infatuated wrote me a love song,
+But is there a switch i could shut off, 'cause now I'm looking in his eyes and they're bloodshot
+But baby, it's only your money that you're wasting,
+buy me another of the same drink
+
+Doesn't know we're playing for the same team
+He plays guitar in a cool band, cool friends and cool clothes with his cool fans
+
+Thinks i hang on his sweater, he's not smart but he don't know any better
+Don't hate me, you and I are looking for the same things
+Arm around my shoulder got me shaking
+Doesn't know we're playing for the same team
+
+He's so oblivious, trying to get me to go home with him
+But he don't know me like I know him,
+can't pick up on a hint
+
+He calls me over and says nothing at all
+I'm so uninterested, but it's not his fault
+was nice to meet ya and nicer to leave ya
+I wanna tell him no but I'm not his teacher
+I want somebody with different features,
+different sneakers, but he's into FIFA
+
+He's so oblivious, trying to get me to go home with him
+But he don't know me like I know him,
+can't pick up on a hint
+
+He's so oblivious, trying to get me to go home with him
+But he don't know me like I know him,
+can't pick up on a hint`,
+  "she's leaving.txt": `I admit I walked in like I was doing fine
+never question, never worry ‘bout another guy
+Turn my phone off no distraction for my peace of mind
+
+I'll find love in somebody else
+Do you think about me it's hard to tell
+bet you're doing better now and I wish you well
+Everybody's always thinking I'm the bad guy
+Saying it won't work and it's never the right time
+But can you stay with me even if it's for the night?
+
+She said that she's leaving
+when no one is around to see it
+I don't know how to tell you i need you 
+and she meant every word I can't stop her, no it's over
+
+She's leaving
+and no one is around to see it
+I don't know how to tell you, I need you
+and she meant every word I can't stop her, no it's over
+
+It's not like me to still care
+I don't miss you anywhere
+You try to fill the hole without me
+And you can call it off, or call it what you want
+
+Call my bluff and tell me it's a front
+But you’ll want me back when all is said and done
+Everybody's always thinking I'm the bad guy
+Saying it won't work and it's never the right time
+But can you stay with me even if it's for the night?
+
+She said that she's leaving
+when no one is around to see it
+I don't know how to tell ya, I need ya
+and she meant every word I can't stop her, no it's over
+
+She's leaving
+when no one is around to see it
+I don't know how to tell you, I need you
+and she meant every word I can't stop her, no it's over`,
+  'how you like me now.txt': `Honey, why you switching up?
+You know I don't get it, you act like you don't give a fuck
+Why you putting on a show? It's funny
+You always wanna hold me, but never wanna know me, but you're just another sad clown
+
+Oh, how you like me now?
+Out with your friends, trouble in the next, just getting by 'til your next pack of cigarettes
+Generations, fucked, shit out of luck, everybody running around doing too much
+
+And I don't really wanna deal with these emotions
+Like turning up to the store when it's closing
+
+Honey, why you switching up?
+You know I don't get it, you act like you don't give a fuck
+Why you putting on a show? It's funny
+You always wanna hold me, but never wanna know me, but you're just another sad clown
+
+Oh, how you like me now?
+Oh, how you like me now?
+
+Sometimes I don't know why you do this
+Taking hints from who you're in the room with
+You think I'm mad but I'm not. No you can't come back, can't cancel your spot
+I hate to tell you I'm breaking off
+That's how it is when we're better off
+
+Honey, why you switching up?
+You know I don't get it, you act like you don't give a fuck
+Why you putting on a show? It's funny
+You always wanna hold me, but never wanna know me, but you're just another sad clown
+
+Oh, how you like me now?
+Honey, why you switching up?
+You know I don't get it, you act like you don't give a fuck
+Why you putting on a show? It's funny
+You always wanna hold me, but never wanna know me, but you're just another sad clown
+
+Oh, how you like me now?
+`,
+  'just want you here.txt': `Back of the car, going 90 way too far
+Don't wanna miss my set at 6 
+And I'm distracted when I'm not with you
+I wish you could be here to sing this wrong 
+And sure my life is busy when I'm touring different cities
+and yeah you think it's pretty cool
+Don't think you want something from me, yeah I only want you on me
+I'll travel the world just to see my girl
+
+A thousand faces, going different places
+I don't care, I just want you here
+Pack you in my bag, you're so cute it makes me sad
+and I don't care, I just want you here
+
+A thousand different meanings, gotta pack up all my feelings
+Sleep through all my alarms
+And yeah we're both exhausted, but this is what we wanted
+(ill call you if it gets too hard)
+Feel like a loser, focus on my future
+I haven't seen you in so long
+
+And sure your life is busy when we're both in different cities
+Yeah there's something missing, I should just be kissing you
+A thousand faces, going different places
+
+I don't care, I just want you here
+Pack you in my bag, you're so cute it makes me sad
+and I don't care, I just want you here
+
+So wont you come on over, I can lean onto your shoulder
+And we're only getting older, this window seats getting colder
+So won't you love me honey, and just say that youre proud of me
+cause your words of affirmation, will beat any destination
+But don't need you to praise me, just wanna be with my lady
+
+Whisper in my ear, wanna keep you near
+I can't stand being alone, wont leave my house 'cause you're my home
+I don't care, I just want you here
+`,
+  'selfish.txt': `Seven days a week
+Keep both of your eyes on me
+Stay here and don't leave
+Making up for lost time, can we
+Lose all of our sleep
+Our stars are aligned maybe
+Ill Start calling you mine, baby
+
+I want you alone now, baby come home now, maybe I'm selfish
+The rumours i love you, maybe they're all true and I can't help it
+I don't wanna see you with anyone else now, baby excuse me
+But I can't help it, I want you all to myself, yeah, I'm selfish
+
+Oh, I've been up late and I've been thinking, who were you out with, what were you drinking?
+Not that I care, but was anyone handsy? I don't wanna share you, is that a bad thing?
+What if you were all mine, keep you on my good side, I would always treat you like you're royalty
+And maybe if it feels right, we could get the knot tied, you could be a loyal to me
+
+I want you alone now, baby come home now, maybe I'm selfish
+The rumours, maybe they're all true, and I can't help it
+I don't wanna see you with anyone else now, baby excuse me
+But I can't help it, I want you all to myself, yeah, I'm selfish
+`,
+  'paris.txt': `Remember we got halfway to Paris till it wasn't what you imagined
+It Lost its magic
+I still think we could have worked if you let it 
+You got internalised shit with your parents 
+and I can't fix it for you 
+
+Oysters and caviar, putting things on your mom's card
+Taking out the Porsche and nearly crash it going way too hard
+Am I different than you thought I was? Did you think that I'd like all this stuff?
+Or is who I am just not enough for you, for you?
+
+I can't, I don't wanna listen
+Don't say that we're too different
+This Could've worked if you let it
+Shit admit you gave up on the idea of us
+I let you in, you're the one
+Feel so dumb. Just forget it
+
+Are you the same person that you were at the start?
+Walking 'round collecting souvenirs of other people's hearts
+You want me here but not because you're in love like you said you were
+Keep me around to fill a hole that you know is unfillable
+
+Oysters and caviar, putting things on your mom's card
+Taking out the Porsche and nearly crash it going way too hard
+Am I different than you thought I was? Did you think that I'd like all this stuff?
+Or is who I am just not enough for you, for you?
+
+I can't, I don't wanna listen. Don't say that we're too different
+Could've worked if you let it
+Shit admit you gave up on the idea of us
+I let you in, you're the one. Feel so dumb. Just forget it
+`,
+  'real to me.txt': `i’ve been in bed for days, your pictures lighting up my face
+I know I shouldn't search your name, but I'll do it anyway
+Are you fine? Are you with your friends or are you forgetting all about it?
+Do you cry or get drunk instead? Were we something I'd imagined?
+
+Was it real to you? It was real to me
+Were there parts of us you were questioning,
+you were such a big deal to me,
+big deal to me
+
+Was it real to you? Did you cry for me?
+When we fell apart, did you feel a thing?
+You were such a big deal to me, it was real to me
+It was real to me
+
+You said you don't see a future in us, can I say that we dated, is that what it was?
+And I can't get a word out of you when we talk, say you don't have the heart now to just break it off
+We were drunk in your car and the truth came undone
+And the knot in my stomach appeared, now you're gone
+And the thing that you got off your chest was my heart, but you don't seem to care anymore
+
+Was it real to you? It was real to me
+Were there parts of us you were questioning?
+You were such a big deal to me, big deal to me
+
+Was it real to you? Did you cry for me?
+When we fell apart, did you feel a thing?
+You were such a big deal to me, it was real to me, it was real to me
+
+When you gave me your promise it'd always be us
+Were you always dishonest? Did I dream it up?
+The ‘i love you’s were real to me, a big deal to me, 
+
+I meant everything.
+`
+};
+
+function toTitle(name){
+  const base = name.replace(/\.txt$/i, '');
+  return base.toLowerCase();
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+}
+
+function loadLyrics() {
+  const list = document.getElementById('lyricsList');
+  const content = document.getElementById('lyricContent');
+  if(!list || !content) return;
+  if(list.children.length > 0) return;
+  lyricsFiles.forEach((entry, i) => {
+    const title = toTitle(entry.file);
+    const item = document.createElement('div');
+    item.className = 'sidebar-item';
+    item.innerText = title;
+    item.onclick = async () => {
+      document.querySelectorAll('#lyricsList .sidebar-item').forEach(el => el.classList.remove('active'));
+      item.classList.add('active');
+      // Prefer inline embedded lyrics to avoid local file fetch issues
+      const local = embeddedLyrics[entry.file];
+      if(local){
+        const safeLocal = escapeHtml(local).replace(/\r?\n/g, '<br>');
+        content.innerHTML = `<h2>${title}</h2><p>${safeLocal}</p>`;
+        return;
+      }
+      try {
+        const res = await fetch(encodeURI(entry.file));
+        const txt = await res.text();
+        const safe = escapeHtml(txt).replace(/\r?\n/g, '<br>');
+        content.innerHTML = `<h2>${title}</h2><p>${safe}</p>`;
+      } catch(e) {
+        content.innerHTML = `<h2>${title}</h2><p style="color:#b00;">Unable to load lyrics.</p>`;
+      }
+    };
+    list.appendChild(item);
+    if(i===0) item.click();
+  });
+}
+
+// ===== LETTERS =====
+function initLetters(){
+  const form = document.getElementById('lettersForm');
+  if(!form) return;
+  if(form.dataset.bound === 'true') return;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('fanName')?.value || '';
+    const message = document.getElementById('fanMessage')?.value || '';
+    const thanks = document.getElementById('lettersThanks');
+    try {
+      const res = await fetch('/api/send-letter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, message })
+      });
+      if(res.ok){
+        if(thanks){
+          thanks.textContent = 'Thank you for your message!';
+          thanks.style.display = 'block';
+          setTimeout(() => { thanks.style.display = 'none'; }, 3000);
+        }
+        const msg = document.getElementById('fanMessage');
+        if(msg) msg.value = '';
+      } else {
+        if(thanks){
+          thanks.textContent = 'Failed to send. Please try again later.';
+          thanks.style.display = 'block';
+          thanks.style.color = '#ff5f56';
+          setTimeout(() => { thanks.style.display = 'none'; thanks.style.color = '#27c93f'; }, 3000);
+        }
+      }
+    } catch(err){
+      if(thanks){
+        thanks.textContent = 'Error sending message.';
+        thanks.style.display = 'block';
+        thanks.style.color = '#ff5f56';
+        setTimeout(() => { thanks.style.display = 'none'; thanks.style.color = '#27c93f'; }, 3000);
+      }
+    }
+  });
+  form.dataset.bound = 'true';
+}
+
+// ===== PONG GAME =====
+let pongRunning = false;
+function initPong(){
+  const canvas = document.getElementById('pongCanvas');
+  const scoreEl = document.getElementById('pongScore');
+  const highEl = document.getElementById('pongHigh');
+  const playBtn = document.getElementById('pongPlayBtn');
+  if(!canvas || !scoreEl) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const bgImg = new Image();
+  bgImg.src = 'fc55f708c8d651c923055ab1a1d749be.jpg';
+
+  let paddle = { w: 120, h: 16, x: (W-120)/2, y: H - 16 };
+  let ball = { x: W/2, y: H/2, r: 8, vx: 3, vy: -3 };
+  let score = 0;
+  let highScore = parseInt(localStorage.getItem('pongHighScore') || '0', 10);
+  let gameOver = false;
+  if(highEl) highEl.textContent = String(highScore);
+  let paddleVX = 0;
+  const paddleSpeed = 7;
+
+  function reset(){
+    paddle.x = (W-120)/2;
+    paddle.y = H - paddle.h;
+    ball.x = W/2; ball.y = H/2; ball.vx = 4; ball.vy = -4;
+    score = 0; scoreEl.textContent = '0';
+    gameOver = false;
+    if(playBtn) playBtn.style.display = 'none';
+  }
+
+  function draw(){
+    // Background image
+    if(bgImg.complete) {
+      ctx.drawImage(bgImg, 0, 0, W, H);
+    } else {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0,0,W,H);
+    }
+    // Ball
+    ctx.fillStyle = '#8000ff';
+    ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2); ctx.fill();
+    // Paddle (normal rectangle)
+    ctx.fillStyle = '#ff69b4';
+    ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
+    // Game over overlay text
+    if(gameOver){
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.fillRect(0,0,W,H);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 28px -apple-system, BlinkMacSystemFont, Segoe UI';
+      ctx.textAlign = 'center';
+    }
+  }
+
+  function endGame(){
+    gameOver = true;
+    pongRunning = false;
+    if(score > highScore){
+      highScore = score;
+      localStorage.setItem('pongHighScore', String(highScore));
+      if(highEl) highEl.textContent = String(highScore);
+    }
+    if(playBtn) playBtn.style.display = 'inline-block';
+  }
+
+  function update(){
+    ball.x += ball.vx; ball.y += ball.vy;
+    // Paddle movement via keyboard
+    paddle.x += paddleVX;
+    if(paddle.x < 0) paddle.x = 0;
+    if(paddle.x > W - paddle.w) paddle.x = W - paddle.w;
+    // Walls
+    if(ball.x < ball.r || ball.x > W - ball.r) ball.vx *= -1;
+    if(ball.y < ball.r) ball.vy *= -1;
+    // Paddle collision
+    if(ball.y + ball.r >= paddle.y && ball.y + ball.r <= paddle.y + paddle.h){
+      if(ball.x >= paddle.x && ball.x <= paddle.x + paddle.w){
+        ball.vy *= -1;
+        score += 1; scoreEl.textContent = String(score);
+        // Add a touch of speed up
+        ball.vx *= 1.02; ball.vy *= 1.02;
+      }
+    }
+    // Miss -> game over
+    if(ball.y - ball.r > H){ endGame(); }
+  }
+
+  function loop(){
+    if(!pongRunning){ draw(); return; }
+    update(); draw(); requestAnimationFrame(loop);
+  }
+
+  function onMouseMove(e){
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    paddle.x = Math.max(0, Math.min(W - paddle.w, mx - paddle.w/2));
+  }
+
+  function onKeyDown(e){
+    if(e.key === 'ArrowLeft') paddleVX = -paddleSpeed;
+    else if(e.key === 'ArrowRight') paddleVX = paddleSpeed;
+  }
+
+  function onKeyUp(e){
+    if(e.key === 'ArrowLeft' || e.key === 'ArrowRight') paddleVX = 0;
+  }
+
+  if(canvas && canvas.dataset.bound !== 'true'){
+    canvas.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    if(playBtn){
+      playBtn.addEventListener('click', () => {
+        if(!pongRunning){
+          reset();
+          pongRunning = true;
+          requestAnimationFrame(loop);
+        }
+      });
+    }
+    canvas.dataset.bound = 'true';
+  }
+
+  pongRunning = true;
+  reset();
+  requestAnimationFrame(loop);
+}
+
+// Videos data
+const videos = [
+  { title: "Music Videos", items: ["1158647574"] },
+  { title: "From Frankie", items: ["945678123"] } // Replace with actual Vimeo ID for Frankie's message
+];
+
+function loadVideos() {
+  const grid = document.getElementById("videoGrid");
+  if(!grid) return;
+  grid.innerHTML = "";
+  // File icons grid view
+  const wrap = document.createElement('div');
+  wrap.className = 'files-grid';
+  const files = [
+    { title: 'Music Videos', vimeoId: (videos[0] && videos[0].items[0]) || null },
+    { title: 'From Frankie', vimeoId: (videos[1] && videos[1].items[0]) || null },
+  ];
+  files.forEach(file => {
+    const card = document.createElement('div');
+    card.className = 'file-card';
+    card.innerHTML = `<div class="file-icon">📁</div><div class="file-title">${file.title}</div>`;
+    card.onclick = () => openVideoModal(file.vimeoId, file.title);
+    wrap.appendChild(card);
+  });
+  grid.appendChild(wrap);
+}
+
+function openVideoModal(vimeoId, title){
+  const modal = document.getElementById('videoModal');
+  const iframe = document.getElementById('videoIframe');
+  if(!modal || !iframe) return;
+  if(!vimeoId){
+    alert('No video available.');
+    return;
+  }
+  iframe.src = `https://player.vimeo.com/video/${vimeoId}?autoplay=1&badge=0&autopause=0&player_id=0&app_id=58479`;
+  modal.style.display = 'flex';
+}
+
+function closeVideoModal(){
+  const modal = document.getElementById('videoModal');
+  const iframe = document.getElementById('videoIframe');
+  if(iframe) iframe.src = '';
+  if(modal) modal.style.display = 'none';
+}
+
+function joinWaitlist(){
+  const email = document.getElementById("tourEmail").value;
+  const messageEl = document.getElementById("formMessage");
+  
+  if(!email || !email.includes("@")){
+    messageEl.textContent = "Please enter a valid email";
+    messageEl.style.color = "#ff5f56";
+    return;
+  }
+  
+  messageEl.textContent = "✓ Thanks! Check your email for confirmation";
+  messageEl.classList.add("success");
+  document.getElementById("tourEmail").value = "";
+  
+  setTimeout(() => {
+    messageEl.textContent = "";
+  }, 3000);
+}
+
 setInterval(updateClock,1000);
 updateClock();
+
+// Preload content so windows are populated when opened
+document.addEventListener('DOMContentLoaded', function(){
+  initGate();
+  try { loadGallery(); } catch(e) { console.warn('Gallery init error', e); }
+  try { loadVideos(); } catch(e) { console.warn('Videos init error', e); }
+  try { /* lazy init draw on open */ } catch(e) { console.warn('Draw init error', e); }
+});
+
+// ESC key to close windows
+document.addEventListener('keydown', function(event) {
+  if(event.key === 'Escape') {
+    document.querySelectorAll(".window").forEach(w => {
+      w.style.display="none";
+      w.classList.remove("active");
+    });
+  }
+});
 </script>
 
 <div class="footer">
