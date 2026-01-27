@@ -785,7 +785,7 @@ html, body {
     </div>
   </div>
 </div>
-<div id="loginOverlay" style="display:none; position:fixed; inset:0; z-index:99998; background:#2d2d2d; background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center;">
+<div id="loginOverlay" style="display:none; position:fixed; inset:0; z-index:99998; background:#2d2d2d; background-size:cover; background-position:center; align-items:center; justify-content:center;">
   <div style="width:92%; max-width:540px; padding:24px; text-align:center;">
     <div style="display:flex; flex-direction:column; align-items:center; gap:14px; margin-bottom:12px;">
       <div style="width:120px; height:120px; border-radius:50%; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.45); border:2px solid rgba(255,255,255,0.4);">
@@ -1462,7 +1462,16 @@ function initGate(){
             document.body.classList.add('desktop-ready');
           }
         } else {
-          status.textContent = 'Incorrect password';
+          // Provide clearer feedback based on status code
+          if(res.status === 401){
+            status.textContent = 'Incorrect password';
+          } else if(res.status === 500){
+            status.textContent = 'Server not configured. Please set ENTRY_PASSWORD.';
+          } else if(res.status === 405){
+            status.textContent = 'Method not allowed. Check API route.';
+          } else {
+            status.textContent = 'Error signing in. Please try again.';
+          }
         }
       } catch(e){ status.textContent = 'Connection error'; }
       btn.disabled = false; btn.textContent = 'Sign In';

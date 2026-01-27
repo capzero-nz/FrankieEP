@@ -3,7 +3,22 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
   try {
-    const { password = '' } = req.body || {};
+    // Support both parsed and raw JSON bodies
+    let body = req.body;
+    if (!body || typeof body !== 'object') {
+      try {
+        const raw = await new Promise((resolve, reject) => {
+          let data = '';
+          req.on('data', chunk => { data += chunk; });
+          req.on('end', () => resolve(data));
+          req.on('error', reject);
+        });
+        body = raw ? JSON.parse(raw) : {};
+      } catch (_) {
+        body = {};
+      }
+    }
+    const { password = '' } = body;
     const gate = process.env.ENTRY_PASSWORD || '';
     if (!gate) {
       // If not set, deny by default
