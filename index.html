@@ -756,29 +756,49 @@ html, body {
 
 <body>
 
-<!-- Entry Password Gate -->
-<div id="gateOverlay" class="gate-overlay" style="display:none;">
-  <div class="gate-card">
-    <div class="gate-title">Welcome</div>
-    <div class="gate-sub">Enter password to continue</div>
-    <input id="gatePassword" type="password" placeholder="Password" class="gate-input" />
-    <button id="gateSubmit" class="gate-btn">Enter</button>
-    <div id="gateStatus" class="gate-status"></div>
+<!-- Overlays: Loading and Mac-style Login -->
+
+<div id="bootOverlay" style="position:fixed; inset:0; z-index:99999; background:#000; display:flex; align-items:center; justify-content:center;">
+  <div style="display:flex; flex-direction:column; align-items:center; gap:22px; width:100%; max-width:560px; padding:24px;">
+    <div style="width:72px; height:72px; border-radius:50%; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:22px;">FV</div>
+    <div id="bootText" style="color:#fff; font-size:13px; opacity:0.9;">Starting up… 0%</div>
+    <div style="width:80%; max-width:420px; height:6px; border-radius:999px; background:rgba(255,255,255,0.15); overflow:hidden;">
+      <div id="bootBar" style="width:0%; height:100%; background:#fff; border-radius:999px; transition:width .25s ease;"></div>
+    </div>
+  </div>
+</div>
+<div id="loginOverlay" style="display:none; position:fixed; inset:0; z-index:99998; background:#2d2d2d; background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center;">
+  <div style="width:92%; max-width:540px; padding:24px; text-align:center;">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px; margin-bottom:12px;">
+      <div style="width:120px; height:120px; border-radius:50%; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.45); border:2px solid rgba(255,255,255,0.4);">
+        <img src="fc55f708c8d651c923055ab1a1d749be.jpg" alt="Frankie Avatar" style="width:100%; height:100%; object-fit:cover;"/>
+      </div>
+      <div style="font-weight:700; font-size:22px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.5);">Frankie Venter</div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center; justify-content:center;">
+      <input id="gatePassword" type="password" placeholder="Password" style="flex:1; min-width:0; max-width:360px; padding:12px; border:1px solid rgba(255,255,255,0.35); background:rgba(0,0,0,0.35); color:#fff; border-radius:12px; font-size:14px; outline:none;"/>
+      <button id="gateSubmit" style="padding:12px 18px; background:#fff; color:#000; border:none; border-radius:12px; font-weight:700; cursor:pointer;">Sign In</button>
+    </div>
+    <div id="gateStatus" style="min-height:18px; margin-top:12px; font-size:12px; color:#ff5f56; text-align:center;"></div>
   </div>
   <style>
-    .gate-overlay { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.6); backdrop-filter:blur(6px); z-index:99999; }
-    .gate-card { width:92%; max-width:360px; padding:20px; border-radius:12px; background:rgba(255,255,255,.9); border:1px solid var(--blur-border); box-shadow:var(--shadow-heavy); text-align:center; }
-    .gate-title { font-size:18px; font-weight:700; color:#222; margin-bottom:6px; }
-    .gate-sub { font-size:12px; color:#555; margin-bottom:14px; }
-    .gate-input { width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px; margin-bottom:12px; }
-    .gate-btn { width:100%; padding:10px; background:#ff69b4; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; }
-    .gate-status { margin-top:10px; font-size:12px; color:#b00; min-height:16px; }
+    @keyframes loginFadeOut {
+      0% { opacity: 1; filter: blur(0px); transform: scale(1); }
+      100% { opacity: 0; filter: blur(12px); transform: scale(1.04); }
+    }
+    .login-exit { animation: loginFadeOut 600ms ease forwards; }
+    @keyframes desktopIn {
+      0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .desktop-ready .desktop { animation: desktopIn 600ms ease forwards; }
+    .reduce-motion .desktop { animation: none !important; }
   </style>
 </div>
 
 <div class="menu-bar">
   <img src="https://www.dropbox.com/scl/fi/jaro7tf2paxju5t9lnflp/747.png?rlkey=akamxf9owvejo8yoj51302xi5&st=8v9mwutn&raw=1" alt="Apple" style="height: 16px; width: auto;">
-  <div style="flex: 1; text-align: center;">Frankie Venter</div>
+  <div style="flex: 1; text-align: center;">Frankie Venter's Laptop</div>
   <div id="clock"></div>
 </div>
 
@@ -838,6 +858,10 @@ html, body {
     <div class="icon" onclick="openWindow('game-window')">
       <div class="icon-img">🕹️</div>
       <div class="icon-label">Games</div>
+    </div>
+    <div class="icon" onclick="openWindow('settings-window')">
+      <div class="icon-img">⚙️</div>
+      <div class="icon-label">Settings</div>
     </div>
     <div class="icon" onclick="openLink('https://fiveam.lnk.to/abigdealtome')">
       <div class="icon-img" style="background-image:url('https://www.dropbox.com/scl/fi/ydjexhmo7bzpefle21734/fc55f708c8d651c923055ab1a1d749be.jpg?rlkey=healak5anf4t66tn4msu6qjnz&st=i6oaa054&raw=1');background-size:cover;background-position:center;"></div>
@@ -987,7 +1011,7 @@ html, body {
         <canvas id="pongCanvas" width="700" height="420" style="max-width:95%;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:#000"></canvas>
         <button id="pongPlayBtn" style="display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 24px;border-radius:10px;border:none;background:#ff69b4;color:#fff;font-weight:700;font-size:16px;box-shadow:0 8px 20px rgba(0,0,0,.2);cursor:pointer;">Play Again</button>
       </div>
-      <div style="font-size:12px;color:#666;">Use mouse or ← → keys to move the paddle.</div>
+      <div style="font-size:12px;color:#666;">Use ← → keys to set paddle direction.</div>
     </div>
 
     
@@ -1078,6 +1102,38 @@ html, body {
   </div>
 </div>
 
+<!-- Settings App Window -->
+<div id="settings-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('settings-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">Settings</div>
+    <button class="sidebar-toggle" onclick="toggleSidebar('settings-window')">☰ Sidebar</button>
+  </div>
+  <div class="window-content">
+    <div class="split-view">
+      <div class="sidebar" id="settingsList"></div>
+      <div class="main-content" id="settingsContent"></div>
+    </div>
+  </div>
+  <style>
+    .setting-row { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(0,0,0,0.06); }
+    .setting-name { font-size:14px; color:#222; }
+    .switch { position:relative; width:46px; height:26px; background:rgba(0,0,0,0.15); border-radius:999px; transition:background .2s ease; cursor:pointer; }
+    .switch input { display:none; }
+    .switch .thumb { position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.25); transition:left .2s ease; }
+    .switch input:checked + .thumb { left:23px; }
+    .switch input:checked ~ .track { background:#27c93f; }
+    .settings-note { font-size:12px; color:#666; margin-top:12px; }
+    .settings-group { margin-bottom:16px; }
+    .settings-group h3 { margin:0 0 8px; font-size:16px; color:#222; }
+    .settings-btn { padding:8px 12px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); background:#f5f5f7; color:#222; font-weight:600; cursor:pointer; }
+  </style>
+</div>
+
 <div id="tour-window" class="window">
   <div class="window-header">
     <div class="dots">
@@ -1149,6 +1205,7 @@ function openWindow(windowId) {
   if(windowId === 'videos-window') loadVideos();
   if(windowId === 'lyrics-window') loadLyrics();
   if(windowId === 'music-window') initMusic();
+  if(windowId === 'settings-window') initSettings();
   if(windowId === 'letters-window') {
     initLetters();
     const thanks = document.getElementById('lettersThanks');
@@ -1186,26 +1243,52 @@ function initMusic(){
 }
 
 function openLink(url){
-  try {
-    window.open(url, '_blank', 'noopener');
-  } catch(e) {
-    location.href = url;
+  try { window.open(url, '_blank', 'noopener'); }
+  catch(e) { location.href = url; }
+}
+
+// ===== ASSET PRELOAD + LOADING OVERLAY =====
+async function preloadAssets(){
+  const list = [
+    'https://www.dropbox.com/scl/fi/jaro7tf2paxju5t9lnflp/747.png?rlkey=akamxf9owvejo8yoj51302xi5&st=8v9mwutn&raw=1',
+    'https://www.dropbox.com/scl/fi/ydjexhmo7bzpefle21734/fc55f708c8d651c923055ab1a1d749be.jpg?rlkey=healak5anf4t66tn4msu6qjnz&st=i6oaa054&raw=1',
+    'fc55f708c8d651c923055ab1a1d749be.jpg',
+    'stencil.jpeg',
+    ...photos
+  ];
+  const unique = Array.from(new Set(list.filter(Boolean)));
+  let loaded = 0;
+  const total = unique.length;
+  function updateProgress(){
+    const bar = document.getElementById('bootBar');
+    const text = document.getElementById('bootText');
+    if(bar){ bar.style.width = Math.round((loaded/total)*100) + '%'; }
+    if(text){ text.textContent = `Starting up… ${Math.round((loaded/total)*100)}%`; }
   }
+  updateProgress();
+  await Promise.allSettled(unique.map(src => new Promise((resolve) => {
+    try {
+      const img = new Image();
+      img.onload = () => { loaded++; updateProgress(); resolve(true); };
+      img.onerror = () => { loaded++; updateProgress(); resolve(false); };
+      img.src = src;
+    } catch(_) { loaded++; updateProgress(); resolve(false); }
+  })));
 }
 
 function closeWindow(id) {
-  const window = document.getElementById(id);
-  window.style.display="none";
-  window.classList.remove("active");
+  const win = document.getElementById(id);
+  if(!win) return;
+  win.style.display = "none";
+  win.classList.remove("active");
 }
 
 // ===== ENTRY PASSWORD GATE =====
 function initGate(){
-  if (window.ENABLE_GATE === true) return;
+  if (window.ENABLE_GATE === false) return;
   try {
-    // Already authorized for this session?
     if(sessionStorage.getItem('fv_auth') === 'true'){ return; }
-    const overlay = document.getElementById('gateOverlay');
+    const overlay = document.getElementById('loginOverlay');
     const input = document.getElementById('gatePassword');
     const btn = document.getElementById('gateSubmit');
     const status = document.getElementById('gateStatus');
@@ -1222,16 +1305,148 @@ function initGate(){
         });
         if(res.ok){
           sessionStorage.setItem('fv_auth', 'true');
-          overlay.style.display = 'none';
+          if(overlay){
+            overlay.classList.add('login-exit');
+            overlay.addEventListener('animationend', () => {
+              overlay.style.display = 'none';
+              document.body.classList.add('desktop-ready');
+            }, { once: true });
+          } else {
+            document.body.classList.add('desktop-ready');
+          }
         } else {
           status.textContent = 'Incorrect password';
         }
       } catch(e){ status.textContent = 'Connection error'; }
-      btn.disabled = false; btn.textContent = 'Enter';
+      btn.disabled = false; btn.textContent = 'Sign In';
     }
     btn.addEventListener('click', attempt);
     input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') attempt(); });
   } catch(e) { console.warn('Gate init error', e); }
+}
+
+// ===== Settings App =====
+const settingsSections = ['General','Appearance','Account','About'];
+function initSettings(){
+  const list = document.getElementById('settingsList');
+  const content = document.getElementById('settingsContent');
+  if(!list || !content) return;
+  if(list.children.length) return;
+  settingsSections.forEach((name, i) => {
+    const item = document.createElement('div');
+    item.className = 'sidebar-item' + (i===0 ? ' active' : '');
+    item.textContent = name;
+    item.onclick = () => selectSettings(name);
+    list.appendChild(item);
+  });
+  selectSettings('General');
+}
+
+function selectSettings(name){
+  document.querySelectorAll('#settingsList .sidebar-item').forEach(el => {
+    el.classList.toggle('active', el.textContent === name);
+  });
+  renderSettings(name);
+}
+
+function renderSettings(section){
+  const content = document.getElementById('settingsContent');
+  if(!content) return;
+  if(section === 'General'){
+    content.innerHTML = `
+      <div class="settings-group">
+        <h3>Session</h3>
+        <div class="setting-row">
+          <div class="setting-name">Enable Password Gate</div>
+          <label class="switch">
+            <input id="toggleGate" type="checkbox" ${window.ENABLE_GATE ? 'checked' : ''}>
+            <span class="thumb"></span>
+          </label>
+        </div>
+        <div class="settings-note">Takes effect immediately. If enabled and you sign out, the login screen will appear.</div>
+        <div style="margin-top:12px;">
+          <button id="signOutBtn" class="settings-btn">Sign Out</button>
+        </div>
+      </div>
+    `;
+    const gate = document.getElementById('toggleGate');
+    const signOut = document.getElementById('signOutBtn');
+    if(gate){
+      gate.addEventListener('change', () => {
+        window.ENABLE_GATE = !!gate.checked;
+        if(!window.ENABLE_GATE){
+          const overlay = document.getElementById('loginOverlay');
+          if(overlay) overlay.style.display = 'none';
+          sessionStorage.setItem('fv_auth','true');
+        } else {
+          sessionStorage.removeItem('fv_auth');
+          initGate();
+        }
+      });
+    }
+    if(signOut){
+      signOut.addEventListener('click', () => {
+        try { sessionStorage.removeItem('fv_auth'); } catch(_){}
+        initGate();
+      });
+    }
+    return;
+  }
+  if(section === 'Appearance'){
+    content.innerHTML = `
+      <div class="settings-group">
+        <h3>Appearance</h3>
+        <div class="setting-row">
+          <div class="setting-name">Reduce Motion</div>
+          <label class="switch">
+            <input id="toggleMotion" type="checkbox" ${localStorage.getItem('fv_reduce_motion')==='true' ? 'checked' : ''}>
+            <span class="thumb"></span>
+          </label>
+        </div>
+        <div class="settings-note">Disables some transitions and animations.</div>
+      </div>
+    `;
+    const motion = document.getElementById('toggleMotion');
+    if(motion){
+      motion.addEventListener('change', () => {
+        localStorage.setItem('fv_reduce_motion', motion.checked ? 'true' : 'false');
+        document.body.classList.toggle('reduce-motion', motion.checked);
+      });
+    }
+    return;
+  }
+  if(section === 'Account'){
+    content.innerHTML = `
+      <div class="settings-group">
+        <h3>Account</h3>
+        <div class="setting-row">
+          <div class="setting-name">User</div>
+          <div style="font-weight:600;">Frankie Venter</div>
+        </div>
+        <div class="setting-row" style="justify-content:flex-start; gap:12px;">
+          <button id="signOutBtn2" class="settings-btn">Sign Out</button>
+        </div>
+      </div>
+    `;
+    const signOut2 = document.getElementById('signOutBtn2');
+    if(signOut2){
+      signOut2.addEventListener('click', () => {
+        try { sessionStorage.removeItem('fv_auth'); } catch(_){}
+        initGate();
+      });
+    }
+    return;
+  }
+  if(section === 'About'){
+    content.innerHTML = `
+      <div class="settings-group">
+        <h3>About</h3>
+        <div class="settings-note">© 2026 Frankie Venter, under exclusive licence to Five AM.</div>
+        <div class="settings-note">Build: FrankieEP (client).</div>
+      </div>
+    `;
+    return;
+  }
 }
 
 // ===== GAMES NAV =====
@@ -1884,7 +2099,7 @@ function initPong(){
   let highScore = parseInt(localStorage.getItem('pongHighScore') || '0', 10);
   if(highEl) highEl.textContent = String(highScore);
   const state = {
-    paddle: { x: (W-PADDLE_W)/2, y: H - PADDLE_H - 2, w: PADDLE_W, h: PADDLE_H, vx: 0, speed: 8 },
+    paddle: { x: (W-PADDLE_W)/2, y: H - PADDLE_H - 2, w: PADDLE_W, h: PADDLE_H, vx: 0, speed: 4 },
     ball: { x: W/2, y: H/2, r: 8, vx: 0, vy: 0 },
     score: 0
   };
@@ -1897,7 +2112,7 @@ function initPong(){
   }
 
   function reset(){
-    state.paddle.x = (W-PADDLE_W)/2; state.paddle.y = H - state.paddle.h - 2; state.paddle.vx = 0;
+    state.paddle.x = (W-PADDLE_W)/2; state.paddle.y = H - state.paddle.h - 2; state.paddle.vx = state.paddle.speed; // always moving right initially
     state.ball.x = W/2; state.ball.y = H*0.6; state.ball.r = 8;
     launchBall();
     state.score = 0; scoreEl.textContent = '0';
@@ -1962,8 +2177,13 @@ function initPong(){
   function update(){
     // Paddle
     state.paddle.x += state.paddle.vx;
-    if(state.paddle.x < 0) state.paddle.x = 0;
-    if(state.paddle.x > W - state.paddle.w) state.paddle.x = W - state.paddle.w;
+    if(state.paddle.x <= 0){
+      state.paddle.x = 0;
+      state.paddle.vx = Math.abs(state.paddle.vx); // bounce right
+    } else if(state.paddle.x >= W - state.paddle.w){
+      state.paddle.x = W - state.paddle.w;
+      state.paddle.vx = -Math.abs(state.paddle.vx); // bounce left
+    }
 
     // Ball
     state.ball.x += state.ball.vx; state.ball.y += state.ball.vy;
@@ -2001,11 +2221,6 @@ function initPong(){
   }
 
   // Controls
-  function onMouseMove(e){
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    state.paddle.x = Math.max(0, Math.min(W - state.paddle.w, mx - state.paddle.w/2));
-  }
   function onKeyDown(e){
     if(e.key === 'ArrowLeft') state.paddle.vx = -state.paddle.speed;
     else if(e.key === 'ArrowRight') state.paddle.vx = state.paddle.speed;
@@ -2013,10 +2228,9 @@ function initPong(){
       if(gameOver && !running){ reset(); running = true; requestAnimationFrame(loop); }
     }
   }
-  function onKeyUp(e){ if(e.key === 'ArrowLeft' || e.key === 'ArrowRight') state.paddle.vx = 0; }
+  function onKeyUp(e){ /* keep moving; do not stop vx */ }
 
   if(canvas && canvas.dataset.pongBound !== 'true'){
-    canvas.addEventListener('mousemove', onMouseMove);
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
     if(playBtn){ playBtn.addEventListener('click', ()=>{ if(!running){ reset(); running = true; requestAnimationFrame(loop); } }); }
@@ -2115,9 +2329,18 @@ updateClock();
 
 // Preload content so windows are populated when opened
 document.addEventListener('DOMContentLoaded', function(){
-  window.ENABLE_GATE = false; // enable password gate
-  try { sessionStorage.removeItem('fv_auth'); } catch(e) {}
-  initGate();
+  window.ENABLE_GATE = true; // enable password gate
+  // Show boot overlay, preload assets, then show login if needed
+  (async ()=>{
+    const boot = document.getElementById('bootOverlay');
+    if(boot) boot.style.display = 'flex';
+    try { await preloadAssets(); } catch(_){}
+    if(boot) boot.style.display = 'none';
+    // If not authorized yet, show login overlay
+    if(window.ENABLE_GATE && sessionStorage.getItem('fv_auth') !== 'true'){
+      initGate();
+    }
+  })();
   try { loadGallery(); } catch(e) { console.warn('Gallery init error', e); }
   try { loadVideos(); } catch(e) { console.warn('Videos init error', e); }
   try { /* lazy init draw on open */ } catch(e) { console.warn('Draw init error', e); }
