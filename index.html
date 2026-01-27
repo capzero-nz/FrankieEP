@@ -24,9 +24,22 @@ html, body {
   margin:0;
   height:100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background:url("bg.jpeg")
-    center / cover no-repeat fixed;
+  background: linear-gradient(135deg, #be0568 0%, #ff69b4 25%, #ff1491bb 50%, #ff69b4 75%, #ff69b9d8 100%);
+  background-size: 400% 400%;
+  animation: gradientWave 8s ease infinite;
   overflow:hidden;
+}
+
+@keyframes gradientWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* ===== MENU BAR ===== */
