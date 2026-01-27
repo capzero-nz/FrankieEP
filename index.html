@@ -189,6 +189,7 @@ html, body {
   background:rgba(255,255,255,.35);
   border-bottom:1px solid rgba(0,0,0,.08);
 }
+.window-header { cursor: move; }
 .sidebar-toggle {
   margin-left: auto;
   padding: 6px 10px;
@@ -221,6 +222,19 @@ html, body {
   font-weight:600;
   color:#222;
   margin-right:48px;
+}
+
+/* Resize handle */
+.resize-handle {
+  position:absolute;
+  right:8px;
+  bottom:8px;
+  width:14px;
+  height:14px;
+  border-right:2px solid rgba(0,0,0,0.3);
+  border-bottom:2px solid rgba(0,0,0,0.3);
+  opacity:0.7;
+  cursor: se-resize;
 }
 
 .window-content {
@@ -868,6 +882,10 @@ html, body {
       <div class="icon-img">🕹️</div>
       <div class="icon-label">Games</div>
     </div>
+    <div class="icon" onclick="openWindow('todo-window')">
+      <div class="icon-img">🗒️</div>
+      <div class="icon-label">To-Do</div>
+    </div>
     <div class="icon" onclick="openWindow('settings-window')">
       <div class="icon-img">⚙️</div>
       <div class="icon-label">Settings</div>
@@ -1111,6 +1129,33 @@ html, body {
   </div>
 </div>
 
+<!-- To-Do App Window -->
+<div id="todo-window" class="window">
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('todo-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
+    </div>
+    <div class="window-title">To-Do</div>
+  </div>
+  <div class="window-content" style="align-items:flex-start; justify-content:flex-start;">
+    <div id="todoContainer" style="width:100%; padding:24px;">
+      <div style="font-size:18px; font-weight:700; color:#222; margin-bottom:12px;">Upcoming Tasks</div>
+      <ul id="todoList" style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;"></ul>
+      <div style="font-size:12px; color:#666; margin-top:10px;">Tasks are curated and cannot be created by users.</div>
+    </div>
+  </div>
+  <style>
+    .todo-item { display:flex; align-items:center; gap:10px; padding:12px; border-radius:10px; background:rgba(255,255,255,.6); border:1px solid var(--blur-border); }
+    .todo-check { width:18px; height:18px; border-radius:4px; border:1px solid #aaa; background:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:14px; color:#27c93f; cursor:pointer; }
+    .todo-title { font-size:14px; color:#222; font-weight:600; }
+    .todo-note { font-size:12px; color:#666; }
+    .todo-done .todo-title { text-decoration: line-through; color:#777; }
+    .todo-done .todo-check { color:#27c93f; }
+  </style>
+</div>
+
 <!-- Settings App Window -->
 <div id="settings-window" class="window">
   <div class="window-header">
@@ -1215,6 +1260,7 @@ function openWindow(windowId) {
   if(windowId === 'lyrics-window') loadLyrics();
   if(windowId === 'music-window') initMusic();
   if(windowId === 'settings-window') initSettings();
+  if(windowId === 'todo-window') initTodo();
   if(windowId === 'letters-window') {
     initLetters();
     const thanks = document.getElementById('lettersThanks');
@@ -1292,6 +1338,98 @@ function closeWindow(id) {
   win.classList.remove("active");
 }
 
+// ===== DRAG & RESIZE WINDOWS =====
+function initWindowInteractions(){
+  const wins = Array.from(document.querySelectorAll('.window'));
+  const vw = ()=> window.innerWidth;
+  const vh = ()=> window.innerHeight;
+  wins.forEach(win => {
+    // Append resize handle if missing
+    if(!win.querySelector('.resize-handle')){
+      const h = document.createElement('div');
+      h.className = 'resize-handle';
+      win.appendChild(h);
+    }
+    // Prepare for drag: ensure absolute position using left/top
+    function center(){
+      const rect = win.getBoundingClientRect();
+      const w = rect.width || 600, h = rect.height || 400;
+      win.style.transform = 'none';
+      win.style.left = Math.max(8, (vw() - w)/2) + 'px';
+      win.style.top = Math.max(8, (vh() - h)/2) + 'px';
+      win.style.right = 'auto';
+      win.style.bottom = 'auto';
+    }
+    center();
+
+    const header = win.querySelector('.window-header');
+    let dragging = false, dx = 0, dy = 0;
+    function onDown(e){
+      dragging = true;
+      const rect = win.getBoundingClientRect();
+      dx = (e.clientX || (e.touches&&e.touches[0].clientX)) - rect.left;
+      dy = (e.clientY || (e.touches&&e.touches[0].clientY)) - rect.top;
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+      document.addEventListener('touchmove', onMove, { passive:false });
+      document.addEventListener('touchend', onUp);
+    }
+    function onMove(e){
+      if(!dragging) return;
+      const x = (e.clientX || (e.touches&&e.touches[0].clientX)) - dx;
+      const y = (e.clientY || (e.touches&&e.touches[0].clientY)) - dy;
+      const rect = win.getBoundingClientRect();
+      const w = rect.width, h = rect.height;
+      const nx = Math.min(vw()-w-8, Math.max(8, x));
+      const ny = Math.min(vh()-h-8, Math.max(8, y));
+      win.style.left = nx + 'px';
+      win.style.top = ny + 'px';
+      e.preventDefault && e.preventDefault();
+    }
+    function onUp(){
+      dragging = false;
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onUp);
+    }
+    if(header){ header.addEventListener('mousedown', onDown); header.addEventListener('touchstart', onDown, { passive:false }); }
+
+    // Resize
+    const handle = win.querySelector('.resize-handle');
+    let resizing = false, sx = 0, sy = 0, sw = 0, sh = 0;
+    function onRDown(e){
+      const pt = e.touches ? e.touches[0] : e;
+      resizing = true; sx = pt.clientX; sy = pt.clientY;
+      const rect = win.getBoundingClientRect(); sw = rect.width; sh = rect.height;
+      document.addEventListener('mousemove', onRMove);
+      document.addEventListener('mouseup', onRUp);
+      document.addEventListener('touchmove', onRMove, { passive:false });
+      document.addEventListener('touchend', onRUp);
+      e.preventDefault && e.preventDefault();
+    }
+    function onRMove(e){
+      if(!resizing) return;
+      const pt = e.touches ? e.touches[0] : e;
+      const dw = (pt.clientX - sx);
+      const dh = (pt.clientY - sy);
+      const newW = Math.min(vw()-parseFloat(win.style.left||'0')-8, Math.max(320, sw + dw));
+      const newH = Math.min(vh()-parseFloat(win.style.top||'0')-8, Math.max(240, sh + dh));
+      win.style.width = newW + 'px';
+      win.style.height = newH + 'px';
+      e.preventDefault && e.preventDefault();
+    }
+    function onRUp(){
+      resizing = false;
+      document.removeEventListener('mousemove', onRMove);
+      document.removeEventListener('mouseup', onRUp);
+      document.removeEventListener('touchmove', onRMove);
+      document.removeEventListener('touchend', onRUp);
+    }
+    if(handle){ handle.addEventListener('mousedown', onRDown); handle.addEventListener('touchstart', onRDown, { passive:false }); }
+  });
+}
+
 // ===== ENTRY PASSWORD GATE =====
 function initGate(){
   if (window.ENABLE_GATE === false) return;
@@ -1335,7 +1473,7 @@ function initGate(){
 }
 
 // ===== Settings App =====
-const settingsSections = ['General','Appearance','Account','About'];
+const settingsSections = ['General','Appearance','Account','Legal','About'];
 function initSettings(){
   const list = document.getElementById('settingsList');
   const content = document.getElementById('settingsContent');
@@ -1366,36 +1504,19 @@ function renderSettings(section){
       <div class="settings-group">
         <h3>Session</h3>
         <div class="setting-row">
-          <div class="setting-name">Enable Password Gate</div>
-          <label class="switch">
-            <input id="toggleGate" type="checkbox" ${window.ENABLE_GATE ? 'checked' : ''}>
-            <span class="thumb"></span>
-          </label>
+          <div class="setting-name">Password Gate</div>
+          <div style="font-weight:600; color:#27c93f;">Always On</div>
         </div>
-        <div class="settings-note">Takes effect immediately. If enabled and you sign out, the login screen will appear.</div>
+        <div class="settings-note">The login gate cannot be disabled.</div>
         <div style="margin-top:12px;">
           <button id="signOutBtn" class="settings-btn">Sign Out</button>
         </div>
       </div>
     `;
-    const gate = document.getElementById('toggleGate');
     const signOut = document.getElementById('signOutBtn');
-    if(gate){
-      gate.addEventListener('change', () => {
-        window.ENABLE_GATE = !!gate.checked;
-        if(!window.ENABLE_GATE){
-          const overlay = document.getElementById('loginOverlay');
-          if(overlay) overlay.style.display = 'none';
-          sessionStorage.setItem('fv_auth','true');
-        } else {
-          sessionStorage.removeItem('fv_auth');
-          initGate();
-        }
-      });
-    }
     if(signOut){
       signOut.addEventListener('click', () => {
-        try { sessionStorage.removeItem('fv_auth'); } catch(_){}
+        try { sessionStorage.removeItem('fv_auth'); } catch(_){ }
         initGate();
       });
     }
@@ -1429,8 +1550,20 @@ function renderSettings(section){
       <div class="settings-group">
         <h3>Account</h3>
         <div class="setting-row">
-          <div class="setting-name">User</div>
-          <div style="font-weight:600;">Frankie Venter</div>
+          <div class="setting-name">Username</div>
+          <div style="font-weight:600;">@frankieventer</div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-name">Device Name</div>
+          <div style="font-weight:600;">Frankie's Laptop</div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-name">OS</div>
+          <div style="font-weight:600;">FrankieOS</div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-name">Build</div>
+          <div style="font-weight:600;">V13.2</div>
         </div>
         <div class="setting-row" style="justify-content:flex-start; gap:12px;">
           <button id="signOutBtn2" class="settings-btn">Sign Out</button>
@@ -1440,10 +1573,23 @@ function renderSettings(section){
     const signOut2 = document.getElementById('signOutBtn2');
     if(signOut2){
       signOut2.addEventListener('click', () => {
-        try { sessionStorage.removeItem('fv_auth'); } catch(_){}
+        try { sessionStorage.removeItem('fv_auth'); } catch(_){ }
         initGate();
       });
     }
+    return;
+  }
+  if(section === 'Legal'){
+    content.innerHTML = `
+      <div class="settings-group">
+        <h3>Legal</h3>
+        <div class="setting-row" style="justify-content:flex-start; gap:12px;">
+          <a href="terms.html" class="settings-btn" target="_blank" rel="noopener">Terms of Service</a>
+          <a href="privacy.html" class="settings-btn" target="_blank" rel="noopener">Privacy Policy</a>
+        </div>
+        <div class="settings-note">These documents describe how this site operates and how we handle your data.</div>
+      </div>
+    `;
     return;
   }
   if(section === 'About'){
@@ -2273,6 +2419,57 @@ function initPong(){
   reset(); running = true; requestAnimationFrame(loop);
 }
 
+// ===== TO-DO APP =====
+const todoItems = [
+  { title: 'Review vinyl proofs', note: 'Check color variant and label alignment', done: false },
+  { title: 'Approve press photos', note: 'Select top 6 for media kit', done: true },
+  { title: 'Playlist outreach', note: 'Send submissions to curators', done: false },
+  { title: 'Tour logistics', note: 'Confirm dates and venues with H', done: false },
+  { title: 'Merch samples', note: 'Evaluate quality and sizing', done: true }
+];
+
+function initTodo(){
+  const list = document.getElementById('todoList');
+  if(!list) return;
+  list.innerHTML = '';
+  const state = JSON.parse(localStorage.getItem('fv_todo_state') || 'null');
+  const items = todoItems.map((t, i) => {
+    const done = state && typeof state[i] !== 'undefined' ? !!state[i] : !!t.done;
+    return { ...t, done };
+  });
+  items.forEach((item, i) => {
+    const li = document.createElement('li');
+    li.className = 'todo-item' + (item.done ? ' todo-done' : '');
+    const check = document.createElement('div');
+    check.className = 'todo-check';
+    check.innerHTML = item.done ? '✓' : '';
+    check.title = 'Toggle complete';
+    check.addEventListener('click', () => {
+      item.done = !item.done;
+      li.classList.toggle('todo-done', item.done);
+      check.innerHTML = item.done ? '✓' : '';
+      // Persist only curated items state; no user-created tasks supported
+      const newState = items.map(it => it.done);
+      localStorage.setItem('fv_todo_state', JSON.stringify(newState));
+    });
+    const textWrap = document.createElement('div');
+    textWrap.style.display = 'flex';
+    textWrap.style.flexDirection = 'column';
+    textWrap.style.gap = '2px';
+    const title = document.createElement('div');
+    title.className = 'todo-title';
+    title.textContent = item.title;
+    const note = document.createElement('div');
+    note.className = 'todo-note';
+    note.textContent = item.note;
+    textWrap.appendChild(title);
+    textWrap.appendChild(note);
+    li.appendChild(check);
+    li.appendChild(textWrap);
+    list.appendChild(li);
+  });
+}
+
 // (Tetris removed per request)
 
 // Videos data
@@ -2371,6 +2568,8 @@ document.addEventListener('DOMContentLoaded', function(){
       initGate();
     }
   })();
+  // Enable drag/resize on windows
+  try { initWindowInteractions(); } catch(e) { console.warn('Init window interactions error', e); }
   initMenuDropdown();
   try { loadGallery(); } catch(e) { console.warn('Gallery init error', e); }
   try { loadVideos(); } catch(e) { console.warn('Videos init error', e); }
