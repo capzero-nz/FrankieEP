@@ -124,6 +124,170 @@
 
         /* Music Window specific adjustments */
         #music-window { width: 480px; }
+
+        /* Gallery Window specific adjustments */
+        #gallery-window { 
+            width: 900px; 
+            max-height: 85vh;
+        }
+
+        .gallery-container {
+            padding: 20px;
+            width: 100%;
+            overflow-y: auto;
+            max-height: calc(85vh - 80px);
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .photo-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            aspect-ratio: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            background: #f5f5f5;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 122, 255, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-item:hover .photo-overlay {
+            opacity: 1;
+        }
+
+        .photo-overlay-text {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        /* Modal for fullscreen view */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            margin: 5vh auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 35px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #ccc;
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 15px 20px;
+            transition: color 0.2s;
+            user-select: none;
+        }
+
+        .modal-nav:hover {
+            color: #ccc;
+        }
+
+        .modal-prev {
+            left: 20px;
+        }
+
+        .modal-next {
+            right: 20px;
+        }
+
+        .scrollbar-style::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollbar-style::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+
+        .scrollbar-style::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+
+        .scrollbar-style::-webkit-scrollbar-thumb:hover {
+            background: rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
@@ -139,7 +303,7 @@
         <div class="icon-label">Exclusive_Music</div>
     </div>
 
-    <div class="icon" onclick="alert('Accessing Vault...')">
+    <div class="icon" onclick="openWindow('gallery-window')">
         <div class="icon-img">📁</div>
         <div class="icon-label">Unreleased_Photos</div>
     </div>
@@ -159,9 +323,107 @@
     </div>
 </div>
 
+<div id="gallery-window" class="window">
+    <div class="window-header">
+        <div class="dots">
+            <div class="dot close" onclick="closeWindow('gallery-window')"></div>
+            <div class="dot min"></div>
+            <div class="dot max"></div>
+        </div>
+        <div class="window-title">Unreleased Photos Gallery</div>
+    </div>
+    <div class="window-content">
+        <div class="gallery-container scrollbar-style">
+            <div class="photo-grid" id="photoGrid"></div>
+        </div>
+    </div>
+</div>
+
+<div id="imageModal" class="modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <span class="modal-nav modal-prev" onclick="prevImage()">&#10094;</span>
+        <img id="modalImage" class="modal-img" src="" alt="">
+        <span class="modal-nav modal-next" onclick="nextImage()">&#10095;</span>
+    </div>
+</div>
+
 <script>
+    // Photo gallery data
+    const photos = [
+        { src: 'FV PRESS IMAGE 1.jpg', alt: 'Press Image 1' },
+        { src: 'FV PRESS IMAGE 2.jpg', alt: 'Press Image 2' },
+        { src: 'FV PRESS IMAGE 3.JPG', alt: 'Press Image 3' },
+        { src: 'FV PRESS IMAGE 4.JPG', alt: 'Press Image 4' },
+        { src: 'FV PRESS IMAGE 5.JPG', alt: 'Press Image 5' },
+        { src: 'FV PRESS IMAGE 1 (EDIT).png', alt: 'Press Image 1 Edit' }
+    ];
+
+    let currentPhotoIndex = 0;
+
+    function loadGallery() {
+        const grid = document.getElementById('photoGrid');
+        grid.innerHTML = '';
+        
+        photos.forEach((photo, index) => {
+            const item = document.createElement('div');
+            item.className = 'photo-item';
+            item.onclick = (e) => {
+                e.stopPropagation();
+                openModal(index);
+            };
+            
+            item.innerHTML = `
+                <img src="${photo.src}" alt="${photo.alt}" loading="lazy">
+                <div class="photo-overlay">
+                    <div class="photo-overlay-text">Click to view</div>
+                </div>
+            `;
+            
+            grid.appendChild(item);
+        });
+    }
+
+    function openModal(index) {
+        currentPhotoIndex = index;
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        modalImg.src = photos[index].src;
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(event) {
+        if (event && event.target.id !== 'imageModal') return;
+        const modal = document.getElementById('imageModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function nextImage() {
+        currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+        document.getElementById('modalImage').src = photos[currentPhotoIndex].src;
+    }
+
+    function prevImage() {
+        currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+        document.getElementById('modalImage').src = photos[currentPhotoIndex].src;
+    }
+
+    // Keyboard navigation for modal
+    document.addEventListener('keydown', (e) => {
+        if (document.getElementById('imageModal').style.display === 'block') {
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'Escape') closeModal();
+        }
+    });
+
     function openWindow(id) {
         document.getElementById(id).style.display = 'block';
+        if (id === 'gallery-window') {
+            loadGallery();
+        }
     }
 
     function closeWindow(id) {
