@@ -1,442 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frankie Venter's Computer</title>
-    <style>
-        :root {
-            --mac-bg: #ececec;
-            --mac-blue: #007aff;
-            --mac-close: #ff5f56;
-            --mac-min: #ffbd2e;
-            --mac-max: #27c93f;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Frankie Venter - A Big Deal To Me</title>
+<link rel="icon" type="image/png" href="Five AM Icon - Color.png">
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2070') no-repeat center center fixed;
-            background-size: cover;
-            overflow: hidden;
-        }
+<style>
+:root {
+  --blur-bg: rgba(255,255,255,0.65);
+  --blur-border: rgba(255,255,255,0.35);
+  --shadow-heavy: 0 40px 80px rgba(0,0,0,.45);
+  --shadow-soft: 0 10px 30px rgba(0,0,0,.25);
 
-        /* Top Menu Bar */
-        .menu-bar {
-            height: 25px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            font-size: 14px;
-            font-weight: 600;
-            justify-content: space-between;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
+  --red:#ff5f56;
+  --yellow:#ffbd2e;
+  --green:#27c93f;
+}
 
-        /* Desktop Icons */
-        .desktop-icons {
-            padding: 40px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 100px);
-            grid-gap: 30px;
-            justify-items: center;
-        }
+* { box-sizing: border-box; }
 
-        .icon {
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+html, body {
+  margin:0;
+  height:100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:url("bg.jpeg")
+    center / cover no-repeat fixed;
+  overflow:hidden;
+}
 
-        .icon:hover { transform: scale(1.05); }
+/* ===== MENU BAR ===== */
+.menu-bar {
+  height:28px;
+  padding:0 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(255,255,255,.8);
+  backdrop-filter: blur(20px);
+  font-size:13px;
+  font-weight:600;
+  box-shadow:0 1px 10px rgba(0,0,0,.1);
+}
 
-        .icon-img {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            margin-bottom: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
+/* ===== DESKTOP ===== */
+.desktop {
+  height:calc(100vh - 28px);
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+  align-items:center;
+  justify-content:center;
+}
 
-        .icon-label {
-            color: white;
-            font-size: 12px;
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
-        }
+.desktop-icons {
+  display:flex;
+  flex-direction:row;
+  gap:40px;
+  align-items:center;
+}
 
-        /* Window Styling */
-        .window {
-            position: absolute;
-            top: 15%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 500px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            overflow: hidden;
-            display: none; /* Hidden by default */
-            z-index: 100;
-        }
+.welcome-text {
+  font-size:48px;
+  font-weight:300;
+  color:#fff;
+  text-align:center;
+  text-shadow:0 2px 8px rgba(0,0,0,.5);
+  letter-spacing:-0.5px;
+  margin-bottom:40px;
+}
 
-        .window-header {
-            height: 35px;
-            background: #f1f1f1;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            border-bottom: 1px solid #ddd;
-        }
+.icon {
+  width:88px;
+  text-align:center;
+  cursor:pointer;
+}
 
-        .dots { display: flex; gap: 8px; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .close { background: var(--mac-close); cursor: pointer; }
-        .min { background: var(--mac-min); }
-        .max { background: var(--mac-max); }
+.icon-img {
+  width:64px;
+  height:64px;
+  margin:0 auto 6px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  background:rgba(255,255,255,.2);
+  backdrop-filter: blur(12px);
+  border:1px solid var(--blur-border);
+  box-shadow: var(--shadow-soft);
+  transition: transform .15s ease;
+}
 
-        .window-title {
-            flex-grow: 1;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 500;
-            color: #555;
-            margin-right: 40px; /* offset for dots */
-        }
+.icon:active .icon-img { transform:scale(.92); }
 
-        .window-content {
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            background: #fff;
-        }
+.icon-label {
+  font-size:11px;
+  color:#fff;
+  background:rgba(0,0,0,.35);
+  padding:2px 6px;
+  border-radius:5px;
+  text-shadow:0 1px 3px rgba(0,0,0,.6);
+}
 
-        /* Music Window specific adjustments */
-        #music-window { width: 480px; }
+/* ===== WINDOWS ===== */
+.window {
+  position:fixed;
+  inset:50% auto auto 50%;
+  transform:translate(-50%,-50%);
+  width:min(900px, 92vw);
+  height:min(600px, 80vh);
+  display:none;
+  flex-direction:column;
+  background:var(--blur-bg);
+  backdrop-filter: blur(30px);
+  border:1px solid var(--blur-border);
+  border-radius:14px;
+  box-shadow: var(--shadow-heavy);
+  overflow:hidden;
+}
 
-        /* Gallery Window specific adjustments */
-        #gallery-window { 
-            width: 900px; 
-            max-height: 85vh;
-        }
+.window-header {
+  height:40px;
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  background:rgba(255,255,255,.35);
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
 
-        .gallery-container {
-            padding: 20px;
-            width: 100%;
-            overflow-y: auto;
-            max-height: calc(85vh - 80px);
-        }
+.dots {
+  display:flex;
+  gap:8px;
+}
 
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            animation: fadeIn 0.3s ease-in;
-        }
+.dot {
+  width:12px;
+  height:12px;
+  border-radius:50%;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+.close { background:var(--red); cursor:pointer; }
+.min   { background:var(--yellow); }
+.max   { background:var(--green); }
 
-        .photo-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            aspect-ratio: 1;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
-            background: #f5f5f5;
-        }
+.window-title {
+  flex:1;
+  text-align:center;
+  font-size:13px;
+  font-weight:600;
+  color:#222;
+  margin-right:48px;
+}
 
-        .photo-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-        }
+.window-content {
+  flex:1;
+  background:rgba(255,255,255,.45);
+  overflow:auto;
+}
 
-        .photo-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
+/* ===== MUSIC ===== */
+.window-content iframe {
+  width:100%;
+  height:100%;
+  border:none;
+}
 
-        .photo-item:hover img {
-            transform: scale(1.08);
-        }
+/* ===== GALLERY ===== */
+.gallery-container {
+  padding:20px;
+}
 
-        .photo-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 122, 255, 0.6);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.photo-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:16px;
+}
 
-        .photo-item:hover .photo-overlay {
-            opacity: 1;
-        }
+.photo-item {
+  aspect-ratio:1;
+  border-radius:10px;
+  overflow:hidden;
+  background:rgba(0,0,0,.05);
+  border:1px solid rgba(255,255,255,.3);
+  cursor:pointer;
+}
 
-        .photo-overlay-text {
-            color: white;
-            font-size: 14px;
-            font-weight: 500;
-            text-align: center;
-            pointer-events: none;
-        }
+.photo-item img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform .3s ease;
+}
 
-        /* Modal for fullscreen view */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 200;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            animation: fadeIn 0.3s ease;
-        }
+.photo-item:hover img { transform:scale(1.06); }
 
-        .modal-content {
-            position: relative;
-            width: 90%;
-            max-width: 1200px;
-            height: 90vh;
-            margin: 5vh auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+/* ===== MODAL ===== */
+.modal {
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.9);
+  backdrop-filter: blur(6px);
+  z-index:9999;
+}
 
-        .modal-img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-        }
+.modal-content {
+  position:relative;
+  width:90vw;
+  height:90vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            color: white;
-            font-size: 35px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: color 0.2s;
-        }
+.modal-img {
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
 
-        .modal-close:hover {
-            color: #ccc;
-        }
+.modal-close {
+  position:absolute;
+  top:14px;
+  right:18px;
+  font-size:34px;
+  color:#fff;
+  cursor:pointer;
+}
 
-        .modal-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-            padding: 15px 20px;
-            transition: color 0.2s;
-            user-select: none;
-        }
+.nav-btn {
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:40px;
+  color:#fff;
+  cursor:pointer;
+  padding:14px;
+  user-select:none;
+}
 
-        .modal-nav:hover {
-            color: #ccc;
-        }
+.prev { left:10px; }
+.next { right:10px; }
 
-        .modal-prev {
-            left: 20px;
-        }
-
-        .modal-next {
-            right: 20px;
-        }
-
-        .scrollbar-style::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .scrollbar-style::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05);
-            border-radius: 10px;
-        }
-
-        .scrollbar-style::-webkit-scrollbar-thumb {
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-        }
-
-        .scrollbar-style::-webkit-scrollbar-thumb:hover {
-            background: rgba(0,0,0,0.3);
-        }
-    </style>
+/* ===== MOBILE ===== */
+@media (max-width:640px) {
+  .desktop { padding:16px; }
+  .window { height:75vh; }
+}
+</style>
 </head>
+
 <body>
 
-<div class="menu-bar">
-    <div> Frankie Venter's Computer</div>
-    <div id="clock">12:00 PM</div>
+<div class="menu-bar">  <img src="747.png" alt="Apple" style="height: 16px; width: auto; margin-right: 8px;">  <div> Frankie Venter</div>
+  <div id="clock"></div>
 </div>
 
-<div class="desktop-icons">
+<div class="desktop">
+  <div class="welcome-text">Welcome back Frankie!</div>
+  <div class="desktop-icons">
     <div class="icon" onclick="openWindow('music-window')">
-        <div class="icon-img">🎵</div>
-        <div class="icon-label">Exclusive_Music</div>
+      <div class="icon-img">🎵</div>
+      <div class="icon-label">Exclusive Music</div>
     </div>
 
     <div class="icon" onclick="openWindow('gallery-window')">
-        <div class="icon-img">📁</div>
-        <div class="icon-label">Unreleased_Photos</div>
+      <div class="icon-img">📂</div>
+      <div class="icon-label">Unreleased</div>
     </div>
+  </div>
 </div>
 
 <div id="music-window" class="window">
-    <div class="window-header">
-        <div class="dots">
-            <div class="dot close" onclick="closeWindow('music-window')"></div>
-            <div class="dot min"></div>
-            <div class="dot max"></div>
-        </div>
-        <div class="window-title">Music Player - Frankie Venter</div>
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('music-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
     </div>
-    <div class="window-content">
-        <iframe id="disco-playlist-27186998" name="disco-playlist-27186998" allowfullscreen frameborder="0" class="disco-embed" src="https://fiveam.disco.ac/e/p/27186998?download=true&s=R681RyXtJ2lOeYwGv0HDWvtm1b4%3A4qrb2von&artwork=true&color=%234E98FF&theme=white" width="480" height="395"></iframe>
-    </div>
+    <div class="window-title">Music Player</div>
+  </div>
+  <div class="window-content">
+    <iframe id="disco-playlist-27299296" name="disco-playlist-27299296" allowfullscreen frameborder="0" class="disco-embed" src="https://fiveam.disco.ac/e/p/27299296?download=true&s=EVvmGgOtx5iRwT7wQD4k4ZtdbIs%3AiznxpykJ&artwork=true&color=%234E98FF&theme=white" width="480" height="395"></iframe>
+  </div>
 </div>
 
 <div id="gallery-window" class="window">
-    <div class="window-header">
-        <div class="dots">
-            <div class="dot close" onclick="closeWindow('gallery-window')"></div>
-            <div class="dot min"></div>
-            <div class="dot max"></div>
-        </div>
-        <div class="window-title">Unreleased Photos Gallery</div>
+  <div class="window-header">
+    <div class="dots">
+      <div class="dot close" onclick="closeWindow('gallery-window')"></div>
+      <div class="dot min"></div>
+      <div class="dot max"></div>
     </div>
-    <div class="window-content">
-        <div class="gallery-container scrollbar-style">
-            <div class="photo-grid" id="photoGrid"></div>
-        </div>
+    <div class="window-title">Gallery</div>
+  </div>
+  <div class="window-content">
+    <div class="gallery-container">
+      <div class="photo-grid" id="photoGrid"></div>
     </div>
+  </div>
 </div>
 
-<div id="imageModal" class="modal" onclick="closeModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <span class="modal-close" onclick="closeModal()">&times;</span>
-        <span class="modal-nav modal-prev" onclick="prevImage()">&#10094;</span>
-        <img id="modalImage" class="modal-img" src="" alt="">
-        <span class="modal-nav modal-next" onclick="nextImage()">&#10095;</span>
-    </div>
+<div id="imageModal" class="modal">
+  <span class="modal-close" onclick="closeModal()">×</span>
+  <div class="modal-content">
+    <span class="nav-btn prev" onclick="changeImage(-1)">‹</span>
+    <img id="modalImg" class="modal-img">
+    <span class="nav-btn next" onclick="changeImage(1)">›</span>
+  </div>
 </div>
 
 <script>
-    // Photo gallery data
-    const photos = [
-        { src: 'FV PRESS IMAGE 1.jpg', alt: 'Press Image 1' },
-        { src: 'FV PRESS IMAGE 2.jpg', alt: 'Press Image 2' },
-        { src: 'FV PRESS IMAGE 3.JPG', alt: 'Press Image 3' },
-        { src: 'FV PRESS IMAGE 4.JPG', alt: 'Press Image 4' },
-        { src: 'FV PRESS IMAGE 5.JPG', alt: 'Press Image 5' },
-        { src: 'FV PRESS IMAGE 1 (EDIT).png', alt: 'Press Image 1 Edit' }
-    ];
+const photos = [
+  "FV PRESS IMAGE 1.jpg",
+  "FV PRESS IMAGE 2.jpg",
+  "FV PRESS IMAGE 3.JPG",
+  "FV PRESS IMAGE 4.JPG",
+  "FV PRESS IMAGE 5.JPG",
+  "FV PRESS IMAGE 1 (EDIT).png"
+];
 
-    let currentPhotoIndex = 0;
+let currentIndex = 0;
 
-    function loadGallery() {
-        const grid = document.getElementById('photoGrid');
-        grid.innerHTML = '';
-        
-        photos.forEach((photo, index) => {
-            const item = document.createElement('div');
-            item.className = 'photo-item';
-            item.onclick = (e) => {
-                e.stopPropagation();
-                openModal(index);
-            };
-            
-            item.innerHTML = `
-                <img src="${photo.src}" alt="${photo.alt}" loading="lazy">
-                <div class="photo-overlay">
-                    <div class="photo-overlay-text">Click to view</div>
-                </div>
-            `;
-            
-            grid.appendChild(item);
-        });
-    }
+function openWindow(id) {
+  document.querySelectorAll(".window").forEach(w => w.style.display="none");
+  document.getElementById(id).style.display="flex";
+  if(id==="gallery-window") loadGallery();
+}
 
-    function openModal(index) {
-        currentPhotoIndex = index;
-        const modal = document.getElementById('imageModal');
-        const modalImg = document.getElementById('modalImage');
-        modalImg.src = photos[index].src;
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
+function closeWindow(id) {
+  document.getElementById(id).style.display="none";
+}
 
-    function closeModal(event) {
-        if (event && event.target.id !== 'imageModal') return;
-        const modal = document.getElementById('imageModal');
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
+function loadGallery() {
+  const grid = document.getElementById("photoGrid");
+  if(grid.children.length) return;
 
-    function nextImage() {
-        currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
-        document.getElementById('modalImage').src = photos[currentPhotoIndex].src;
-    }
+  photos.forEach((src,i)=>{
+    const div=document.createElement("div");
+    div.className="photo-item";
+    div.innerHTML=`<img src="${src}" loading="lazy">`;
+    div.onclick=()=>openModal(i);
+    grid.appendChild(div);
+  });
+}
 
-    function prevImage() {
-        currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
-        document.getElementById('modalImage').src = photos[currentPhotoIndex].src;
-    }
+function openModal(i){
+  currentIndex=i;
+  document.getElementById("modalImg").src=photos[i];
+  document.getElementById("imageModal").style.display="flex";
+}
 
-    // Keyboard navigation for modal
-    document.addEventListener('keydown', (e) => {
-        if (document.getElementById('imageModal').style.display === 'block') {
-            if (e.key === 'ArrowRight') nextImage();
-            if (e.key === 'ArrowLeft') prevImage();
-            if (e.key === 'Escape') closeModal();
-        }
-    });
+function closeModal(){
+  document.getElementById("imageModal").style.display="none";
+}
 
-    function openWindow(id) {
-        document.getElementById(id).style.display = 'block';
-        if (id === 'gallery-window') {
-            loadGallery();
-        }
-    }
+function changeImage(dir){
+  currentIndex=(currentIndex+dir+photos.length)%photos.length;
+  document.getElementById("modalImg").src=photos[currentIndex];
+}
 
-    function closeWindow(id) {
-        document.getElementById(id).style.display = 'none';
-    }
-
-    // Simple Clock
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+function updateClock(){
+  document.getElementById("clock").textContent=
+    new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+}
+setInterval(updateClock,1000);
+updateClock();
 </script>
 
 </body>
