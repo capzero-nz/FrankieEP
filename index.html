@@ -809,7 +809,9 @@ html, body {
       0% { opacity: 0; transform: translateY(10px) scale(0.98); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
-    .desktop-ready .desktop { animation: desktopIn 600ms ease forwards; }
+    /* Hide desktop until authenticated */
+    .desktop { opacity: 0; pointer-events: none; }
+    .desktop-ready .desktop { animation: desktopIn 600ms ease forwards; opacity: 1; pointer-events: auto; }
     .reduce-motion .desktop { animation: none !important; }
   </style>
 </div>
@@ -829,13 +831,13 @@ html, body {
   <div class="welcome-text">Welcome back, Frankie!</div>
   <div class="desktop-icons">
     <div class="icon" onclick="openWindow('music-window')">
-      <div class="icon-img">🎵</div>
+      <div class="icon-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Spotify_icon.svg/512px-Spotify_icon.svg.png');background-size:cover;background-position:center;"></div>
       <div class="icon-label">Frankie's Demos</div>
     </div>
 
     <div class="icon" onclick="openWindow('gallery-window')">
-      <div class="icon-img">📂</div>
-      <div class="icon-label">Unreleased Photos</div>
+      <div class="icon-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/480px-Instagram_icon.png');background-size:cover;background-position:center;"></div>
+      <div class="icon-label">Frankie's Photos</div>
     </div>
 
     <div class="icon" onclick="openWindow('notes-window')">
@@ -844,7 +846,7 @@ html, body {
     </div>
 
     <div class="icon" onclick="openWindow('videos-window')">
-      <div class="icon-img">🎬</div>
+      <div class="icon-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/YouTube_Logo.svg/512px-YouTube_Logo.svg.png');background-size:cover;background-position:center;"></div>
       <div class="icon-label">Videos</div>
     </div>
 
@@ -854,7 +856,7 @@ html, body {
     </div>
 
     <div class="icon" onclick="openWindow('social-window')">
-      <div class="icon-img">👥</div>
+      <div class="icon-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/480px-Instagram_icon.png');background-size:cover;background-position:center;"></div>
       <div class="icon-label">Follow</div>
     </div>
 
@@ -922,11 +924,11 @@ html, body {
       <div class="dot min"></div>
       <div class="dot max"></div>
     </div>
-    <div class="window-title">Gallery</div>
+    <div class="window-title">Frankie's Photos</div>
   </div>
   <div class="window-content">
-    <div class="gallery-container">
-      <div class="photo-grid" id="photoGrid"></div>
+    <div class="gallery-container" style="width:100%;height:100%;">
+      <div class="files-grid" id="photoGrid"></div>
     </div>
   </div>
 </div>
@@ -1139,9 +1141,9 @@ html, body {
     </div>
     <div class="window-title">To-Do</div>
   </div>
-  <div class="window-content" style="align-items:flex-start; justify-content:flex-start;">
-    <div id="todoContainer" style="width:100%; padding:24px;">
-      <div style="font-size:18px; font-weight:700; color:#222; margin-bottom:12px;">Upcoming Tasks</div>
+  <div class="window-content" style="align-items:center; justify-content:center;">
+    <div id="todoContainer" style="width:100%; max-width:540px; padding:24px;">
+      <div style="font-size:18px; font-weight:700; color:#222; margin-bottom:12px; text-align:center;">Upcoming Tasks</div>
       <ul id="todoList" style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;"></ul>
       <div style="font-size:12px; color:#666; margin-top:10px;">Tasks are curated and cannot be created by users.</div>
     </div>
@@ -1245,13 +1247,16 @@ const photos = [
 let currentIndex = 0;
 
 function openWindow(windowId) {
-  // Hide all windows and remove active class
-  document.querySelectorAll('.window').forEach(w => { w.style.display = 'none'; w.classList.remove('active'); });
   const target = document.getElementById(windowId);
   if(!target){ console.warn('Window not found:', windowId); return; }
   // Show target window
   target.style.display = 'flex';
   target.classList.add('active');
+  // Bring to front
+  try {
+    window.__winZ = (window.__winZ || 100) + 1;
+    target.style.zIndex = window.__winZ;
+  } catch(_){ }
   // App-specific init
   if(windowId === 'notes-window') loadNotes();
   if(windowId === 'credits-window') loadCredits();
@@ -1434,7 +1439,6 @@ function initWindowInteractions(){
 function initGate(){
   if (window.ENABLE_GATE === false) return;
   try {
-    if(sessionStorage.getItem('fv_auth') === 'true'){ return; }
     const overlay = document.getElementById('loginOverlay');
     const input = document.getElementById('gatePassword');
     const btn = document.getElementById('gateSubmit');
@@ -1511,13 +1515,8 @@ function renderSettings(section){
   if(section === 'General'){
     content.innerHTML = `
       <div class="settings-group">
-        <h3>Session</h3>
-        <div class="setting-row">
-          <div class="setting-name">Password Gate</div>
-          <div style="font-weight:600; color:#27c93f;">Always On</div>
-        </div>
-        <div class="settings-note">The login gate cannot be disabled.</div>
-        <div style="margin-top:12px;">
+        <h3>General</h3>
+        <div class="setting-row" style="justify-content:flex-start; gap:12px;">
           <button id="signOutBtn" class="settings-btn">Sign Out</button>
         </div>
       </div>
@@ -1637,11 +1636,14 @@ function loadGallery() {
   if(grid.children.length) return;
 
   photos.forEach((src,i)=>{
-    const div=document.createElement("div");
-    div.className="photo-item";
-    div.innerHTML=`<img src="${src}" alt="Frankie photo ${i+1}" loading="lazy">`;
-    div.onclick=()=>openModal(i);
-    grid.appendChild(div);
+    const card = document.createElement("div");
+    card.className = "file-card";
+    card.innerHTML = `
+      <div class="file-icon">🖼️</div>
+      <div class="file-title">Photo ${i+1}</div>
+    `;
+    card.onclick = ()=>openModal(i);
+    grid.appendChild(card);
   });
   if(!grid.children.length){
     const msg = document.createElement('div');
@@ -2573,7 +2575,7 @@ document.addEventListener('DOMContentLoaded', function(){
     try { await preloadAssets(); } catch(_){}
     if(boot) boot.style.display = 'none';
     // If not authorized yet, show login overlay
-    if(window.ENABLE_GATE && sessionStorage.getItem('fv_auth') !== 'true'){
+    if(window.ENABLE_GATE){
       initGate();
     }
   })();
