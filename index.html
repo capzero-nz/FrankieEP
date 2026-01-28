@@ -1492,6 +1492,8 @@ try {
   window.openWindow = openWindow;
   window.showGamesMenu = typeof showGamesMenu === 'function' ? showGamesMenu : window.showGamesMenu;
   window.showPongView = typeof showPongView === 'function' ? showPongView : window.showPongView;
+  window.openSettingsFromMenu = typeof openSettingsFromMenu === 'function' ? openSettingsFromMenu : window.openSettingsFromMenu;
+  window.logoutFromMenu = typeof logoutFromMenu === 'function' ? logoutFromMenu : window.logoutFromMenu;
 } catch(_) {}
 function toggleSidebar(windowId){
   const win = document.getElementById(windowId);
@@ -1908,6 +1910,11 @@ function renderSettings(section){
     if(signOut){
       signOut.addEventListener('click', () => {
         try { sessionStorage.removeItem('fv_auth'); } catch(_){ }
+        window.ENABLE_GATE = true;
+        document.querySelectorAll('.window').forEach(w => { w.style.display = 'none'; w.classList.remove('active'); });
+        document.body.classList.remove('desktop-ready');
+        const login = document.getElementById('loginOverlay');
+        if(login) login.style.display = 'flex';
         initGate();
       });
     }
