@@ -306,13 +306,7 @@ html, body {
 .masonry-item:hover .overlay { opacity: 1; }
 
 /* Photos Toolbar */
-.gallery-toolbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 24px; border-bottom:1px solid rgba(0,0,0,.06); background:rgba(255,255,255,.45); backdrop-filter: blur(12px); }
-.chip { padding:6px 10px; border:1px solid rgba(0,0,0,.1); border-radius:999px; font-size:12px; cursor:pointer; background:rgba(255,255,255,.7); }
-.chip.active { background:var(--accent); color:#fff; border-color:transparent; }
-.gallery-search { flex:1; min-width:220px; }
-.gallery-search input { width:100%; padding:8px 10px; border:1px solid rgba(0,0,0,.12); border-radius:8px; font-size:12px; background:rgba(255,255,255,.85); }
-.gallery-sort { display:flex; align-items:center; gap:6px; font-size:12px; }
-.gallery-sort select { padding:6px 8px; border:1px solid rgba(0,0,0,.12); border-radius:8px; background:rgba(255,255,255,.85); }
+/* (Photos toolbar removed per request) */
 .masonry-item { break-inside: avoid; margin-bottom: 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--blur-border); box-shadow: var(--shadow-soft); background: rgba(255,255,255,.6); cursor: pointer; }
 .masonry-item img { width: 100%; height: auto; display: block; transition: transform .25s ease; }
 .masonry-item:hover img { transform: scale(1.03); }
@@ -1063,20 +1057,7 @@ html, body {
     <div class="window-title">Frankie's Photos</div>
   </div>
   <div class="window-content">
-    <div class="gallery-container" style="width:100%;height:100%; display:flex; flex-direction:column;">
-      <div class="gallery-toolbar">
-        <div class="chip" data-filter="all">All</div>
-        <div class="chip" data-filter="press">Press</div>
-        <div class="chip" data-filter="studio">Studio</div>
-        <div class="chip" data-filter="travel">Travel</div>
-        <div class="gallery-search"><input id="gallerySearch" type="text" placeholder="Search captions or tags"/></div>
-        <div class="gallery-sort"><span>Sort:</span>
-          <select id="gallerySort">
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-          </select>
-        </div>
-      </div>
+    <div class="gallery-container" style="width:100%;height:100%;">
       <div class="masonry-grid" id="photoGrid"></div>
     </div>
   </div>
@@ -1255,7 +1236,7 @@ html, body {
   <div class="window-content">
     <div class="social-grid">
       <a href="https://instagram.com/frankieventermusic" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big" style="background-image:url('https://www.dropbox.com/scl/fi/ydjexhmo7bzpefle21734/fc55f708c8d651c923055ab1a1d749be.jpg?rlkey=healak5anf4t66tn4msu6qjnz&st=i6oaa054&raw=1');background-size:cover;background-position:center;">📸</div>
+        <div class="social-icon-big" style="background-image:url('https://www.dropbox.com/scl/fi/ydjexhmo7bzpefle21734/fc55f708c8d651c923055ab1a1d749be.jpg?rlkey=healak5anf4t66tn4msu6qjnz&st=i6oaa054&raw=1');background-size:cover;background-position:center;"></div>
         <div class="social-name" >Instagram</div>
         <div class="social-handle">@frankieventermusic</div>
         <div class="social-btn">Open</div>
@@ -1267,13 +1248,13 @@ html, body {
         <div class="social-btn">Open</div>
       </a>
       <a href="http://youtube.com/@frankieventermusic" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big" style="background-image:url('https://static.vecteezy.com/system/resources/previews/023/986/704/non_2x/youtube-logo-youtube-logo-transparent-youtube-icon-transparent-free-free-png.png');background-size:cover;background-position:center;">📺</div>
+        <div class="social-icon-big" style="background-image:url('https://static.vecteezy.com/system/resources/previews/023/986/704/non_2x/youtube-logo-youtube-logo-transparent-youtube-icon-transparent-free-free-png.png');background-size:cover;background-position:center;"></div>
         <div class="social-name">YouTube</div>
         <div class="social-handle">@frankieventermusic</div>
         <div class="social-btn">Open</div>
       </a>
       <a href="https://www.facebook.com/frankiesingingxx" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big" style="background-image:url('https://img.freepik.com/premium-vector/facebook-logo-vector-facebook-official-logo-vector-facebook-logo-illustrator_1002350-1803.jpg?semt=ais_hybrid&w=740&q=80');background-size:cover;background-position:center;">👥</div>
+        <div class="social-icon-big" style="background-image:url('https://img.freepik.com/premium-vector/facebook-logo-vector-facebook-official-logo-vector-facebook-logo-illustrator_1002350-1803.jpg?semt=ais_hybrid&w=740&q=80');background-size:cover;background-position:center;"></div>
         <div class="social-name">Facebook</div>
         <div class="social-handle">@frankiesingingxx</div>
         <div class="social-btn">Open</div>
@@ -1479,6 +1460,9 @@ function logoutFromMenu(){
     window.ENABLE_GATE = true;
     document.querySelectorAll('.window').forEach(w => { w.style.display = 'none'; w.classList.remove('active'); });
     document.body.classList.remove('desktop-ready');
+    // Show login overlay immediately as a fallback
+    const login = document.getElementById('loginOverlay');
+    if(login) login.style.display = 'flex';
     initGate();
   } catch(_) {}
 }
@@ -1988,30 +1972,11 @@ function showPongView(){
 
  
 
-function applyGalleryFilters(){
-  // Start from all photos
-  let list = photos.slice();
-  // Filter album
-  if(galleryFilter !== 'all') list = list.filter(p => p.album === galleryFilter);
-  // Search
-  if(galleryQuery){
-    const q = galleryQuery.toLowerCase();
-    list = list.filter(p => (p.title && p.title.toLowerCase().includes(q)) || (p.tags && p.tags.join(' ').toLowerCase().includes(q)));
-  }
-  // Sort
-  list.sort((a,b) => {
-    const da = new Date(a.date).getTime();
-    const db = new Date(b.date).getTime();
-    return gallerySort === 'newest' ? db - da : da - db;
-  });
-  visiblePhotos = list;
-}
-
-function renderGallery(){
+function loadGallery(){
   const grid = document.getElementById("photoGrid");
   if(!grid) return;
   grid.innerHTML = "";
-  applyGalleryFilters();
+  visiblePhotos = photos.slice();
   visiblePhotos.forEach((p,i)=>{
     const item = document.createElement("div");
     item.className = "masonry-item";
@@ -2024,34 +1989,9 @@ function renderGallery(){
     msg.style.color = '#666';
     msg.style.textAlign = 'center';
     msg.style.padding = '20px';
-    msg.textContent = 'No photos match your filters.';
+    msg.textContent = 'No photos available.';
     grid.appendChild(msg);
   }
-}
-
-function loadGallery(){
-  // Bind toolbar events once
-  const chips = document.querySelectorAll('.gallery-toolbar .chip');
-  const search = document.getElementById('gallerySearch');
-  const sortSel = document.getElementById('gallerySort');
-  chips.forEach(ch => {
-    ch.addEventListener('click', () => {
-      chips.forEach(c => c.classList.remove('active'));
-      ch.classList.add('active');
-      galleryFilter = ch.dataset.filter || 'all';
-      renderGallery();
-    });
-  });
-  // Set default active chip
-  const def = document.querySelector('.gallery-toolbar .chip[data-filter="all"]');
-  if(def) def.classList.add('active');
-  if(search){
-    search.addEventListener('input', (e) => { galleryQuery = e.target.value || ''; renderGallery(); });
-  }
-  if(sortSel){
-    sortSel.addEventListener('change', (e) => { gallerySort = e.target.value || 'newest'; renderGallery(); });
-  }
-  renderGallery();
 }
 
 function openModal(i){
@@ -2092,7 +2032,7 @@ function initMenuDropdown(){
   const dd = document.getElementById('appleDropdown');
   const logoutItem = document.getElementById('logoutMenuItem');
   const settingsItem = document.getElementById('settingsMenuItem');
-  if(!btn || !dd || !logoutItem) return;
+  if(!btn || !dd) return;
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     const willShow = dd.style.display !== 'block';
@@ -2102,15 +2042,10 @@ function initMenuDropdown(){
       dd.addEventListener('animationend', () => dd.classList.remove('anim-menu-in'), { once:true });
     }
   });
+  dd.addEventListener('click', (e) => e.stopPropagation());
   document.addEventListener('click', () => { dd.style.display = 'none'; });
-  logoutItem.addEventListener('click', () => {
-    dd.style.display = 'none';
-    try { sessionStorage.removeItem('fv_auth'); } catch(_){}
-    window.ENABLE_GATE = true;
-    document.querySelectorAll('.window').forEach(w => { w.style.display = 'none'; w.classList.remove('active'); });
-    document.body.classList.remove('desktop-ready');
-    initGate();
-  });
+  if(settingsItem){ settingsItem.addEventListener('click', () => { openSettingsFromMenu(); }); }
+  if(logoutItem){ logoutItem.addEventListener('click', () => { logoutFromMenu(); }); }
 }
 const notes = [
   {title: "a big deal to me", content: "Started this in the late hours when the city goes quiet. The synth layers came naturally - I wanted that dreamy, ethereal feeling. Three weeks of production, endless coffee breaks, and finally found the perfect vocal tone. This track captures exactly what I was feeling at that moment. Pure creativity flowing through the speakers."},
