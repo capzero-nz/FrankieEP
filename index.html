@@ -25,6 +25,10 @@
   --title-size: clamp(42px, 6.8vh, 64px);
   --top-pad: clamp(100px, 12vh, 160px);
   --bottom-pad: clamp(70px, 9.2vh, 140px);
+
+  /* Background tuning */
+  --bg-blur: 6px;   /* blur intensity for image backgrounds */
+  --bg-dim: 0.35;   /* overlay dim alpha for image backgrounds */
 }
 
 * { box-sizing: border-box; }
@@ -38,6 +42,20 @@ html, body {
   animation: gradientWave 8s ease infinite;
   overflow-x:hidden;
   overflow-y:auto;
+}
+/* Blurred custom image background layer */
+body.bg-image::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(0,0,0,var(--bg-dim)), rgba(0,0,0,var(--bg-dim))), var(--bg-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(var(--bg-blur));
+  transform: scale(1.04); /* compensate blur shrink */
+  pointer-events: none;
+  z-index: 0;
 }
 
 @keyframes gradientWave {
@@ -1396,8 +1414,6 @@ html, body {
 const photos = [
   { src: "https://www.dropbox.com/scl/fi/gm1a6kbul7sculre1fxee/FV-PRESS-IMAGE-1.jpg?rlkey=3a38td6eq56jda3q73750oynv&st=uw9eil5f&raw=1", title:"Press Image 1", album:"press", date:"2024-08-01", tags:["press","portrait"] },
   { src: "https://www.dropbox.com/scl/fi/kxr51rx8mowaxexl23eqc/FV-PRESS-IMAGE-2.jpg?rlkey=wc2sh3bbzpeychrfpglp12pv1&st=4m1yzyzm&raw=1", title:"Press Image 2", album:"press", date:"2024-08-02", tags:["press","portrait"] },
-  { src: "https://www.dropbox.com/scl/fi/hl6i1mjlvrzeyk7mql15v/FV-PRESS-IMAGE-3.JPG?rlkey=uhf4xtyw8abc3wimmcwzjv62x&st=rfe3otok&raw=1", title:"Studio Session", album:"studio", date:"2024-08-10", tags:["studio","bts"] },
-  { src: "https://www.dropbox.com/scl/fi/sjjarijq46b8ju1mksm2o/FV-PRESS-IMAGE-4.JPG?rlkey=bqs6ur6f9loulaj0tk6fni3bk&st=try8pq1v&raw=1", title:"Live Show", album:"travel", date:"2024-09-01", tags:["live","travel"] },
   { src: "https://www.dropbox.com/scl/fi/or7ugi1hykukdwdorl933/FV-PRESS-IMAGE-5.JPG?rlkey=wme7basatxkjfkrlmcrsd4xsy&st=3iuzdkj7&raw=1", title:"Backstage", album:"studio", date:"2024-09-05", tags:["studio","bts"] },
   { src: "https://www.dropbox.com/scl/fi/zwv1cu8ofa6upmsh3km49/FV-PRESS-IMAGE-1-EDIT.png?rlkey=xxn6iwwkhumimsov06v4hs2c0&st=2mv5nizc&raw=1", title:"Poster Edit", album:"press", date:"2024-09-12", tags:["press","edit"] }
 ];
@@ -1515,18 +1531,25 @@ function toggleSidebar(windowId){
 function applyBackgroundPreference(){
   const pref = localStorage.getItem('fv_bg') || 'gradient';
   const body = document.body;
+  // Apply persisted tuning values
+  const savedDim = parseFloat(localStorage.getItem('fv_bg_dim') || '0.35');
+  let savedBlur = localStorage.getItem('fv_bg_blur') || '6';
+  savedBlur = /px$/.test(savedBlur) ? savedBlur : `${parseInt(savedBlur || '6', 10)}px`;
+  body.style.setProperty('--bg-dim', isNaN(savedDim) ? '0.35' : String(savedDim));
+  body.style.setProperty('--bg-blur', savedBlur);
   if(pref === 'gradient'){
     body.style.backgroundImage = '';
     body.style.background = 'linear-gradient(135deg, #be0568 0%, #ff69b4 25%, #ff1491bb 50%, #ff69b4 75%, #ff69b9d8 100%)';
     body.style.backgroundSize = '400% 400%';
     body.style.animation = 'gradientWave 8s ease infinite';
+    body.classList.remove('bg-image');
   } else {
     body.style.background = 'none';
-    body.style.backgroundImage = `url('${pref}')`;
-    body.style.backgroundSize = 'cover';
-    body.style.backgroundPosition = 'center';
-    body.style.backgroundRepeat = 'no-repeat';
+    body.style.backgroundColor = '#000';
     body.style.animation = 'none';
+    body.style.backgroundImage = '';
+    body.classList.add('bg-image');
+    body.style.setProperty('--bg-url', `url('${pref}')`);
   }
 }
 
@@ -1970,6 +1993,20 @@ function renderSettings(section){
         </div>
         <div class="settings-note">Choose a background image or use the animated gradient.</div>
       </div>
+      <div class="settings-group">
+        <h3>Background Intensity</h3>
+        <div class="setting-row" style="gap:12px; align-items:center;">
+          <div class="setting-name" style="min-width:120px;">Dim</div>
+          <input id="bgDimRange" type="range" min="0" max="0.8" step="0.05" style="flex:1;">
+          <div id="bgDimValue" style="width:60px; text-align:right;">35%</div>
+        </div>
+        <div class="setting-row" style="gap:12px; align-items:center;">
+          <div class="setting-name" style="min-width:120px;">Blur</div>
+          <input id="bgBlurRange" type="range" min="0" max="20" step="1" style="flex:1;">
+          <div id="bgBlurValue" style="width:60px; text-align:right;">6px</div>
+        </div>
+        <div class="settings-note">Adjusts image background only (disabled on gradient).</div>
+      </div>
     `;
     const motion = document.getElementById('toggleMotion');
     if(motion){
@@ -1987,8 +2024,42 @@ function renderSettings(section){
         cards.forEach(c => c.style.outline = 'none');
         card.style.outline = '2px solid var(--accent)';
         applyBackgroundPreference();
+        updateBgTuningState();
       });
     });
+    // Tuning sliders
+    const dimRange = document.getElementById('bgDimRange');
+    const blurRange = document.getElementById('bgBlurRange');
+    const dimValue = document.getElementById('bgDimValue');
+    const blurValue = document.getElementById('bgBlurValue');
+    const savedDim = parseFloat(localStorage.getItem('fv_bg_dim') || '0.35');
+    const savedBlur = parseInt(localStorage.getItem('fv_bg_blur') || '6', 10);
+    if(dimRange){ dimRange.value = isNaN(savedDim) ? 0.35 : savedDim; }
+    if(blurRange){ blurRange.value = isNaN(savedBlur) ? 6 : savedBlur; }
+    if(dimValue){ dimValue.textContent = `${Math.round((dimRange.valueAsNumber || savedDim) * 100)}%`; }
+    if(blurValue){ blurValue.textContent = `${blurRange.value || savedBlur}px`; }
+
+    function applyDim(val){
+      const clamped = Math.max(0, Math.min(0.8, val));
+      localStorage.setItem('fv_bg_dim', String(clamped));
+      document.body.style.setProperty('--bg-dim', String(clamped));
+      if(dimValue) dimValue.textContent = `${Math.round(clamped * 100)}%`;
+    }
+    function applyBlur(val){
+      const n = Math.max(0, Math.min(40, val));
+      localStorage.setItem('fv_bg_blur', String(n));
+      document.body.style.setProperty('--bg-blur', `${n}px`);
+      if(blurValue) blurValue.textContent = `${n}px`;
+    }
+    if(dimRange){ dimRange.addEventListener('input', () => applyDim(dimRange.valueAsNumber)); }
+    if(blurRange){ blurRange.addEventListener('input', () => applyBlur(blurRange.valueAsNumber)); }
+
+    function updateBgTuningState(){
+      const isGradient = (localStorage.getItem('fv_bg') || 'gradient') === 'gradient';
+      if(dimRange) dimRange.disabled = isGradient;
+      if(blurRange) blurRange.disabled = isGradient;
+    }
+    updateBgTuningState();
     return;
   }
   if(section === 'Account'){
