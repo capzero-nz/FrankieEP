@@ -300,6 +300,19 @@ html, body {
 .masonry-grid { column-count: 4; column-gap: 16px; padding: 24px; width: 100%; max-width: 1100px; }
 @media (max-width: 1024px) { .masonry-grid { column-count: 3; } }
 @media (max-width: 640px) { .masonry-grid { column-count: 2; } }
+.masonry-item { break-inside: avoid; margin-bottom: 16px; position: relative; }
+.masonry-item img { width: 100%; border-radius: 12px; box-shadow: var(--shadow-soft); display:block; }
+.masonry-item .overlay { position:absolute; inset:auto 8px 8px 8px; background:rgba(0,0,0,.5); color:#fff; padding:8px 10px; border-radius:8px; font-size:12px; opacity:0; transition:opacity .18s ease; }
+.masonry-item:hover .overlay { opacity: 1; }
+
+/* Photos Toolbar */
+.gallery-toolbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 24px; border-bottom:1px solid rgba(0,0,0,.06); background:rgba(255,255,255,.45); backdrop-filter: blur(12px); }
+.chip { padding:6px 10px; border:1px solid rgba(0,0,0,.1); border-radius:999px; font-size:12px; cursor:pointer; background:rgba(255,255,255,.7); }
+.chip.active { background:var(--accent); color:#fff; border-color:transparent; }
+.gallery-search { flex:1; min-width:220px; }
+.gallery-search input { width:100%; padding:8px 10px; border:1px solid rgba(0,0,0,.12); border-radius:8px; font-size:12px; background:rgba(255,255,255,.85); }
+.gallery-sort { display:flex; align-items:center; gap:6px; font-size:12px; }
+.gallery-sort select { padding:6px 8px; border:1px solid rgba(0,0,0,.12); border-radius:8px; background:rgba(255,255,255,.85); }
 .masonry-item { break-inside: avoid; margin-bottom: 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--blur-border); box-shadow: var(--shadow-soft); background: rgba(255,255,255,.6); cursor: pointer; }
 .masonry-item img { width: 100%; height: auto; display: block; transition: transform .25s ease; }
 .masonry-item:hover img { transform: scale(1.03); }
@@ -1050,7 +1063,20 @@ html, body {
     <div class="window-title">Frankie's Photos</div>
   </div>
   <div class="window-content">
-    <div class="gallery-container" style="width:100%;height:100%;">
+    <div class="gallery-container" style="width:100%;height:100%; display:flex; flex-direction:column;">
+      <div class="gallery-toolbar">
+        <div class="chip" data-filter="all">All</div>
+        <div class="chip" data-filter="press">Press</div>
+        <div class="chip" data-filter="studio">Studio</div>
+        <div class="chip" data-filter="travel">Travel</div>
+        <div class="gallery-search"><input id="gallerySearch" type="text" placeholder="Search captions or tags"/></div>
+        <div class="gallery-sort"><span>Sort:</span>
+          <select id="gallerySort">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </div>
+      </div>
       <div class="masonry-grid" id="photoGrid"></div>
     </div>
   </div>
@@ -1229,31 +1255,31 @@ html, body {
   <div class="window-content">
     <div class="social-grid">
       <a href="https://instagram.com/frankieventermusic" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big">📸</div>
-        <div class="social-name">Instagram</div>
+        <div class="social-icon-big" style="background-image:url('https://www.dropbox.com/scl/fi/ydjexhmo7bzpefle21734/fc55f708c8d651c923055ab1a1d749be.jpg?rlkey=healak5anf4t66tn4msu6qjnz&st=i6oaa054&raw=1');background-size:cover;background-position:center;">📸</div>
+        <div class="social-name" >Instagram</div>
         <div class="social-handle">@frankieventermusic</div>
         <div class="social-btn">Open</div>
       </a>
       <a href="https://open.spotify.com/artist/4OpEtCxKCkuq7XqJ18zVYn?si=k9NxL5NGSNud1M53hMcxmg" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big">🎵</div>
+        <div class="social-icon-big" style="background-image:url('https://unblast.com/wp-content/uploads/2025/07/instagram-logo-colored.jpg');background-size:cover;background-position:center;">🎵</div>
         <div class="social-name">Spotify</div>
         <div class="social-handle">Artist Page</div>
         <div class="social-btn">Open</div>
       </a>
       <a href="http://youtube.com/@frankieventermusic" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big">📺</div>
+        <div class="social-icon-big" style="background-image:url('https://static.vecteezy.com/system/resources/previews/023/986/704/non_2x/youtube-logo-youtube-logo-transparent-youtube-icon-transparent-free-free-png.png');background-size:cover;background-position:center;">📺</div>
         <div class="social-name">YouTube</div>
         <div class="social-handle">@frankieventermusic</div>
         <div class="social-btn">Open</div>
       </a>
       <a href="https://www.facebook.com/frankiesingingxx" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big">👥</div>
+        <div class="social-icon-big" style="background-image:url('https://img.freepik.com/premium-vector/facebook-logo-vector-facebook-official-logo-vector-facebook-logo-illustrator_1002350-1803.jpg?semt=ais_hybrid&w=740&q=80');background-size:cover;background-position:center;">👥</div>
         <div class="social-name">Facebook</div>
         <div class="social-handle">@frankiesingingxx</div>
         <div class="social-btn">Open</div>
       </a>
       <a href="http://tiktok.com/@frankieventermusic" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big">✨</div>
+        <div class="social-icon-big" style="background-image:url('https://images.seeklogo.com/logo-png/34/1/tiktok-logo-png_seeklogo-340606.png');background-size:cover;background-position:center;">✨</div>
         <div class="social-name">TikTok</div>
         <div class="social-handle">@frankieventermusic</div>
         <div class="social-btn">Open</div>
@@ -1348,7 +1374,10 @@ html, body {
   <span class="modal-close" onclick="closeModal()">×</span>
   <div class="modal-content">
     <span class="nav-btn prev" onclick="changeImage(-1)">‹</span>
-    <img id="modalImg" class="modal-img">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+      <img id="modalImg" class="modal-img">
+      <div id="modalCaption" style="color:#fff; font-size:12px; text-align:center; opacity:.9;"></div>
+    </div>
     <span class="nav-btn next" onclick="changeImage(1)">›</span>
   </div>
 </div>
@@ -1365,15 +1394,19 @@ html, body {
 
 <script>
 const photos = [
-  "https://www.dropbox.com/scl/fi/gm1a6kbul7sculre1fxee/FV-PRESS-IMAGE-1.jpg?rlkey=3a38td6eq56jda3q73750oynv&st=uw9eil5f&raw=1",
-  "https://www.dropbox.com/scl/fi/kxr51rx8mowaxexl23eqc/FV-PRESS-IMAGE-2.jpg?rlkey=wc2sh3bbzpeychrfpglp12pv1&st=4m1yzyzm&raw=1",
-  "https://www.dropbox.com/scl/fi/hl6i1mjlvrzeyk7mql15v/FV-PRESS-IMAGE-3.JPG?rlkey=uhf4xtyw8abc3wimmcwzjv62x&st=rfe3otok&raw=1",
-  "https://www.dropbox.com/scl/fi/sjjarijq46b8ju1mksm2o/FV-PRESS-IMAGE-4.JPG?rlkey=bqs6ur6f9loulaj0tk6fni3bk&st=try8pq1v&raw=1",
-  "https://www.dropbox.com/scl/fi/or7ugi1hykukdwdorl933/FV-PRESS-IMAGE-5.JPG?rlkey=wme7basatxkjfkrlmcrsd4xsy&st=3iuzdkj7&raw=1",
-  "https://www.dropbox.com/scl/fi/zwv1cu8ofa6upmsh3km49/FV-PRESS-IMAGE-1-EDIT.png?rlkey=xxn6iwwkhumimsov06v4hs2c0&st=2mv5nizc&raw=1"
+  { src: "https://www.dropbox.com/scl/fi/gm1a6kbul7sculre1fxee/FV-PRESS-IMAGE-1.jpg?rlkey=3a38td6eq56jda3q73750oynv&st=uw9eil5f&raw=1", title:"Press Image 1", album:"press", date:"2024-08-01", tags:["press","portrait"] },
+  { src: "https://www.dropbox.com/scl/fi/kxr51rx8mowaxexl23eqc/FV-PRESS-IMAGE-2.jpg?rlkey=wc2sh3bbzpeychrfpglp12pv1&st=4m1yzyzm&raw=1", title:"Press Image 2", album:"press", date:"2024-08-02", tags:["press","portrait"] },
+  { src: "https://www.dropbox.com/scl/fi/hl6i1mjlvrzeyk7mql15v/FV-PRESS-IMAGE-3.JPG?rlkey=uhf4xtyw8abc3wimmcwzjv62x&st=rfe3otok&raw=1", title:"Studio Session", album:"studio", date:"2024-08-10", tags:["studio","bts"] },
+  { src: "https://www.dropbox.com/scl/fi/sjjarijq46b8ju1mksm2o/FV-PRESS-IMAGE-4.JPG?rlkey=bqs6ur6f9loulaj0tk6fni3bk&st=try8pq1v&raw=1", title:"Live Show", album:"travel", date:"2024-09-01", tags:["live","travel"] },
+  { src: "https://www.dropbox.com/scl/fi/or7ugi1hykukdwdorl933/FV-PRESS-IMAGE-5.JPG?rlkey=wme7basatxkjfkrlmcrsd4xsy&st=3iuzdkj7&raw=1", title:"Backstage", album:"studio", date:"2024-09-05", tags:["studio","bts"] },
+  { src: "https://www.dropbox.com/scl/fi/zwv1cu8ofa6upmsh3km49/FV-PRESS-IMAGE-1-EDIT.png?rlkey=xxn6iwwkhumimsov06v4hs2c0&st=2mv5nizc&raw=1", title:"Poster Edit", album:"press", date:"2024-09-12", tags:["press","edit"] }
 ];
 
 let currentIndex = 0;
+let visiblePhotos = photos.slice();
+let galleryFilter = 'all';
+let galleryQuery = '';
+let gallerySort = 'newest';
 
 function openWindow(windowId) {
   const target = document.getElementById(windowId);
@@ -1955,15 +1988,34 @@ function showPongView(){
 
  
 
-function loadGallery() {
+function applyGalleryFilters(){
+  // Start from all photos
+  let list = photos.slice();
+  // Filter album
+  if(galleryFilter !== 'all') list = list.filter(p => p.album === galleryFilter);
+  // Search
+  if(galleryQuery){
+    const q = galleryQuery.toLowerCase();
+    list = list.filter(p => (p.title && p.title.toLowerCase().includes(q)) || (p.tags && p.tags.join(' ').toLowerCase().includes(q)));
+  }
+  // Sort
+  list.sort((a,b) => {
+    const da = new Date(a.date).getTime();
+    const db = new Date(b.date).getTime();
+    return gallerySort === 'newest' ? db - da : da - db;
+  });
+  visiblePhotos = list;
+}
+
+function renderGallery(){
   const grid = document.getElementById("photoGrid");
   if(!grid) return;
-  if(grid.children.length) return;
-
-  photos.forEach((src,i)=>{
+  grid.innerHTML = "";
+  applyGalleryFilters();
+  visiblePhotos.forEach((p,i)=>{
     const item = document.createElement("div");
     item.className = "masonry-item";
-    item.innerHTML = `<img src="${src}" alt="Frankie photo ${i+1}" loading="lazy"/>`;
+    item.innerHTML = `<img src="${p.src}" alt="${p.title || 'Photo'}" loading="lazy"/><div class='overlay'>${p.title || ''}</div>`;
     item.onclick = ()=>openModal(i);
     grid.appendChild(item);
   });
@@ -1972,15 +2024,45 @@ function loadGallery() {
     msg.style.color = '#666';
     msg.style.textAlign = 'center';
     msg.style.padding = '20px';
-    msg.textContent = 'No photos available.';
+    msg.textContent = 'No photos match your filters.';
     grid.appendChild(msg);
   }
 }
 
+function loadGallery(){
+  // Bind toolbar events once
+  const chips = document.querySelectorAll('.gallery-toolbar .chip');
+  const search = document.getElementById('gallerySearch');
+  const sortSel = document.getElementById('gallerySort');
+  chips.forEach(ch => {
+    ch.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      ch.classList.add('active');
+      galleryFilter = ch.dataset.filter || 'all';
+      renderGallery();
+    });
+  });
+  // Set default active chip
+  const def = document.querySelector('.gallery-toolbar .chip[data-filter="all"]');
+  if(def) def.classList.add('active');
+  if(search){
+    search.addEventListener('input', (e) => { galleryQuery = e.target.value || ''; renderGallery(); });
+  }
+  if(sortSel){
+    sortSel.addEventListener('change', (e) => { gallerySort = e.target.value || 'newest'; renderGallery(); });
+  }
+  renderGallery();
+}
+
 function openModal(i){
   currentIndex=i;
-  document.getElementById("modalImg").src=photos[i];
-  document.getElementById("imageModal").style.display="flex";
+  const img = document.getElementById("modalImg");
+  const modal = document.getElementById("imageModal");
+  const p = visiblePhotos[i];
+  img.src=p.src;
+  const cap = document.getElementById('modalCaption');
+  if(cap){ cap.textContent = [p.title, p.album && p.album.toUpperCase(), p.date].filter(Boolean).join(' • '); }
+  modal.style.display="flex";
 }
 
 function closeModal(){
@@ -1988,8 +2070,13 @@ function closeModal(){
 }
 
 function changeImage(dir){
-  currentIndex=(currentIndex+dir+photos.length)%photos.length;
-  document.getElementById("modalImg").src=photos[currentIndex];
+  if(!visiblePhotos.length) return;
+  currentIndex=(currentIndex+dir+visiblePhotos.length)%visiblePhotos.length;
+  const img = document.getElementById("modalImg");
+  const cap = document.getElementById('modalCaption');
+  const p = visiblePhotos[currentIndex];
+  img.src=p.src;
+  if(cap){ cap.textContent = [p.title, p.album && p.album.toUpperCase(), p.date].filter(Boolean).join(' • '); }
 }
 
 function updateClock(){
