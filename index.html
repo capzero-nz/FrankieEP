@@ -3124,6 +3124,8 @@ document.addEventListener('DOMContentLoaded', function(){
   (async ()=>{
     const boot = document.getElementById('bootOverlay');
     if(boot) boot.style.display = 'flex';
+    // Force gradient background for everyone on load
+    try { localStorage.setItem('fv_bg','gradient'); } catch(_) {}
     applyBackgroundPreference();
     try {
       const preload = preloadAssets().catch(()=>{});
