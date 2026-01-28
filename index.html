@@ -90,18 +90,20 @@ body.bg-image::before {
 
 /* ===== FOOTER ===== */
 .footer {
-  position:fixed;
-  bottom:0;
-  height:24px;
-  padding:0 14px;
+  position:relative;
+  bottom:auto;
+  height:auto;
+  padding:12px 14px;
   display:flex;
   align-items:center;
   justify-content:center;
   width:100%;
-  left:0;
-  right:0;
+  left:auto;
+  right:auto;
   color:#fff;
   font-size:12px;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(8px);
 }
 .footer p { margin: 0; }
 .footer a { color:#fff; text-decoration: underline; }
@@ -937,7 +939,7 @@ body.bg-image::before {
       </div>
       <div style="font-weight:700; font-size:22px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.5);">Frankie Venter</div>
     </div>
-    <div style="display:flex; gap:10px; align-items:center; justify-content:center;">
+    <div class="login-controls" style="display:flex; gap:10px; align-items:center; justify-content:center;">
       <input id="gatePassword" type="password" placeholder="Password" style="flex:1; min-width:0; max-width:360px; padding:12px; border:1px solid rgba(255,255,255,0.35); background:rgba(0,0,0,0.28); color:#fff; border-radius:12px; font-size:14px; outline:none;"/>
       <button id="gateSubmit" style="padding:12px 18px; background:#fff; color:#000; border:none; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 8px 18px rgba(0,0,0,.25);">Sign In</button>
     </div>
@@ -972,6 +974,11 @@ body.bg-image::before {
       pointer-events: none;
     }
     #loginOverlay > * { position: relative; z-index: 1; }
+    @media (max-width: 480px) {
+      #loginOverlay .login-controls { flex-direction: column; gap: 12px; }
+      #loginOverlay .login-controls input,
+      #loginOverlay .login-controls button { width: 100%; max-width: none; }
+    }
   </style>
 </div>
 
@@ -2005,7 +2012,6 @@ function renderSettings(section){
           <input id="bgBlurRange" type="range" min="0" max="20" step="1" style="flex:1;">
           <div id="bgBlurValue" style="width:60px; text-align:right;">6px</div>
         </div>
-        <div class="settings-note">Adjusts image background only (disabled on gradient).</div>
       </div>
     `;
     const motion = document.getElementById('toggleMotion');
@@ -3114,20 +3120,18 @@ updateClock();
 // Preload content so windows are populated when opened
 document.addEventListener('DOMContentLoaded', function(){
   window.ENABLE_GATE = true; // enable password gate
-  // Show boot overlay, preload assets, then show login if needed
+  // Show boot overlay; cap at 5s before showing login
   (async ()=>{
     const boot = document.getElementById('bootOverlay');
-    const isMobile = window.innerWidth <= 640;
     if(boot) boot.style.display = 'flex';
     applyBackgroundPreference();
-    if(isMobile){
-      try { preloadAssets().finally(()=>{ if(boot) boot.style.display = 'none'; }); } catch(_){}
-      if(window.ENABLE_GATE){ initGate(); }
-    } else {
-      try { await preloadAssets(); } catch(_){}
-      if(boot) boot.style.display = 'none';
-      if(window.ENABLE_GATE){ initGate(); }
-    }
+    try {
+      const preload = preloadAssets().catch(()=>{});
+      const maxWait = new Promise(resolve => setTimeout(resolve, 5000));
+      await Promise.race([preload, maxWait]);
+    } catch(_) {}
+    if(boot) boot.style.display = 'none';
+    if(window.ENABLE_GATE){ initGate(); }
   })();
   // Mobile overlay removed
   // Enable drag/resize on windows
@@ -3154,9 +3158,9 @@ document.addEventListener('keydown', function(event) {
 try{}catch(_){}
 </script>
 
-<div class="footer">
+<footer class="footer">
 <p>Built by  <a href="https://fiveammusic.com" target="_blank"> Five AM</a></p>
-</div>
+</footer>
 
 </body>
 </html>
