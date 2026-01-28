@@ -297,9 +297,7 @@ html, body {
 .todo-done .todo-title { text-decoration: line-through; color:#777; }
 
 /* Photos (Masonry) */
-.masonry-grid { column-count: 4; column-gap: 16px; padding: 24px; width: 100%; max-width: 1100px; }
-@media (max-width: 1024px) { .masonry-grid { column-count: 3; } }
-@media (max-width: 640px) { .masonry-grid { column-count: 2; } }
+.masonry-grid { column-width: 260px; column-gap: 16px; padding: 24px; width: 100%; max-width: 1400px; margin: 0 auto; }
 .masonry-item { break-inside: avoid; margin-bottom: 16px; position: relative; }
 .masonry-item img { width: 100%; border-radius: 12px; box-shadow: var(--shadow-soft); display:block; }
 .masonry-item .overlay { position:absolute; inset:auto 8px 8px 8px; background:rgba(0,0,0,.5); color:#fff; padding:8px 10px; border-radius:8px; font-size:12px; opacity:0; transition:opacity .18s ease; }
@@ -1540,14 +1538,23 @@ function initIconRipple(){
 
 // ===== ASSET PRELOAD + LOADING OVERLAY =====
 async function preloadAssets(){
-  const list = [
+  // Base assets
+  const base = [
     'https://www.dropbox.com/scl/fi/jaro7tf2paxju5t9lnflp/747.png?rlkey=akamxf9owvejo8yoj51302xi5&st=8v9mwutn&raw=1',
     'https://www.dropbox.com/scl/fi/ydjexhmo7bzpefle21734/fc55f708c8d651c923055ab1a1d749be.jpg?rlkey=healak5anf4t66tn4msu6qjnz&st=i6oaa054&raw=1',
-    'fc55f708c8d651c923055ab1a1d749be.jpg',
-    'stencil.jpeg',
-    'https://www.newzealand.com/assets/Tourism-NZ/Auckland/235640-auckland-city-auckland-web-2560__aWxvdmVrZWxseQo_FocalPointCropWzM1MiwxMDI0LDUwLDUwLDc1LCJqcGciLDY1LDIuNV0.jpg',
-    ...photos
+    'https://www.newzealand.com/assets/Tourism-NZ/Auckland/235640-auckland-city-auckland-web-2560__aWxvdmVrZWxseQo_FocalPointCropWzM1MiwxMDI0LDUwLDUwLDc1LCJqcGciLDY1LDIuNV0.jpg'
   ];
+  // Photo sources
+  const photoSrcs = (Array.isArray(photos) ? photos.map(p => typeof p === 'string' ? p : p.src).filter(Boolean) : []);
+  // Social icon backgrounds from DOM
+  const socialBg = Array.from(document.querySelectorAll('.social-icon-big'))
+    .map(el => {
+      const bg = (el.style && el.style.backgroundImage) || '';
+      const m = bg.match(/url\(("|')?(.*?)("|')?\)/);
+      return m && m[2] ? m[2] : null;
+    })
+    .filter(Boolean);
+  const list = [...base, ...photoSrcs, ...socialBg];
   const unique = Array.from(new Set(list.filter(Boolean)));
   let loaded = 0;
   const total = unique.length;
