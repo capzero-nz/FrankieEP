@@ -887,6 +887,11 @@ html, body {
   .resize-handle { display:none; }
 }
 
+/* Pong mobile controls */
+.pong-controls { display:none; align-items:center; gap:16px; margin-top:8px; }
+.pong-btn { padding:12px 18px; font-size:18px; border-radius:12px; border:1px solid rgba(0,0,0,.1); background:#f5f5f7; color:#222; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,.12); }
+@media (max-width: 640px) { .pong-controls { display:flex; } }
+
 /* Follow app icons */
 .social-icon-big { width: 84px; height: 84px; border-radius: 16px; background-size: cover; background-position: center; background-repeat: no-repeat; box-shadow: var(--shadow-soft); }
 </style>
@@ -1181,6 +1186,10 @@ html, body {
       <div id="pongContainer" style="position:relative;display:inline-block;">
         <canvas id="pongCanvas" width="700" height="420" style="max-width:95%;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:#000"></canvas>
         <button id="pongPlayBtn" style="display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 24px;border-radius:10px;border:none;background:#ff69b4;color:#fff;font-weight:700;font-size:16px;box-shadow:0 8px 20px rgba(0,0,0,.2);cursor:pointer;">Play Again</button>
+      </div>
+      <div id="pongControls" class="pong-controls">
+        <button id="pongLeftBtn" class="pong-btn">◀</button>
+        <button id="pongRightBtn" class="pong-btn">▶</button>
       </div>
       <div style="font-size:12px;color:#666;">Use ← → keys to set paddle direction.</div>
     </div>
@@ -1500,6 +1509,25 @@ function toggleSidebar(windowId){
   if(!win) return;
   const sidebar = win.querySelector('.sidebar');
   if(sidebar){ sidebar.classList.toggle('collapsed'); }
+}
+
+// Apply background preference (gradient or image URL)
+function applyBackgroundPreference(){
+  const pref = localStorage.getItem('fv_bg') || 'gradient';
+  const body = document.body;
+  if(pref === 'gradient'){
+    body.style.backgroundImage = '';
+    body.style.background = 'linear-gradient(135deg, #be0568 0%, #ff69b4 25%, #ff1491bb 50%, #ff69b4 75%, #ff69b9d8 100%)';
+    body.style.backgroundSize = '400% 400%';
+    body.style.animation = 'gradientWave 8s ease infinite';
+  } else {
+    body.style.background = 'none';
+    body.style.backgroundImage = `url('${pref}')`;
+    body.style.backgroundSize = 'cover';
+    body.style.backgroundPosition = 'center';
+    body.style.backgroundRepeat = 'no-repeat';
+    body.style.animation = 'none';
+  }
 }
 
 function initMusic(){
@@ -1921,6 +1949,7 @@ function renderSettings(section){
     return;
   }
   if(section === 'Appearance'){
+    const imgs = (Array.isArray(photos) ? photos.slice(0,6).map(p => (typeof p === 'string' ? p : p.src)) : []);
     content.innerHTML = `
       <div class="settings-group">
         <h3>Appearance</h3>
@@ -1933,6 +1962,14 @@ function renderSettings(section){
         </div>
         <div class="settings-note">Disables some transitions and animations.</div>
       </div>
+      <div class="settings-group">
+        <h3>Background</h3>
+        <div class="bg-options" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:12px;">
+          <div class="bg-card" data-bg="gradient" style="height:80px; border-radius:12px; border:1px solid rgba(0,0,0,.1); background:linear-gradient(135deg, #be0568 0%, #ff69b4 25%, #ff1491bb 50%, #ff69b4 75%, #ff69b9d8 100%);"></div>
+          ${imgs.map(src => `<div class="bg-card" data-bg="${src}" style="height:80px; border-radius:12px; border:1px solid rgba(0,0,0,.1); background-image:url('${src}'); background-size:cover; background-position:center;"></div>`).join('')}
+        </div>
+        <div class="settings-note">Choose a background image or use the animated gradient.</div>
+      </div>
     `;
     const motion = document.getElementById('toggleMotion');
     if(motion){
@@ -1941,6 +1978,17 @@ function renderSettings(section){
         document.body.classList.toggle('reduce-motion', motion.checked);
       });
     }
+    const cards = content.querySelectorAll('.bg-card');
+    const current = localStorage.getItem('fv_bg') || 'gradient';
+    cards.forEach(card => {
+      if(card.dataset.bg === current) card.style.outline = '2px solid var(--accent)';
+      card.addEventListener('click', () => {
+        localStorage.setItem('fv_bg', card.dataset.bg);
+        cards.forEach(c => c.style.outline = 'none');
+        card.style.outline = '2px solid var(--accent)';
+        applyBackgroundPreference();
+      });
+    });
     return;
   }
   if(section === 'Account'){
@@ -2832,6 +2880,13 @@ function initPong(){
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
     if(playBtn){ playBtn.addEventListener('click', ()=>{ if(!running){ reset(); running = true; requestAnimationFrame(loop); } }); }
+    // Mobile controls
+    const leftBtn = document.getElementById('pongLeftBtn');
+    const rightBtn = document.getElementById('pongRightBtn');
+    function setLeft(){ state.paddle.vx = -state.paddle.speed; }
+    function setRight(){ state.paddle.vx = state.paddle.speed; }
+    if(leftBtn){ leftBtn.addEventListener('click', setLeft); leftBtn.addEventListener('touchstart', (e)=>{ e.preventDefault(); setLeft(); }, {passive:false}); }
+    if(rightBtn){ rightBtn.addEventListener('click', setRight); rightBtn.addEventListener('touchstart', (e)=>{ e.preventDefault(); setRight(); }, {passive:false}); }
     canvas.dataset.pongBound = 'true';
   }
 
@@ -2991,12 +3046,16 @@ document.addEventListener('DOMContentLoaded', function(){
   // Show boot overlay, preload assets, then show login if needed
   (async ()=>{
     const boot = document.getElementById('bootOverlay');
+    const isMobile = window.innerWidth <= 640;
     if(boot) boot.style.display = 'flex';
-    try { await preloadAssets(); } catch(_){}
-    if(boot) boot.style.display = 'none';
-    // If not authorized yet, show login overlay
-    if(window.ENABLE_GATE){
-      initGate();
+    applyBackgroundPreference();
+    if(isMobile){
+      try { preloadAssets().finally(()=>{ if(boot) boot.style.display = 'none'; }); } catch(_){}
+      if(window.ENABLE_GATE){ initGate(); }
+    } else {
+      try { await preloadAssets(); } catch(_){}
+      if(boot) boot.style.display = 'none';
+      if(window.ENABLE_GATE){ initGate(); }
     }
   })();
   // Mobile overlay removed
