@@ -872,6 +872,25 @@ html, body {
   .welcome-text { font-size: 24px; }
   .window { width: 95vw; height: 78vh; }
 }
+
+/* ===== MOBILE ENHANCEMENTS ===== */
+@media (max-width: 480px) {
+  :root {
+    --shadow-heavy: 0 16px 36px rgba(0,0,0,.30);
+    --shadow-soft: 0 8px 18px rgba(0,0,0,.18);
+  }
+  .menu-bar { backdrop-filter: saturate(110%) blur(6px); }
+  .window { backdrop-filter: saturate(110%) blur(12px); box-shadow: var(--shadow-soft); border-radius: 8px; }
+  .window-header { cursor: default; }
+  .dot { width:18px; height:18px; }
+  .dots { gap:12px; }
+  /* Full-screen windows below the menu bar */
+  .window.active { left:0 !important; right:0 !important; width:100vw !important; top:32px !important; height:calc(100vh - 32px) !important; border-radius: 0; }
+  .resize-handle { display:none; }
+}
+
+/* Follow app icons */
+.social-icon-big { width: 84px; height: 84px; border-radius: 16px; background-size: cover; background-position: center; background-repeat: no-repeat; box-shadow: var(--shadow-soft); }
 </style>
 </head>
 
@@ -935,14 +954,7 @@ html, body {
   </style>
 </div>
 
-<!-- Narrow Screen Overlay -->
-<div id="narrowOverlay" style="display:none; position:fixed; inset:0; z-index:100000; background:rgba(0,0,0,0.8); backdrop-filter: blur(6px); align-items:center; justify-content:center; text-align:center;">
-  <div style="color:#fff; max-width:640px; padding:24px;">
-    <div style="font-size:28px; font-weight:800; margin-bottom:10px;">Mobile not supported</div>
-    <div style="font-size:14px; opacity:0.9;">For the best experience, please use a laptop or desktop with a wider screen.</div>
-  </div>
-  
-</div>
+<!-- Mobile overlay removed: app now supports mobile -->
 
 <div class="menu-bar">
   <div class="menu-left">
@@ -1242,7 +1254,7 @@ html, body {
         <div class="social-btn">Open</div>
       </a>
       <a href="https://open.spotify.com/artist/4OpEtCxKCkuq7XqJ18zVYn?si=k9NxL5NGSNud1M53hMcxmg" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big" style="background-image:url('https://unblast.com/wp-content/uploads/2025/07/instagram-logo-colored.jpg');background-size:cover;background-position:center;">🎵</div>
+        <div class="social-icon-big" style="background-image:url('https://unblast.com/wp-content/uploads/2025/07/instagram-logo-colored.jpg');background-size:cover;background-position:center;"></div>
         <div class="social-name">Spotify</div>
         <div class="social-handle">Artist Page</div>
         <div class="social-btn">Open</div>
@@ -1260,7 +1272,7 @@ html, body {
         <div class="social-btn">Open</div>
       </a>
       <a href="http://tiktok.com/@frankieventermusic" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big" style="background-image:url('https://images.seeklogo.com/logo-png/34/1/tiktok-logo-png_seeklogo-340606.png');background-size:cover;background-position:center;">✨</div>
+        <div class="social-icon-big" style="background-image:url('https://images.seeklogo.com/logo-png/34/1/tiktok-logo-png_seeklogo-340606.png');background-size:cover;background-position:center;"></div>
         <div class="social-name">TikTok</div>
         <div class="social-handle">@frankieventermusic</div>
         <div class="social-btn">Open</div>
@@ -1402,11 +1414,21 @@ function openWindow(windowId) {
     const w = rect.width || parseFloat(target.style.width)||600;
     const h = rect.height || parseFloat(target.style.height)||400;
     target.style.transform = 'none';
-    target.style.left = Math.max(8, (vw - w)/2) + 'px';
-    target.style.top = Math.max(8, (vh - h)/2) + 'px';
-    target.style.right = 'auto';
-    target.style.bottom = 'auto';
-    target.dataset.maximized = 'false';
+    if(vw <= 480){
+      target.style.left = '0px';
+      target.style.top = '32px';
+      target.style.right = '0px';
+      target.style.bottom = '0px';
+      target.style.width = '100vw';
+      target.style.height = 'calc(100vh - 32px)';
+      target.dataset.maximized = 'true';
+    } else {
+      target.style.left = Math.max(8, (vw - w)/2) + 'px';
+      target.style.top = Math.max(8, (vh - h)/2) + 'px';
+      target.style.right = 'auto';
+      target.style.bottom = 'auto';
+      target.dataset.maximized = 'false';
+    }
   } catch(_) {}
   // Animate open
   try {
@@ -1580,10 +1602,19 @@ function initWindowInteractions(){
       const rect = win.getBoundingClientRect();
       const w = rect.width || 600, h = rect.height || 400;
       win.style.transform = 'none';
-      win.style.left = Math.max(8, (vw() - w)/2) + 'px';
-      win.style.top = Math.max(8, (vh() - h)/2) + 'px';
-      win.style.right = 'auto';
-      win.style.bottom = 'auto';
+      if(vw() <= 480){
+        win.style.left = '0px';
+        win.style.top = '32px';
+        win.style.right = '0px';
+        win.style.bottom = '0px';
+        win.style.width = '100vw';
+        win.style.height = 'calc(100vh - 32px)';
+      } else {
+        win.style.left = Math.max(8, (vw() - w)/2) + 'px';
+        win.style.top = Math.max(8, (vh() - h)/2) + 'px';
+        win.style.right = 'auto';
+        win.style.bottom = 'auto';
+      }
     }
     center();
 
@@ -1625,10 +1656,12 @@ function initWindowInteractions(){
       document.removeEventListener('touchend', onUp);
     }
     if(header){
-      header.addEventListener('mousedown', onDown);
-      header.addEventListener('touchstart', onDown, { passive:false });
-      // Double-click to toggle maximize
-      header.addEventListener('dblclick', () => toggleMaximize(win, vw(), vh()));
+      const isMobile = vw() <= 640;
+      if(!isMobile){
+        header.addEventListener('mousedown', onDown);
+        header.addEventListener('touchstart', onDown, { passive:false });
+        header.addEventListener('dblclick', () => toggleMaximize(win, vw(), vh()));
+      }
     }
 
     // Wire toolbar buttons: minimize (yellow) and maximize (green)
@@ -1668,7 +1701,7 @@ function initWindowInteractions(){
       document.removeEventListener('touchmove', onRMove);
       document.removeEventListener('touchend', onRUp);
     }
-    if(handle){ handle.addEventListener('mousedown', onRDown); handle.addEventListener('touchstart', onRDown, { passive:false }); }
+    if(handle && vw() > 480){ handle.addEventListener('mousedown', onRDown); handle.addEventListener('touchstart', onRDown, { passive:false }); }
   });
 }
 
@@ -2951,20 +2984,7 @@ document.addEventListener('DOMContentLoaded', function(){
       initGate();
     }
   })();
-  // Narrow screen overlay
-  try {
-    function initNarrowOverlay(){
-      const ovl = document.getElementById('narrowOverlay');
-      if(!ovl) return;
-      function apply(){
-        const isNarrow = window.innerWidth < 900;
-        ovl.style.display = isNarrow ? 'flex' : 'none';
-      }
-      window.addEventListener('resize', apply);
-      apply();
-    }
-    initNarrowOverlay();
-  } catch(e) { console.warn('Narrow overlay init error', e); }
+  // Mobile overlay removed
   // Enable drag/resize on windows
   try { initWindowInteractions(); } catch(e) { console.warn('Init window interactions error', e); }
   initMenuDropdown();
