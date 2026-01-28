@@ -33,9 +33,9 @@ html, body {
   margin:0;
   height:100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #1d1b2a 0%, #352e5b 40%, #6a3b85 75%, #b24a9a 100%);
-  background-size: 300% 300%;
-  animation: gradientWave 16s ease infinite;
+  background: linear-gradient(135deg, #be0568 0%, #ff69b4 25%, #ff1491bb 50%, #ff69b4 75%, #ff69b9d8 100%);
+  background-size: 400% 400%;
+  animation: gradientWave 8s ease infinite;
   overflow-x:hidden;
   overflow-y:auto;
 }
@@ -74,46 +74,11 @@ html, body {
 .footer {
   position:fixed;
   bottom:0;
-  left:0;
-  right:0;
   height:24px;
   padding:0 14px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:11px;
-  color:#fff;
-}
-
-.footer a {
-  color:#fff;
-  text-decoration:none;
-  transition: opacity .2s ease;
-}
-
-.footer a:hover {
-  opacity:.7;
-}
-
-/* ===== DESKTOP ===== */
-.desktop {
-  height:calc(100vh - 28px);
-  padding:40px;
-  padding-top: var(--top-pad);
-  padding-bottom: var(--bottom-pad);
-  display:flex;
-  flex-direction:column;
-  gap:50px;
-  align-items:center;
-  justify-content:center;
-}
-
-.desktop-icons {
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap: var(--icon-gap);
-  align-items:center;
-  justify-items:center;
   max-width:1200px;
 }
 
@@ -274,37 +239,54 @@ html, body {
   justify-content:center;
 }
 
-/* ===== DOCK (App Launcher) ===== */
-#appDock {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 18px;
-  display: flex;
-  gap: 12px;
-  padding: 8px 12px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: saturate(120%) blur(12px);
-  border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 16px 36px rgba(0,0,0,0.18);
-  z-index: 900;
-}
-.dock-item {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.92);
-  border: 1px solid rgba(0,0,0,0.06);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-  cursor: pointer;
-  transition: transform .15s ease, box-shadow .2s ease;
-}
-.dock-item:hover { transform: translateY(-3px) scale(1.06); box-shadow: 0 16px 34px rgba(0,0,0,.22); }
-.dock-item img { width: 70%; height: 70%; object-fit: contain; border-radius: 8px; }
+/* ===== Redesigned Apps ===== */
+/* Follow (Social) */
+.social-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:18px; padding:24px; width:100%; max-width:900px; }
+.social-card { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:18px; border-radius:14px; background:rgba(255,255,255,.7); backdrop-filter:saturate(120%) blur(10px); border:1px solid var(--blur-border); box-shadow: var(--shadow-soft); text-decoration:none; color:#222; transition:transform .15s ease, box-shadow .2s ease; }
+.social-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(0,0,0,.22); }
+.social-icon-big { font-size:38px; }
+.social-name { font-size:13px; font-weight:700; }
+.social-handle { font-size:12px; color:#666; }
+.social-btn { padding:8px 12px; border-radius:8px; border:1px solid rgba(0,0,0,.1); background:#f5f5f7; font-weight:600; cursor:pointer; }
+
+/* Games */
+.games-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:18px; padding:24px; width:100%; max-width:900px; }
+.game-card { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:18px; border-radius:14px; background:rgba(255,255,255,.7); border:1px solid var(--blur-border); box-shadow: var(--shadow-soft); cursor:pointer; transition:transform .15s ease, box-shadow .2s ease; }
+.game-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(0,0,0,.22); }
+.game-title { font-weight:700; color:#222; }
+.pong-scorebar { display:flex; gap:10px; align-items:center; justify-content:center; padding:8px 12px; background:rgba(255,255,255,.7); border:1px solid var(--blur-border); border-radius:10px; }
+
+/* To-Do */
+.todo-wrap { width:100%; max-width:700px; padding:26px; display:flex; flex-direction:column; gap:14px; }
+.todo-header { display:flex; align-items:center; justify-content:space-between; }
+.todo-progress { width:100%; height:8px; background:rgba(0,0,0,.08); border-radius:999px; overflow:hidden; }
+.todo-progress > span { display:block; height:100%; width:0%; background:linear-gradient(90deg,#ff69b4,#ff1493); border-radius:999px; transition: width .25s ease; }
+.todo-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; }
+.todo-item { display:flex; align-items:center; gap:12px; padding:14px; border-radius:12px; background:rgba(255,255,255,.72); border:1px solid var(--blur-border); }
+.todo-toggle { width:42px; height:24px; border-radius:999px; background:rgba(0,0,0,.12); position:relative; cursor:pointer; }
+.todo-toggle .thumb { position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.25); transition:left .2s ease; }
+.todo-done .todo-toggle { background:#27c93f; }
+.todo-done .todo-toggle .thumb { left:21px; }
+.todo-texts { display:flex; flex-direction:column; gap:2px; }
+.todo-title { font-size:14px; color:#222; font-weight:700; }
+.todo-note { font-size:12px; color:#666; }
+.todo-done .todo-title { text-decoration: line-through; color:#777; }
+
+/* Photos (Masonry) */
+.masonry-grid { column-count: 4; column-gap: 16px; padding: 24px; width: 100%; max-width: 1100px; }
+@media (max-width: 1024px) { .masonry-grid { column-count: 3; } }
+@media (max-width: 640px) { .masonry-grid { column-count: 2; } }
+.masonry-item { break-inside: avoid; margin-bottom: 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--blur-border); box-shadow: var(--shadow-soft); background: rgba(255,255,255,.6); cursor: pointer; }
+.masonry-item img { width: 100%; height: auto; display: block; transition: transform .25s ease; }
+.masonry-item:hover img { transform: scale(1.03); }
+
+/* Videos */
+.video-library { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:20px; padding:24px; width:100%; max-width:900px; }
+.video-card { display:flex; flex-direction:column; align-items:center; gap:10px; padding:18px; border-radius:14px; background:rgba(255,255,255,.7); border:1px solid var(--blur-border); box-shadow: var(--shadow-soft); cursor:pointer; transition:transform .15s ease, box-shadow .2s ease; }
+.video-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(0,0,0,.22); }
+.video-icon { width:72px; height:72px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:36px; background:rgba(255,255,255,.92); border:1px solid #eee; box-shadow:0 8px 20px rgba(0,0,0,.06); }
+.video-title { font-size:13px; font-weight:700; color:#222; }
+
 
 /* ===== MUSIC ===== */
 .window-content iframe {
@@ -876,13 +858,11 @@ html, body {
   </div>
 </div>
 
-<!-- Parallax Wallpaper -->
-<div id="parallaxBg" style="position:fixed; inset:0; z-index:0; pointer-events:none; background-image:url('https://www.newzealand.com/assets/Tourism-NZ/Auckland/235640-auckland-city-auckland-web-2560__aWxvdmVrZWxseQo_FocalPointCropWzM1MiwxMDI0LDUwLDUwLDc1LCJqcGciLDY1LDIuNV0.jpg'); background-size:cover; background-position:center; opacity:.18; filter: blur(1px); transform: translate3d(0,0,0) scale(1.06);"></div>
 <div id="loginOverlay" style="display:none; position:fixed; inset:0; z-index:99998; background:#2d2d2d; background-image:url('https://www.newzealand.com/assets/Tourism-NZ/Auckland/235640-auckland-city-auckland-web-2560__aWxvdmVrZWxseQo_FocalPointCropWzM1MiwxMDI0LDUwLDUwLDc1LCJqcGciLDY1LDIuNV0.jpg'); background-size:cover; background-position:center; align-items:center; justify-content:center;">
   <div style="width:92%; max-width:520px; padding:24px; text-align:center; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28); border-radius:18px; backdrop-filter: blur(12px); box-shadow: 0 30px 60px rgba(0,0,0,.4);">
     <div style="display:flex; flex-direction:column; align-items:center; gap:14px; margin-bottom:12px;">
       <div style="width:120px; height:120px; border-radius:50%; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.45); border:2px solid rgba(255,255,255,0.4);">
-        <img src="fc55f708c8d651c923055ab1a1d749be.jpg" alt="Frankie Avatar" style="width:100%; height:100%; object-fit:cover;"/>
+        <img src="https://t2.genius.com/unsafe/300x300/https%3A%2F%2Fimages.genius.com%2F732e4180ce8e75b5159bbe3ffaf86b98.300x300x1.jpg " alt="Frankie Avatar" style="width:100%; height:100%; object-fit:cover;"/>
       </div>
       <div style="font-weight:700; font-size:22px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.5);">Frankie Venter</div>
     </div>
@@ -938,7 +918,7 @@ html, body {
     <img id="appleMenuButton" src="https://www.dropbox.com/scl/fi/jaro7tf2paxju5t9lnflp/747.png?rlkey=akamxf9owvejo8yoj51302xi5&st=8v9mwutn&raw=1" alt="Apple" style="height: 16px; width: auto; cursor: pointer;">
     <div id="appleDropdown" class="menu-dropdown" style="display:none;">
       <div class="menu-item" id="settingsMenuItem" onclick="openSettingsFromMenu()">Settings</div>
-      <div class="menu-item" id="logoutMenuItem">Log Out</div>
+      <div class="menu-item" id="logoutMenuItem" onclick="logoutFromMenu()">Log Out</div>
     </div>
   </div>
   <div style="flex: 1; text-align: center; font-weight:700; color:#222;">FrankieOS</div>
@@ -1017,33 +997,6 @@ html, body {
   </div>
 </div>
 
-<!-- Bottom Dock (Mac-style app launcher) -->
-<div id="appDock" aria-label="Dock">
-  <div class="dock-item" title="Music" onclick="openWindow('music-window')">
-    <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/cd.png" alt="Music">
-  </div>
-  <div class="dock-item" title="Photos" onclick="openWindow('gallery-window')">
-    <img src="https://media.istockphoto.com/id/931643150/vector/picture-icon.jpg?s=612x612&w=0&k=20&c=St-gpRn58eIa8EDAHpn_yO4CZZAnGD6wKpln9l3Z3Ok=" alt="Photos">
-  </div>
-  <div class="dock-item" title="Notes" onclick="openWindow('notes-window')">
-    <img src="https://static.vecteezy.com/system/resources/previews/029/722/382/non_2x/notes-icon-in-trendy-flat-style-isolated-on-white-background-notes-silhouette-symbol-for-your-website-design-logo-app-ui-illustration-eps10-free-vector.jpg" alt="Notes">
-  </div>
-  <div class="dock-item" title="Videos" onclick="openWindow('videos-window')">
-    <img src="https://static.vecteezy.com/system/resources/thumbnails/021/659/265/small/video-player-icon-for-streaming-movies-or-playing-media-vector.jpg" alt="Videos">
-  </div>
-  <div class="dock-item" title="Letters" onclick="openWindow('letters-window')">
-    <img src="https://static.vecteezy.com/system/resources/previews/026/323/965/non_2x/mail-icon-symbol-design-illustration-vector.jpg" alt="Letters">
-  </div>
-  <div class="dock-item" title="Games" onclick="openWindow('game-window')">
-    <img src="https://static.vecteezy.com/system/resources/previews/035/923/758/non_2x/joystick-icon-design-template-vector.jpg" alt="Games">
-  </div>
-  <div class="dock-item" title="To-Do" onclick="openWindow('todo-window')">
-    <img src="https://media.istockphoto.com/id/874723624/vector/checklist-on-clip-board-icon-flat-graphic-design.jpg?s=612x612&w=0&k=20&c=tzQwMPU3-aAjkljDPd81SOm3U3ZPOWadA5W1WyWjys0=" alt="To-Do">
-  </div>
-  <div class="dock-item" title="Settings" onclick="openWindow('settings-window')">
-    <img src="https://img.icons8.com/m_rounded/1200/settings.jpg" alt="Settings">
-  </div>
-</div>
 
 <div id="music-window" class="window">
   <div class="window-header">
@@ -1074,7 +1027,7 @@ html, body {
   </div>
   <div class="window-content">
     <div class="gallery-container" style="width:100%;height:100%;">
-      <div class="files-grid" id="photoGrid"></div>
+      <div class="masonry-grid" id="photoGrid"></div>
     </div>
   </div>
 </div>
@@ -1171,10 +1124,11 @@ html, body {
     <div class="window-title">Games</div>
   </div>
   <div class="window-content" style="flex-direction:column;gap:16px;">
-    <div id="gamesMenu" style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center;">
-      <div onclick="showPongView()" style="width:150px;height:150px;border:1px solid rgba(0,0,0,.08);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.6);box-shadow:var(--shadow-heavy);cursor:pointer;">
+    <div id="gamesMenu" class="games-grid" style="display:grid;">
+      <div class="game-card" onclick="showPongView()">
         <div style="font-size:42px;">🏓</div>
-        <div style="margin-top:8px;font-weight:700;color:#222;">Frankie Pong</div>
+        <div class="game-title">Frankie Pong</div>
+        <div style="font-size:12px;color:#666;">Classic single-player arcade with glow.</div>
       </div>
     </div>
 
@@ -1182,7 +1136,7 @@ html, body {
       <div style="width:100%;display:flex;justify-content:flex-start;">
         <button onclick="showGamesMenu()" style="padding:6px 10px;border-radius:8px;border:1px solid rgba(0,0,0,.1);background:#f5f5f7;color:#222;font-weight:600;cursor:pointer;">← Games</button>
       </div>
-      <div style="font-size:16px;color:#222;font-weight:600;">Score: <span id="pongScore">0</span> • High: <span id="pongHigh">0</span></div>
+      <div class="pong-scorebar"><span>Score: <strong id="pongScore">0</strong></span><span>High: <strong id="pongHigh">0</strong></span></div>
       <div id="pongContainer" style="position:relative;display:inline-block;">
         <canvas id="pongCanvas" width="700" height="420" style="max-width:95%;border-radius:10px;border:1px solid rgba(0,0,0,.1);background:#000"></canvas>
         <button id="pongPlayBtn" style="display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 24px;border-radius:10px;border:none;background:#ff69b4;color:#fff;font-weight:700;font-size:16px;box-shadow:0 8px 20px rgba(0,0,0,.2);cursor:pointer;">Play Again</button>
@@ -1249,31 +1203,37 @@ html, body {
     <div class="window-title">Frankie's Socials</div>
   </div>
   <div class="window-content">
-    <div class="social-container">
-      <div class="social-row">
-        <a href="https://instagram.com/frankieventermusic" target="_blank" class="social-link">
-          <div class="social-icon">📸</div>
-          <div class="social-name">Instagram</div>
-        </a>
-        <a href="https://open.spotify.com/artist/4OpEtCxKCkuq7XqJ18zVYn?si=k9NxL5NGSNud1M53hMcxmg" target="_blank" class="social-link">
-          <div class="social-icon">🎵</div>
-          <div class="social-name">Spotify</div>
-        </a>
-        <a href="http://youtube.com/@frankieventermusic" target="_blank" class="social-link">
-          <div class="social-icon">📺</div>
-          <div class="social-name">YouTube</div>
-        </a>
-      </div>
-      <div class="social-row">
-        <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiQ147syLOOAxUx-DgGHb2hLdYQFnoECAoQAQ&url=https%3A%2F%2Fwww.facebook.com%2Ffrankiesingingxx%2F&usg=AOvVaw31uUTvQjPLPmA-ZUDC2W68&opi=89978449" target="_blank" class="social-link">
-          <div class="social-icon">👥</div>
-          <div class="social-name">Facebook</div>
-        </a>
-        <a href="http://tiktok.com/@frankieventermusic" target="_blank" class="social-link">
-          <div class="social-icon">✨</div>
-          <div class="social-name">TikTok</div>
-        </a>
-      </div>
+    <div class="social-grid">
+      <a href="https://instagram.com/frankieventermusic" target="_blank" class="social-card" rel="noopener">
+        <div class="social-icon-big">📸</div>
+        <div class="social-name">Instagram</div>
+        <div class="social-handle">@frankieventermusic</div>
+        <div class="social-btn">Open</div>
+      </a>
+      <a href="https://open.spotify.com/artist/4OpEtCxKCkuq7XqJ18zVYn?si=k9NxL5NGSNud1M53hMcxmg" target="_blank" class="social-card" rel="noopener">
+        <div class="social-icon-big">🎵</div>
+        <div class="social-name">Spotify</div>
+        <div class="social-handle">Artist Page</div>
+        <div class="social-btn">Open</div>
+      </a>
+      <a href="http://youtube.com/@frankieventermusic" target="_blank" class="social-card" rel="noopener">
+        <div class="social-icon-big">📺</div>
+        <div class="social-name">YouTube</div>
+        <div class="social-handle">@frankieventermusic</div>
+        <div class="social-btn">Open</div>
+      </a>
+      <a href="https://www.facebook.com/frankiesingingxx" target="_blank" class="social-card" rel="noopener">
+        <div class="social-icon-big">👥</div>
+        <div class="social-name">Facebook</div>
+        <div class="social-handle">@frankiesingingxx</div>
+        <div class="social-btn">Open</div>
+      </a>
+      <a href="http://tiktok.com/@frankieventermusic" target="_blank" class="social-card" rel="noopener">
+        <div class="social-icon-big">✨</div>
+        <div class="social-name">TikTok</div>
+        <div class="social-handle">@frankieventermusic</div>
+        <div class="social-btn">Open</div>
+      </a>
     </div>
   </div>
 </div>
@@ -1289,18 +1249,17 @@ html, body {
     <div class="window-title">To-Do</div>
   </div>
   <div class="window-content" style="align-items:center; justify-content:center;">
-    <div id="todoContainer" style="width:100%; max-width:540px; padding:24px;">
-      <div style="font-size:18px; font-weight:700; color:#222; margin-bottom:12px; text-align:center;">Frankie's To-Do</div>
-      <ul id="todoList" style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;"></ul>
+    <div id="todoContainer" class="todo-wrap">
+      <div class="todo-header">
+        <div style="font-size:18px; font-weight:700; color:#222;">Frankie's To-Do</div>
+        <div id="todoSummary" style="font-size:12px; color:#666;">0/0 done</div>
+      </div>
+      <div class="todo-progress"><span id="todoProgress"></span></div>
+      <ul id="todoList" class="todo-list"></ul>
     </div>
   </div>
   <style>
-    .todo-item { display:flex; align-items:center; gap:10px; padding:12px; border-radius:10px; background:rgba(255,255,255,.6); border:1px solid var(--blur-border); }
-    .todo-check { width:18px; height:18px; border-radius:4px; border:1px solid #aaa; background:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:14px; color:#27c93f; cursor:pointer; }
-    .todo-title { font-size:14px; color:#222; font-weight:600; }
-    .todo-note { font-size:12px; color:#666; }
-    .todo-done .todo-title { text-decoration: line-through; color:#777; }
-    .todo-done .todo-check { color:#27c93f; }
+    /* moved to global redesigned styles */
   </style>
 </div>
 
@@ -1451,6 +1410,19 @@ function openSettingsFromMenu(){
     const dd = document.getElementById('appleDropdown');
     if(dd) dd.style.display = 'none';
     openWindow('settings-window');
+  } catch(_) {}
+}
+
+// Close Apple menu, then perform logout and restore gate
+function logoutFromMenu(){
+  try {
+    const dd = document.getElementById('appleDropdown');
+    if(dd) dd.style.display = 'none';
+    try { sessionStorage.removeItem('fv_auth'); } catch(_){}
+    window.ENABLE_GATE = true;
+    document.querySelectorAll('.window').forEach(w => { w.style.display = 'none'; w.classList.remove('active'); });
+    document.body.classList.remove('desktop-ready');
+    initGate();
   } catch(_) {}
 }
 
@@ -1965,14 +1937,11 @@ function loadGallery() {
   if(grid.children.length) return;
 
   photos.forEach((src,i)=>{
-    const card = document.createElement("div");
-    card.className = "file-card";
-    card.innerHTML = `
-      <img class="file-thumb" src="${src}" alt="Frankie photo ${i+1}" loading="lazy"/>
-      <div class="file-title">Photo ${i+1}</div>
-    `;
-    card.onclick = ()=>openModal(i);
-    grid.appendChild(card);
+    const item = document.createElement("div");
+    item.className = "masonry-item";
+    item.innerHTML = `<img src="${src}" alt="Frankie photo ${i+1}" loading="lazy"/>`;
+    item.onclick = ()=>openModal(i);
+    grid.appendChild(item);
   });
   if(!grid.children.length){
     const msg = document.createElement('div');
@@ -2799,22 +2768,21 @@ function initTodo(){
   items.forEach((item, i) => {
     const li = document.createElement('li');
     li.className = 'todo-item' + (item.done ? ' todo-done' : '');
-    const check = document.createElement('div');
-    check.className = 'todo-check';
-    check.innerHTML = item.done ? '✓' : '';
-    check.title = 'Toggle complete';
-    check.addEventListener('click', () => {
+    const toggle = document.createElement('div');
+    toggle.className = 'todo-toggle';
+    const thumb = document.createElement('div');
+    thumb.className = 'thumb';
+    toggle.appendChild(thumb);
+    toggle.title = 'Toggle complete';
+    toggle.addEventListener('click', () => {
       item.done = !item.done;
       li.classList.toggle('todo-done', item.done);
-      check.innerHTML = item.done ? '✓' : '';
-      // Persist only curated items state; no user-created tasks supported
       const newState = items.map(it => it.done);
       localStorage.setItem('fv_todo_state', JSON.stringify(newState));
+      updateProgress();
     });
     const textWrap = document.createElement('div');
-    textWrap.style.display = 'flex';
-    textWrap.style.flexDirection = 'column';
-    textWrap.style.gap = '2px';
+    textWrap.className = 'todo-texts';
     const title = document.createElement('div');
     title.className = 'todo-title';
     title.textContent = item.title;
@@ -2823,10 +2791,20 @@ function initTodo(){
     note.textContent = item.note;
     textWrap.appendChild(title);
     textWrap.appendChild(note);
-    li.appendChild(check);
+    li.appendChild(toggle);
     li.appendChild(textWrap);
     list.appendChild(li);
   });
+  updateProgress();
+
+  function updateProgress(){
+    const summary = document.getElementById('todoSummary');
+    const bar = document.getElementById('todoProgress');
+    const total = items.length;
+    const doneCount = items.filter(it => it.done).length;
+    if(summary) summary.textContent = `${doneCount}/${total} done`;
+    if(bar) bar.style.width = `${Math.round((doneCount/total)*100)}%`;
+  }
 }
 
 // (Tetris removed per request)
@@ -2841,17 +2819,17 @@ function loadVideos() {
   const grid = document.getElementById("videoGrid");
   if(!grid) return;
   grid.innerHTML = "";
-  // File icons grid view
+  // Redesigned video library view
   const wrap = document.createElement('div');
-  wrap.className = 'files-grid';
+  wrap.className = 'video-library';
   const files = [
     { title: 'Music Videos', vimeoId: (videos[0] && videos[0].items[0]) || null },
     { title: 'From Frankie', vimeoId: (videos[1] && videos[1].items[0]) || null },
   ];
   files.forEach(file => {
     const card = document.createElement('div');
-    card.className = 'file-card';
-    card.innerHTML = `<div class="file-icon">📁</div><div class="file-title">${file.title}</div>`;
+    card.className = 'video-card';
+    card.innerHTML = `<div class="video-icon">🎬</div><div class="video-title">${file.title}</div>`;
     card.onclick = () => openVideoModal(file.vimeoId, file.title);
     wrap.appendChild(card);
   });
@@ -2945,7 +2923,6 @@ document.addEventListener('DOMContentLoaded', function(){
   try { initWindowInteractions(); } catch(e) { console.warn('Init window interactions error', e); }
   initMenuDropdown();
   try { initIconRipple(); } catch(e) { console.warn('Ripple init error', e); }
-  try { initParallax(); } catch(e) { console.warn('Parallax init error', e); }
   try { loadGallery(); } catch(e) { console.warn('Gallery init error', e); }
   try { loadVideos(); } catch(e) { console.warn('Videos init error', e); }
   try { /* lazy init draw on open */ } catch(e) { console.warn('Draw init error', e); }
