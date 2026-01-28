@@ -9,22 +9,22 @@
 
 <style>
 :root {
-  --blur-bg: rgba(255,255,255,0.65);
-  --blur-border: rgba(255,255,255,0.35);
-  --shadow-heavy: 0 40px 80px rgba(0,0,0,.45);
-  --shadow-soft: 0 10px 30px rgba(0,0,0,.25);
+  --blur-bg: rgba(255,255,255,0.62);
+  --blur-border: rgba(255,255,255,0.28);
+  --shadow-heavy: 0 50px 120px rgba(0,0,0,.45);
+  --shadow-soft: 0 12px 34px rgba(0,0,0,.22);
 
-  --red:#ff5f56;
-  --yellow:#ffbd2e;
-  --green:#27c93f;
-  --accent:#ff69b4;
+  --red:#ff5f56;   /* macOS close */
+  --yellow:#ffbd2e;/* macOS minimize */
+  --green:#27c93f; /* macOS zoom */
+  --accent:#ff69b4;/* brand accent */
 
-  /* Home layout scaling: fit (not fill) */
-  --icon-size: clamp(72px, 10vh, 96px);
-  --icon-gap: clamp(34px, 4.2vh, 72px);
-  --title-size: clamp(40px, 6.8vh, 60px);
-  --top-pad: clamp(56px, 8.5vh, 110px);
-  --bottom-pad: clamp(64px, 8.5vh, 120px);
+  /* Home layout scaling */
+  --icon-size: clamp(72px, 9vh, 98px);
+  --icon-gap: clamp(36px, 4.8vh, 72px);
+  --title-size: clamp(42px, 6.8vh, 64px);
+  --top-pad: clamp(50px, 8vh, 102px);
+  --bottom-pad: clamp(70px, 9.2vh, 140px);
 }
 
 * { box-sizing: border-box; }
@@ -33,9 +33,9 @@ html, body {
   margin:0;
   height:100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #be0568 0%, #ff69b4 25%, #ff1491bb 50%, #ff69b4 75%, #ff69b9d8 100%);
-  background-size: 400% 400%;
-  animation: gradientWave 8s ease infinite;
+  background: linear-gradient(135deg, #1d1b2a 0%, #352e5b 40%, #6a3b85 75%, #b24a9a 100%);
+  background-size: 300% 300%;
+  animation: gradientWave 16s ease infinite;
   overflow-x:hidden;
   overflow-y:auto;
 }
@@ -59,14 +59,14 @@ html, body {
   display:flex;
   align-items:center;
   justify-content:space-between;
-  background:rgba(255,255,255,.8);
-  backdrop-filter: blur(20px);
+  background:rgba(255,255,255,.82);
+  backdrop-filter: saturate(120%) blur(24px);
   font-size:13px;
   font-weight:600;
-  box-shadow:0 1px 10px rgba(0,0,0,.1);
+  box-shadow:0 2px 18px rgba(0,0,0,.12);
 }
 .menu-left { position: relative; display:flex; align-items:center; gap:8px; }
-.menu-dropdown { position:absolute; top:26px; left:0; background:rgba(255,255,255,0.95); border:1px solid rgba(0,0,0,0.08); border-radius:8px; box-shadow:0 10px 24px rgba(0,0,0,0.15); min-width:140px; overflow:hidden; z-index:10000; }
+.menu-dropdown { position:absolute; top:26px; left:0; background:rgba(255,255,255,0.95); border:1px solid rgba(0,0,0,0.08); border-radius:10px; box-shadow:0 16px 36px rgba(0,0,0,0.18); min-width:160px; overflow:hidden; z-index:10000; }
 .menu-item { padding:8px 12px; font-size:13px; color:#222; cursor:pointer; }
 .menu-item:hover { background:rgba(0,0,0,0.06); }
 
@@ -98,7 +98,7 @@ html, body {
 /* ===== DESKTOP ===== */
 .desktop {
   height:calc(100vh - 28px);
-  padding:32px;
+  padding:40px;
   padding-top: var(--top-pad);
   padding-bottom: var(--bottom-pad);
   display:flex;
@@ -166,17 +166,16 @@ html, body {
 /* ===== WINDOWS ===== */
 .window {
   position:fixed;
-  inset:50% auto auto 50%;
-  transform:translate(-50%,-50%);
-  width:min(900px, 92vw);
-  height:min(600px, 80vh);
+  inset:auto auto auto auto;
+  width:min(980px, 92vw);
+  height:min(640px, 82vh);
   display:none;
   flex-direction:column;
   background:var(--blur-bg);
-  backdrop-filter: blur(30px);
+  backdrop-filter: saturate(120%) blur(32px);
   border:1px solid var(--blur-border);
-  border-radius:14px;
-  box-shadow: var(--shadow-heavy);
+  border-radius:16px;
+  box-shadow: 0 60px 120px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.15) inset;
   overflow:hidden;
   transition: left .2s ease, top .2s ease, width .2s ease, height .2s ease, opacity .18s ease, transform .18s ease;
 }
@@ -207,11 +206,11 @@ html, body {
 .window.anim-close { animation: winOut 180ms ease-in forwards; }
 
 .window-header {
-  height:40px;
+  height:42px;
   display:flex;
   align-items:center;
   padding:0 14px;
-  background:rgba(255,255,255,.35);
+  background:rgba(255,255,255,.38);
   border-bottom:1px solid rgba(0,0,0,.08);
 }
 .window-header { cursor: move; }
@@ -234,6 +233,7 @@ html, body {
   width:12px;
   height:12px;
   border-radius:50%;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset, 0 2px 6px rgba(0,0,0,0.25);
 }
 
 .close { background:var(--red); cursor:pointer; }
@@ -254,10 +254,10 @@ html, body {
   position:absolute;
   right:8px;
   bottom:8px;
-  width:14px;
-  height:14px;
-  border-right:2px solid rgba(0,0,0,0.3);
-  border-bottom:2px solid rgba(0,0,0,0.3);
+  width:16px;
+  height:16px;
+  border-right:2px solid rgba(0,0,0,0.25);
+  border-bottom:2px solid rgba(0,0,0,0.25);
   opacity:0.7;
   cursor: se-resize;
 }
@@ -267,12 +267,44 @@ html, body {
 
 .window-content {
   flex:1;
-  background:rgba(255,255,255,.45);
+  background:rgba(255,255,255,.48);
   overflow:auto;
   display:flex;
   align-items:center;
   justify-content:center;
 }
+
+/* ===== DOCK (App Launcher) ===== */
+#appDock {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 18px;
+  display: flex;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: saturate(120%) blur(12px);
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.18);
+  z-index: 900;
+}
+.dock-item {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+.dock-item:hover { transform: translateY(-3px) scale(1.06); box-shadow: 0 16px 34px rgba(0,0,0,.22); }
+.dock-item img { width: 70%; height: 70%; object-fit: contain; border-radius: 8px; }
 
 /* ===== MUSIC ===== */
 .window-content iframe {
@@ -835,11 +867,11 @@ html, body {
 <!-- Overlays: Loading and Mac-style Login -->
 
 <div id="bootOverlay" style="position:fixed; inset:0; z-index:99999; background:#000; display:flex; align-items:center; justify-content:center;">
-  <div style="display:flex; flex-direction:column; align-items:center; gap:22px; width:100%; max-width:560px; padding:24px;">
-    <div style="width:72px; height:72px; border-radius:50%; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:22px;">FV</div>
-    <div id="bootText" style="color:#fff; font-size:13px; opacity:0.9;">Starting up… 0%</div>
-    <div style="width:80%; max-width:420px; height:6px; border-radius:999px; background:rgba(255,255,255,0.15); overflow:hidden;">
-      <div id="bootBar" style="width:0%; height:100%; background:#fff; border-radius:999px; transition:width .25s ease;"></div>
+  <div style="display:flex; flex-direction:column; align-items:center; gap:20px; width:100%; max-width:480px; padding:24px;">
+    <div style="width:84px; height:84px; border-radius:22px; background:rgba(255,255,255,0.9); color:#000; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:24px; box-shadow:0 16px 36px rgba(0,0,0,.4); border:1px solid rgba(0,0,0,.1);">FV</div>
+    <div id="bootText" style="color:#fff; font-size:12px; opacity:0.85; letter-spacing:0.2px;">Starting up… 0%</div>
+    <div style="width:80%; max-width:380px; height:6px; border-radius:999px; background:rgba(255,255,255,0.15); overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.25) inset;">
+      <div id="bootBar" style="width:0%; height:100%; background:linear-gradient(90deg,#fff,#ddd); border-radius:999px; transition:width .25s ease;"></div>
     </div>
   </div>
 </div>
@@ -847,7 +879,7 @@ html, body {
 <!-- Parallax Wallpaper -->
 <div id="parallaxBg" style="position:fixed; inset:0; z-index:0; pointer-events:none; background-image:url('https://www.newzealand.com/assets/Tourism-NZ/Auckland/235640-auckland-city-auckland-web-2560__aWxvdmVrZWxseQo_FocalPointCropWzM1MiwxMDI0LDUwLDUwLDc1LCJqcGciLDY1LDIuNV0.jpg'); background-size:cover; background-position:center; opacity:.18; filter: blur(1px); transform: translate3d(0,0,0) scale(1.06);"></div>
 <div id="loginOverlay" style="display:none; position:fixed; inset:0; z-index:99998; background:#2d2d2d; background-image:url('https://www.newzealand.com/assets/Tourism-NZ/Auckland/235640-auckland-city-auckland-web-2560__aWxvdmVrZWxseQo_FocalPointCropWzM1MiwxMDI0LDUwLDUwLDc1LCJqcGciLDY1LDIuNV0.jpg'); background-size:cover; background-position:center; align-items:center; justify-content:center;">
-  <div style="width:92%; max-width:540px; padding:24px; text-align:center;">
+  <div style="width:92%; max-width:520px; padding:24px; text-align:center; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28); border-radius:18px; backdrop-filter: blur(12px); box-shadow: 0 30px 60px rgba(0,0,0,.4);">
     <div style="display:flex; flex-direction:column; align-items:center; gap:14px; margin-bottom:12px;">
       <div style="width:120px; height:120px; border-radius:50%; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.45); border:2px solid rgba(255,255,255,0.4);">
         <img src="fc55f708c8d651c923055ab1a1d749be.jpg" alt="Frankie Avatar" style="width:100%; height:100%; object-fit:cover;"/>
@@ -855,8 +887,8 @@ html, body {
       <div style="font-weight:700; font-size:22px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.5);">Frankie Venter</div>
     </div>
     <div style="display:flex; gap:10px; align-items:center; justify-content:center;">
-      <input id="gatePassword" type="password" placeholder="Password" style="flex:1; min-width:0; max-width:360px; padding:12px; border:1px solid rgba(255,255,255,0.35); background:rgba(0,0,0,0.35); color:#fff; border-radius:12px; font-size:14px; outline:none;"/>
-      <button id="gateSubmit" style="padding:12px 18px; background:#fff; color:#000; border:none; border-radius:12px; font-weight:700; cursor:pointer;">Sign In</button>
+      <input id="gatePassword" type="password" placeholder="Password" style="flex:1; min-width:0; max-width:360px; padding:12px; border:1px solid rgba(255,255,255,0.35); background:rgba(0,0,0,0.28); color:#fff; border-radius:12px; font-size:14px; outline:none;"/>
+      <button id="gateSubmit" style="padding:12px 18px; background:#fff; color:#000; border:none; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 8px 18px rgba(0,0,0,.25);">Sign In</button>
     </div>
     <div id="gateStatus" style="min-height:18px; margin-top:12px; font-size:12px; color:#ff5f56; text-align:center;"></div>
   </div>
@@ -895,7 +927,7 @@ html, body {
 <!-- Narrow Screen Overlay -->
 <div id="narrowOverlay" style="display:none; position:fixed; inset:0; z-index:100000; background:rgba(0,0,0,0.8); backdrop-filter: blur(6px); align-items:center; justify-content:center; text-align:center;">
   <div style="color:#fff; max-width:640px; padding:24px;">
-    <div style="font-size:28px; font-weight:800; margin-bottom:10px;">Screen Too Narrow</div>
+    <div style="font-size:28px; font-weight:800; margin-bottom:10px;">Mobile not supported</div>
     <div style="font-size:14px; opacity:0.9;">For the best experience, please use a laptop or desktop with a wider screen.</div>
   </div>
   
@@ -905,11 +937,11 @@ html, body {
   <div class="menu-left">
     <img id="appleMenuButton" src="https://www.dropbox.com/scl/fi/jaro7tf2paxju5t9lnflp/747.png?rlkey=akamxf9owvejo8yoj51302xi5&st=8v9mwutn&raw=1" alt="Apple" style="height: 16px; width: auto; cursor: pointer;">
     <div id="appleDropdown" class="menu-dropdown" style="display:none;">
-      <div class="menu-item" id="settingsMenuItem">Settings</div>
+      <div class="menu-item" id="settingsMenuItem" onclick="openSettingsFromMenu()">Settings</div>
       <div class="menu-item" id="logoutMenuItem">Log Out</div>
     </div>
   </div>
-  <div style="flex: 1; text-align: center;">Frankie Venter's Laptop</div>
+  <div style="flex: 1; text-align: center; font-weight:700; color:#222;">FrankieOS</div>
   <div id="clock"></div>
 </div>
 
@@ -982,6 +1014,34 @@ html, body {
       <div class="icon-img" style="background-image:url('https://www.dropbox.com/scl/fi/ydjexhmo7bzpefle21734/fc55f708c8d651c923055ab1a1d749be.jpg?rlkey=healak5anf4t66tn4msu6qjnz&st=i6oaa054&raw=1');background-size:cover;background-position:center;"></div>
       <div class="icon-label">Listen</div>
     </div>
+  </div>
+</div>
+
+<!-- Bottom Dock (Mac-style app launcher) -->
+<div id="appDock" aria-label="Dock">
+  <div class="dock-item" title="Music" onclick="openWindow('music-window')">
+    <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/cd.png" alt="Music">
+  </div>
+  <div class="dock-item" title="Photos" onclick="openWindow('gallery-window')">
+    <img src="https://media.istockphoto.com/id/931643150/vector/picture-icon.jpg?s=612x612&w=0&k=20&c=St-gpRn58eIa8EDAHpn_yO4CZZAnGD6wKpln9l3Z3Ok=" alt="Photos">
+  </div>
+  <div class="dock-item" title="Notes" onclick="openWindow('notes-window')">
+    <img src="https://static.vecteezy.com/system/resources/previews/029/722/382/non_2x/notes-icon-in-trendy-flat-style-isolated-on-white-background-notes-silhouette-symbol-for-your-website-design-logo-app-ui-illustration-eps10-free-vector.jpg" alt="Notes">
+  </div>
+  <div class="dock-item" title="Videos" onclick="openWindow('videos-window')">
+    <img src="https://static.vecteezy.com/system/resources/thumbnails/021/659/265/small/video-player-icon-for-streaming-movies-or-playing-media-vector.jpg" alt="Videos">
+  </div>
+  <div class="dock-item" title="Letters" onclick="openWindow('letters-window')">
+    <img src="https://static.vecteezy.com/system/resources/previews/026/323/965/non_2x/mail-icon-symbol-design-illustration-vector.jpg" alt="Letters">
+  </div>
+  <div class="dock-item" title="Games" onclick="openWindow('game-window')">
+    <img src="https://static.vecteezy.com/system/resources/previews/035/923/758/non_2x/joystick-icon-design-template-vector.jpg" alt="Games">
+  </div>
+  <div class="dock-item" title="To-Do" onclick="openWindow('todo-window')">
+    <img src="https://media.istockphoto.com/id/874723624/vector/checklist-on-clip-board-icon-flat-graphic-design.jpg?s=612x612&w=0&k=20&c=tzQwMPU3-aAjkljDPd81SOm3U3ZPOWadA5W1WyWjys0=" alt="To-Do">
+  </div>
+  <div class="dock-item" title="Settings" onclick="openWindow('settings-window')">
+    <img src="https://img.icons8.com/m_rounded/1200/settings.jpg" alt="Settings">
   </div>
 </div>
 
@@ -1383,6 +1443,15 @@ function openWindow(windowId) {
     // Land on the Games menu; game loops start when a view is opened
     showGamesMenu();
   }
+}
+
+// Close Apple menu then open Settings, ensuring focus
+function openSettingsFromMenu(){
+  try {
+    const dd = document.getElementById('appleDropdown');
+    if(dd) dd.style.display = 'none';
+    openWindow('settings-window');
+  } catch(_) {}
 }
 
 // Expose UI actions globally for inline handlers
@@ -1962,12 +2031,6 @@ function initMenuDropdown(){
     document.body.classList.remove('desktop-ready');
     initGate();
   });
-  if(settingsItem){
-    settingsItem.addEventListener('click', () => {
-      dd.style.display = 'none';
-      try { openWindow('settings-window'); } catch(_){}
-    });
-  }
 }
 const notes = [
   {title: "a big deal to me", content: "Started this in the late hours when the city goes quiet. The synth layers came naturally - I wanted that dreamy, ethereal feeling. Three weeks of production, endless coffee breaks, and finally found the perfect vocal tone. This track captures exactly what I was feeling at that moment. Pure creativity flowing through the speakers."},
