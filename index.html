@@ -23,7 +23,7 @@
   --icon-size: clamp(72px, 9vh, 98px);
   --icon-gap: clamp(36px, 4.8vh, 72px);
   --title-size: clamp(42px, 6.8vh, 64px);
-  --top-pad: clamp(50px, 8vh, 102px);
+  --top-pad: clamp(100px, 12vh, 160px);
   --bottom-pad: clamp(70px, 9.2vh, 140px);
 }
 
@@ -33,7 +33,7 @@ html, body {
   margin:0;
   height:100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #be0568 0%, #ff69b4 25%, #ff1491bb 50%, #ff69b4 75%, #ff69b9d8 100%);
+  background: linear-gradient(135deg, #a205be 0%, #ff69b4 25%, #ff1491bb 50%, #ff69b4 75%, #e969ffd8 100%);
   background-size: 400% 400%;
   animation: gradientWave 8s ease infinite;
   overflow-x:hidden;
@@ -91,6 +91,24 @@ html, body {
   text-shadow:0 2px 8px rgba(0,0,0,.5);
   letter-spacing:-0.5px;
   margin-bottom: clamp(20px, 3.2vh, 40px);
+}
+
+/* ===== HOME DESKTOP LAYOUT ===== */
+.desktop {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding: var(--top-pad) 24px var(--bottom-pad);
+}
+.desktop-icons {
+  display:grid;
+  grid-template-columns: repeat(4, auto);
+  gap: var(--icon-gap);
+  justify-content:center;
+  justify-items:center;
+}
+@media (min-width: 1400px) {
+  .desktop-icons { grid-template-columns: repeat(5, auto); }
 }
 
 .icon {
