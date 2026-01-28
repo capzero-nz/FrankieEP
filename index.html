@@ -1252,7 +1252,7 @@ html, body {
         <div class="social-btn">Open</div>
       </a>
       <a href="https://open.spotify.com/artist/4OpEtCxKCkuq7XqJ18zVYn?si=k9NxL5NGSNud1M53hMcxmg" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big" style="background-image:url('https://unblast.com/wp-content/uploads/2025/07/instagram-logo-colored.jpg');background-size:cover;background-position:center;"></div>
+        <div class="social-icon-big" style="background-image:url('https://png.pngtree.com/element_our/png/20181011/spotify-social-media-icon-design-template-vector-png_127005.jpg');background-size:cover;background-position:center;"></div>
         <div class="social-name">Spotify</div>
         <div class="social-handle">Artist Page</div>
         <div class="social-btn">Open</div>
@@ -1264,7 +1264,7 @@ html, body {
         <div class="social-btn">Open</div>
       </a>
       <a href="https://www.facebook.com/frankiesingingxx" target="_blank" class="social-card" rel="noopener">
-        <div class="social-icon-big" style="background-image:url('https://img.freepik.com/premium-vector/facebook-logo-vector-facebook-official-logo-vector-facebook-logo-illustrator_1002350-1803.jpg?semt=ais_hybrid&w=740&q=80');background-size:cover;background-position:center;"></div>
+        <div class="social-icon-big" style="background-image:url('https://www.citypng.com/public/uploads/preview/blue-square-form-contains-outline-fb-facebook-logo-701751694792360h0fcgk1pal.png');background-size:cover;background-position:center;"></div>
         <div class="social-name">Facebook</div>
         <div class="social-handle">@frankiesingingxx</div>
         <div class="social-btn">Open</div>
@@ -1546,8 +1546,9 @@ async function preloadAssets(){
   ];
   // Photo sources
   const photoSrcs = (Array.isArray(photos) ? photos.map(p => typeof p === 'string' ? p : p.src).filter(Boolean) : []);
-  // Social icon backgrounds from DOM
-  const socialBg = Array.from(document.querySelectorAll('.social-icon-big'))
+  // Icon backgrounds from DOM (home icons + social icons)
+  const bgEls = document.querySelectorAll('.icon-img, .social-icon-big');
+  const socialBg = Array.from(bgEls)
     .map(el => {
       const bg = (el.style && el.style.backgroundImage) || '';
       const m = bg.match(/url\(("|')?(.*?)("|')?\)/);
@@ -2020,7 +2021,7 @@ function loadGallery(){
   visiblePhotos.forEach((p,i)=>{
     const item = document.createElement("div");
     item.className = "masonry-item";
-    item.innerHTML = `<img src="${p.src}" alt="${p.title || 'Photo'}" loading="lazy"/><div class='overlay'>${p.title || ''}</div>`;
+    item.innerHTML = `<img src="${p.src}" alt="${p.title || 'Photo'}" decoding="async"/><div class='overlay'>${p.title || ''}</div>`;
     item.onclick = ()=>openModal(i);
     grid.appendChild(item);
   });
