@@ -148,7 +148,10 @@ html, body {
   border:1px solid var(--blur-border);
   box-shadow: var(--shadow-soft);
   transition: transform .15s ease;
+  position: relative;
+  overflow: hidden;
 }
+.icon-img:hover { transform: translateY(-3px) scale(1.03) rotate(0.5deg); box-shadow: 0 16px 34px rgba(0,0,0,.22); }
 
 .icon:active .icon-img { transform:scale(.92); }
 
@@ -175,11 +178,33 @@ html, body {
   border-radius:14px;
   box-shadow: var(--shadow-heavy);
   overflow:hidden;
+  transition: left .2s ease, top .2s ease, width .2s ease, height .2s ease, opacity .18s ease, transform .18s ease;
 }
 
 .window.active {
   display:flex;
 }
+
+/* Focus glow when brought to front */
+.window.focused { box-shadow: 0 50px 100px rgba(0,0,0,.55), 0 0 0 2px rgba(255,105,180,.35) inset; }
+
+/* Maximize gentle bounce */
+@keyframes bounceIn {
+  0% { transform: scale(0.995); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1.0); }
+}
+.win-bounce { animation: bounceIn 240ms ease-out; }
+/* Window open/close animations */
+@keyframes winIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes winOut {
+  to { opacity: 0; transform: scale(0.96) translateY(8px); }
+}
+.window.anim-open { animation: winIn 240ms ease-out; }
+.window.anim-close { animation: winOut 180ms ease-in forwards; }
 
 .window-header {
   height:40px;
@@ -236,6 +261,9 @@ html, body {
   opacity:0.7;
   cursor: se-resize;
 }
+
+/* Minimize animation state */
+.window.minimizing { opacity: 0; transform: scale(0.96); }
 
 .window-content {
   flex:1;
@@ -416,6 +444,9 @@ html, body {
   transform: translateY(-2px);
   box-shadow: 0 14px 34px rgba(0,0,0,.18);
 }
+.file-thumb:hover { transform: scale(1.02); transition: transform .18s ease; }
+.menu-dropdown.anim-menu-in { animation: menuIn 160ms ease-out; }
+@keyframes menuIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 
 .file-icon {
   width: 72px;
@@ -444,6 +475,20 @@ html, body {
   border-radius: 10px;
   object-fit: cover;
   border: 1px solid #eee;
+}
+
+/* Ripple effect on icon click */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  opacity: 0.35;
+  background: rgba(255,255,255,0.8);
+  pointer-events: none;
+  animation: rippleAnim 420ms ease-out forwards;
+}
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
 }
 
 /* ===== SHOP ===== */
@@ -594,6 +639,10 @@ html, body {
   max-height:100%;
   object-fit:contain;
 }
+/* Dock styling */
+#windowDock { backdrop-filter: blur(12px); background: rgba(255,255,255,.85); border: 1px solid rgba(0,0,0,.08); border-radius: 10px; padding: 8px 10px; box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+.dock-btn { padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: rgba(255,255,255,0.95); cursor: pointer; font-size: 12px; transition: transform .12s ease, box-shadow .15s ease; }
+.dock-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.16); }
 
 .modal-close {
   position:absolute;
@@ -794,6 +843,9 @@ html, body {
     </div>
   </div>
 </div>
+
+<!-- Parallax Wallpaper -->
+<div id="parallaxBg" style="position:fixed; inset:0; z-index:0; pointer-events:none; background-image:url('https://www.newzealand.com/assets/Tourism-NZ/Auckland/235640-auckland-city-auckland-web-2560__aWxvdmVrZWxseQo_FocalPointCropWzM1MiwxMDI0LDUwLDUwLDc1LCJqcGciLDY1LDIuNV0.jpg'); background-size:cover; background-position:center; opacity:.18; filter: blur(1px); transform: translate3d(0,0,0) scale(1.06);"></div>
 <div id="loginOverlay" style="display:none; position:fixed; inset:0; z-index:99998; background:#2d2d2d; background-image:url('https://www.newzealand.com/assets/Tourism-NZ/Auckland/235640-auckland-city-auckland-web-2560__aWxvdmVrZWxseQo_FocalPointCropWzM1MiwxMDI0LDUwLDUwLDc1LCJqcGciLDY1LDIuNV0.jpg'); background-size:cover; background-position:center; align-items:center; justify-content:center;">
   <div style="width:92%; max-width:540px; padding:24px; text-align:center;">
     <div style="display:flex; flex-direction:column; align-items:center; gap:14px; margin-bottom:12px;">
@@ -840,10 +892,20 @@ html, body {
   </style>
 </div>
 
+<!-- Narrow Screen Overlay -->
+<div id="narrowOverlay" style="display:none; position:fixed; inset:0; z-index:100000; background:rgba(0,0,0,0.8); backdrop-filter: blur(6px); align-items:center; justify-content:center; text-align:center;">
+  <div style="color:#fff; max-width:640px; padding:24px;">
+    <div style="font-size:28px; font-weight:800; margin-bottom:10px;">Screen Too Narrow</div>
+    <div style="font-size:14px; opacity:0.9;">For the best experience, please use a laptop or desktop with a wider screen.</div>
+  </div>
+  
+</div>
+
 <div class="menu-bar">
   <div class="menu-left">
     <img id="appleMenuButton" src="https://www.dropbox.com/scl/fi/jaro7tf2paxju5t9lnflp/747.png?rlkey=akamxf9owvejo8yoj51302xi5&st=8v9mwutn&raw=1" alt="Apple" style="height: 16px; width: auto; cursor: pointer;">
     <div id="appleDropdown" class="menu-dropdown" style="display:none;">
+      <div class="menu-item" id="settingsMenuItem">Settings</div>
       <div class="menu-item" id="logoutMenuItem">Log Out</div>
     </div>
   </div>
@@ -964,7 +1026,7 @@ html, body {
       <div class="dot min"></div>
       <div class="dot max"></div>
     </div>
-    <div class="window-title">Notes from Frankie</div>
+    <div class="window-title">Frankie's Notes</div>
     <button class="sidebar-toggle" onclick="toggleSidebar('notes-window')">☰ Sidebar</button>
   </div>
   <div class="window-content">
@@ -1026,10 +1088,11 @@ html, body {
   <div class="window-content" style="align-items:center; flex-direction:column;">
     <div style="margin:auto;max-width:520px;width:100%;padding:24px;">
       <div style="font-size:18px;font-weight:600;color:#222;margin-bottom:8px;">Write a letter to Frankie</div>
-      <p style="margin:0 0 16px;color:#555;font-size:14px;line-height:1.7;">Share a message, a memory, or anything you'd like Frankie to read. Your words mean a lot — thank you for taking the time to write.</p>
+      <p style="margin:0 0 16px;color:#555;font-size:14px;line-height:1.7;">Write directly to Frankie! Share a message you'd like Frankie to read. Your words & support mean a lot — thank you for taking the time to write.</p>
     </div>
     <form id="lettersForm" style="margin:auto;max-width:520px;width:100%;display:flex;flex-direction:column;gap:16px;align-items:stretch;padding:0 24px 24px;">
       <input type="text" id="fanName" placeholder="Your Name (optional)" style="width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:15px;">
+      <input type="email" id="fanEmail" placeholder="Your Email (required)" required style="width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:15px;">
       <textarea id="fanMessage" placeholder="Write your message to Frankie..." rows="6" style="width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:15px;"></textarea>
       <button type="submit" style="padding:10px 24px;background:#ff69b4;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Send</button>
       <div id="lettersThanks" style="color:#27c93f;font-size:14px;display:none;">Thank you for your message!</div>
@@ -1123,7 +1186,7 @@ html, body {
       <div class="dot min"></div>
       <div class="dot max"></div>
     </div>
-    <div class="window-title">Follow Frankie</div>
+    <div class="window-title">Frankie's Socials</div>
   </div>
   <div class="window-content">
     <div class="social-container">
@@ -1275,10 +1338,30 @@ function openWindow(windowId) {
   // Show target window
   target.style.display = 'flex';
   target.classList.add('active');
+  // Center on open
+  try {
+    const vw = window.innerWidth; const vh = window.innerHeight;
+    const rect = target.getBoundingClientRect();
+    const w = rect.width || parseFloat(target.style.width)||600;
+    const h = rect.height || parseFloat(target.style.height)||400;
+    target.style.transform = 'none';
+    target.style.left = Math.max(8, (vw - w)/2) + 'px';
+    target.style.top = Math.max(8, (vh - h)/2) + 'px';
+    target.style.right = 'auto';
+    target.style.bottom = 'auto';
+    target.dataset.maximized = 'false';
+  } catch(_) {}
+  // Animate open
+  try {
+    target.classList.add('anim-open');
+    target.addEventListener('animationend', () => target.classList.remove('anim-open'), { once:true });
+  } catch(_){}
   // Bring to front
   try {
     window.__winZ = (window.__winZ || 100) + 1;
     target.style.zIndex = window.__winZ;
+    document.querySelectorAll('.window').forEach(w => w.classList.remove('focused'));
+    target.classList.add('focused');
   } catch(_){ }
   // App-specific init
   if(windowId === 'notes-window') loadNotes();
@@ -1330,6 +1413,27 @@ function openLink(url){
   catch(e) { location.href = url; }
 }
 
+// ===== ICON RIPPLE =====
+function initIconRipple(){
+  document.querySelectorAll('.icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      const img = icon.querySelector('.icon-img');
+      if(!img) return;
+      const rect = img.getBoundingClientRect();
+      const x = (e.clientX || (e.touches && e.touches[0].clientX) || rect.width/2) - rect.left;
+      const y = (e.clientY || (e.touches && e.touches[0].clientY) || rect.height/2) - rect.top;
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.width = '24px';
+      ripple.style.height = '24px';
+      ripple.style.left = (x - 12) + 'px';
+      ripple.style.top = (y - 12) + 'px';
+      img.appendChild(ripple);
+      ripple.addEventListener('animationend', () => { try { ripple.remove(); } catch(_){} }, { once:true });
+    });
+  });
+}
+
 // ===== ASSET PRELOAD + LOADING OVERLAY =====
 async function preloadAssets(){
   const list = [
@@ -1363,8 +1467,18 @@ async function preloadAssets(){
 function closeWindow(id) {
   const win = document.getElementById(id);
   if(!win) return;
-  win.style.display = "none";
-  win.classList.remove("active");
+  // Animate close then hide
+  try {
+    win.classList.add('anim-close');
+    win.addEventListener('animationend', () => {
+      win.style.display = 'none';
+      win.classList.remove('active');
+      win.classList.remove('anim-close');
+    }, { once:true });
+  } catch(_){
+    win.style.display = 'none';
+    win.classList.remove('active');
+  }
 }
 
 // ===== DRAG & RESIZE WINDOWS =====
@@ -1398,6 +1512,12 @@ function initWindowInteractions(){
       const rect = win.getBoundingClientRect();
       dx = (e.clientX || (e.touches&&e.touches[0].clientX)) - rect.left;
       dy = (e.clientY || (e.touches&&e.touches[0].clientY)) - rect.top;
+      try {
+        window.__winZ = (window.__winZ || 100) + 1;
+        win.style.zIndex = window.__winZ;
+        document.querySelectorAll('.window').forEach(w => w.classList.remove('focused'));
+        win.classList.add('focused');
+      } catch(_){}
       document.addEventListener('mousemove', onMove);
       document.addEventListener('mouseup', onUp);
       document.addEventListener('touchmove', onMove, { passive:false });
@@ -1422,7 +1542,18 @@ function initWindowInteractions(){
       document.removeEventListener('touchmove', onMove);
       document.removeEventListener('touchend', onUp);
     }
-    if(header){ header.addEventListener('mousedown', onDown); header.addEventListener('touchstart', onDown, { passive:false }); }
+    if(header){
+      header.addEventListener('mousedown', onDown);
+      header.addEventListener('touchstart', onDown, { passive:false });
+      // Double-click to toggle maximize
+      header.addEventListener('dblclick', () => toggleMaximize(win, vw(), vh()));
+    }
+
+    // Wire toolbar buttons: minimize (yellow) and maximize (green)
+    const minBtn = win.querySelector('.min');
+    const maxBtn = win.querySelector('.max');
+    if(minBtn){ minBtn.addEventListener('click', () => minimizeWindow(win)); }
+    if(maxBtn){ maxBtn.addEventListener('click', () => toggleMaximize(win, vw(), vh())); }
 
     // Resize
     const handle = win.querySelector('.resize-handle');
@@ -1459,6 +1590,110 @@ function initWindowInteractions(){
   });
 }
 
+// ===== MINIMIZE / MAXIMIZE HELPERS =====
+function ensureDock(){
+  let dock = document.getElementById('windowDock');
+  if(!dock){
+    dock = document.createElement('div');
+    dock.id = 'windowDock';
+    dock.style.position = 'fixed';
+    dock.style.bottom = '36px';
+    dock.style.left = '16px';
+    dock.style.display = 'flex';
+    dock.style.gap = '8px';
+    dock.style.zIndex = '10001';
+    dock.style.backdropFilter = 'blur(12px)';
+    dock.style.background = 'rgba(255,255,255,.85)';
+    dock.style.border = '1px solid rgba(0,0,0,.08)';
+    dock.style.borderRadius = '10px';
+    dock.style.padding = '8px 10px';
+    dock.style.boxShadow = '0 10px 24px rgba(0,0,0,.18)';
+    document.body.appendChild(dock);
+  }
+  return dock;
+}
+
+function addDockItem(win){
+  const dock = ensureDock();
+  const title = win.querySelector('.window-title')?.textContent || 'App';
+  const btn = document.createElement('button');
+  btn.textContent = title;
+  btn.className = 'dock-btn';
+  btn.dataset.windowId = win.id;
+  btn.addEventListener('click', () => {
+    restoreWindow(win);
+    btn.remove();
+  });
+  dock.appendChild(btn);
+}
+
+// ===== PARALLAX WALLPAPER =====
+function initParallax(){
+  const bg = document.getElementById('parallaxBg');
+  if(!bg) return;
+  let raf = null;
+  let targetX = 0, targetY = 0;
+  function animate(){
+    const dx = targetX * 0.06;
+    const dy = targetY * 0.06;
+    bg.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(1.06)`;
+    raf = null;
+  }
+  function onMove(e){
+    const cx = (e.clientX || window.innerWidth/2) / window.innerWidth;
+    const cy = (e.clientY || window.innerHeight/2) / window.innerHeight;
+    targetX = (cx - 0.5) * 24; // max 24px offset
+    targetY = (cy - 0.5) * 18;
+    if(!raf) raf = requestAnimationFrame(animate);
+  }
+  window.addEventListener('mousemove', onMove);
+}
+
+function minimizeWindow(win){
+  addDockItem(win);
+  win.classList.add('minimizing');
+  setTimeout(() => {
+    win.style.display = 'none';
+    win.classList.remove('active');
+    win.classList.remove('minimizing');
+  }, 180);
+}
+
+function toggleMaximize(win, viewportW, viewportH){
+  const isMax = win.dataset.maximized === 'true';
+  if(!isMax){
+    const rect = win.getBoundingClientRect();
+    win.dataset.prevLeft = win.style.left || rect.left + 'px';
+    win.dataset.prevTop = win.style.top || rect.top + 'px';
+    win.dataset.prevWidth = win.style.width || rect.width + 'px';
+    win.dataset.prevHeight = win.style.height || rect.height + 'px';
+    win.style.transform = 'none';
+    win.style.left = '8px';
+    win.style.top = '36px';
+    win.style.right = 'auto';
+    win.style.bottom = 'auto';
+    win.style.width = Math.max(320, viewportW - 16) + 'px';
+    win.style.height = Math.max(240, viewportH - 52) + 'px';
+    win.dataset.maximized = 'true';
+    try {
+      win.classList.add('win-bounce');
+      win.addEventListener('animationend', () => win.classList.remove('win-bounce'), { once:true });
+    } catch(_){}
+  } else {
+    win.style.left = win.dataset.prevLeft || win.style.left;
+    win.style.top = win.dataset.prevTop || win.style.top;
+    win.style.width = win.dataset.prevWidth || win.style.width;
+    win.style.height = win.dataset.prevHeight || win.style.height;
+    win.dataset.maximized = 'false';
+  }
+}
+
+function restoreWindow(win){
+  win.style.display = 'flex';
+  win.classList.add('active');
+  try { window.__winZ = (window.__winZ || 100) + 1; win.style.zIndex = window.__winZ; document.querySelectorAll('.window').forEach(w => w.classList.remove('focused')); win.classList.add('focused'); } catch(_){}
+}
+
 // ===== ENTRY PASSWORD GATE =====
 function initGate(){
   if (window.ENABLE_GATE === false) return;
@@ -1469,6 +1704,7 @@ function initGate(){
     const status = document.getElementById('gateStatus');
     if(!overlay || !input || !btn) return;
     overlay.style.display = 'flex';
+    try { overlay.classList.add('login-enter'); } catch(_){}
     async function attempt(){
       const pw = input.value.trim();
       status.textContent = '';
@@ -1706,10 +1942,16 @@ function initMenuDropdown(){
   const btn = document.getElementById('appleMenuButton');
   const dd = document.getElementById('appleDropdown');
   const logoutItem = document.getElementById('logoutMenuItem');
+  const settingsItem = document.getElementById('settingsMenuItem');
   if(!btn || !dd || !logoutItem) return;
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
-    dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    const willShow = dd.style.display !== 'block';
+    dd.style.display = willShow ? 'block' : 'none';
+    if(willShow){
+      dd.classList.add('anim-menu-in');
+      dd.addEventListener('animationend', () => dd.classList.remove('anim-menu-in'), { once:true });
+    }
   });
   document.addEventListener('click', () => { dd.style.display = 'none'; });
   logoutItem.addEventListener('click', () => {
@@ -1720,6 +1962,12 @@ function initMenuDropdown(){
     document.body.classList.remove('desktop-ready');
     initGate();
   });
+  if(settingsItem){
+    settingsItem.addEventListener('click', () => {
+      dd.style.display = 'none';
+      try { openWindow('settings-window'); } catch(_){}
+    });
+  }
 }
 const notes = [
   {title: "a big deal to me", content: "Started this in the late hours when the city goes quiet. The synth layers came naturally - I wanted that dreamy, ethereal feeling. Three weeks of production, endless coffee breaks, and finally found the perfect vocal tone. This track captures exactly what I was feeling at that moment. Pure creativity flowing through the speakers."},
@@ -2243,15 +2491,26 @@ function initLetters(){
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const nameEl = document.getElementById('fanName');
+    const emailEl = document.getElementById('fanEmail');
     const msgEl = document.getElementById('fanMessage');
     const name = (nameEl && nameEl.value) || '';
+    const email = (emailEl && emailEl.value) || '';
     const message = (msgEl && msgEl.value) || '';
     const thanks = document.getElementById('lettersThanks');
+    if(!email || typeof email !== 'string' || !email.includes('@')){
+      if(thanks){
+        thanks.textContent = 'Please enter a valid email address.';
+        thanks.style.display = 'block';
+        thanks.style.color = '#ff5f56';
+        setTimeout(() => { thanks.style.display = 'none'; thanks.style.color = '#27c93f'; }, 3000);
+      }
+      return;
+    }
     try {
       const res = await fetch('/api/send-letter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, message })
+        body: JSON.stringify({ name, email, message })
       });
       if(res.ok){
         if(thanks){
@@ -2261,6 +2520,8 @@ function initLetters(){
         }
         const msg = document.getElementById('fanMessage');
         if(msg) msg.value = '';
+        if(emailEl) emailEl.value = '';
+        if(nameEl) nameEl.value = '';
       } else {
         const data = await res.json().catch(()=>({}));
         if(thanks){
@@ -2603,9 +2864,25 @@ document.addEventListener('DOMContentLoaded', function(){
       initGate();
     }
   })();
+  // Narrow screen overlay
+  try {
+    function initNarrowOverlay(){
+      const ovl = document.getElementById('narrowOverlay');
+      if(!ovl) return;
+      function apply(){
+        const isNarrow = window.innerWidth < 900;
+        ovl.style.display = isNarrow ? 'flex' : 'none';
+      }
+      window.addEventListener('resize', apply);
+      apply();
+    }
+    initNarrowOverlay();
+  } catch(e) { console.warn('Narrow overlay init error', e); }
   // Enable drag/resize on windows
   try { initWindowInteractions(); } catch(e) { console.warn('Init window interactions error', e); }
   initMenuDropdown();
+  try { initIconRipple(); } catch(e) { console.warn('Ripple init error', e); }
+  try { initParallax(); } catch(e) { console.warn('Parallax init error', e); }
   try { loadGallery(); } catch(e) { console.warn('Gallery init error', e); }
   try { loadVideos(); } catch(e) { console.warn('Videos init error', e); }
   try { /* lazy init draw on open */ } catch(e) { console.warn('Draw init error', e); }
